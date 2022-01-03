@@ -3,9 +3,8 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from AppMejoraDespacho.models import *
+import re
 
-patron_alpanum = r"[a-zA-Z0-9 ]*"
-patron_alphabetic = r"[a-zA-Z ]*"
 
 def validar_archivo(archivo):
     '''
@@ -37,3 +36,23 @@ class ingresoForm(forms.Form):
     observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
     fecha_despacho = forms.DateField(label='Fecha de despacho', input_formats=['%d/%m/%Y'], required=True)
     hora_despacho = forms.TimeField(label='Hora de despacho', input_formats=['%H:%M'], required=True)
+
+    def clean_nvv(self):
+        '''
+        Metodo que validara el campo de nvv
+        '''
+        dato = self.cleaned_data['nvv']
+        regex = re.compile(r'(V[0-9]*)')
+        if(regex.fullmatch(dato) is None):
+            raise forms.ValidationError("Error con el campo NVV: ingrese formato correcto (V123456)")
+        return dato
+
+    def clean_cont_telefono(self):
+        '''
+        Metodo que validara el campo de telefono
+        '''
+        dato = self.cleaned_data['cont_telefono']
+        regex = re.compile(r'(\+?[0-9]+)')
+        if(regex.fullmatch(dato) is None):
+            raise forms.ValidationError("Error con el campo Teléfono: número de teléfono inválido")
+        return dato
