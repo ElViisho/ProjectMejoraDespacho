@@ -44,10 +44,10 @@ class ingresoForm(forms.Form):
         Metodo que validara el campo de nvv
         '''
         dato = self.cleaned_data['nvv']
-        regex = re.compile(r'(V[0-9]*)')
+        regex = re.compile(r'([vV][0-9]*)')
         if(regex.fullmatch(dato) is None):
             raise forms.ValidationError("Error con el campo NVV: ingrese formato correcto (V123456)")
-        return dato
+        return dato.upper()
 
     def clean_cont_telefono(self):
         '''

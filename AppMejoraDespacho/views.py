@@ -32,6 +32,7 @@ def ingresar(request):
 			cleaned_data = data_obtenida.cleaned_data
 
 			if cleaned_data['comprobante_pago'] is None:
+				print("xd")
 				cleaned_data['comprobante_pago'] = "None"
 
 			Ordenes.objects.create(
@@ -58,3 +59,10 @@ def confirm_nvv(request):
 	Funcion de mostrar la pagina de exitoso ingreso de la nota de venta a la base
 	'''
 	return render(request, "AppMejoraDespacho/confirm_nvv.html")
+
+def tabla(request):
+	'''
+	Funcion de mostrar la pagina con la tabla de la base de datos
+	'''
+	base = Ordenes.objects.all()
+	return render(request, "AppMejoraDespacho/tabla.html",{"queryset": base})
