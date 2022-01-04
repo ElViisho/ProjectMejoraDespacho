@@ -12,6 +12,7 @@
     font-size: 50px;
     font-weight: normal;
     padding-left: 1%;
+    cursor: pointer;
 }
 
 .blog-header {
