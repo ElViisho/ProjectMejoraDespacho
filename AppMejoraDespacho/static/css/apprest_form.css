@@ -13,7 +13,7 @@ td{
 
 label{
     font-size: 25px;
-    color: rgb(119, 86, 65);
+    color: #444444;
     font-weight: bold;
 }
 
@@ -58,16 +58,16 @@ input#foto{
 }
 
 #boton{
-    color:black;
     font-size: 20px;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
     font-style: normal;
     transition: background-color 1s , border-color 1s;
-    background-color: rgb(233, 211, 170);
+    background-color: #f42414;
+    color: #dfdfdf;
+    font-size: 20px;
     border-radius: 5px;
-    border-color: rgb(119, 86, 65);
     border-style: solid;
-    border-radius: 5px;
+    border-color: #cc542c;
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 35%;
@@ -78,8 +78,8 @@ input#foto{
 
 #boton:hover{
     cursor: pointer;
-    background-color: rgb(253, 253, 253);
-    border-color: aliceblue;
+    background-color: #ff948c;
+    border-color: rgb(255, 240, 240);
     transition-duration: 1s;
 }
 
