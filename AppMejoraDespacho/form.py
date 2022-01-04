@@ -6,7 +6,7 @@ from AppMejoraDespacho.models import *
 import re
 from django.forms.widgets import NumberInput
 import datetime 
-
+from .regiones_y_comunas import regiones, comunas
 
 def validar_archivo(archivo):
     '''
@@ -30,8 +30,9 @@ def validar_archivo(archivo):
 
 class ingresoForm(forms.Form):
     nvv = forms.CharField(label='NVV', max_length=20, required=True)
+    region = forms.ChoiceField(label = 'Región', choices=regiones, initial=7, required=True)
+    comuna = forms.ChoiceField(label='Comuna', choices=comunas[7], initial=1, required=True)
     direccion = forms.CharField(label='Dirección', max_length=250, required=True)
-    comuna = forms.CharField(label='Comuna', max_length=50, required=True)
     cont_nombre = forms.CharField(label='Nombre contacto', max_length=200, required=True)
     cont_telefono = forms.CharField(label='Teléfono contacto', max_length=12, required=True)
     comprobante_pago = forms.FileField(label='Comprobante de pago', required=False, validators=[validar_archivo])
