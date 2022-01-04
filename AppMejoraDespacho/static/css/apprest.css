@@ -1,5 +1,5 @@
 body {
-	background-color: #f2eadc;
+	background-color: #e0e0e0;
 	font-family:  "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;;
 }
 
@@ -8,12 +8,12 @@ body {
 	grid-column: auto;
 	padding-bottom: 8px;
 	text-align: center;
-	background-color: #c92d39;
+	background-color: #ffffff;
 	border-radius: 5px;
 }
 
 .opcion-menu{ 
-	background-color: #f2eadc;
+	background-color: #535353b9;
 	display: inline-block;
 	text-align: center;
 	margin: 10px;
@@ -45,7 +45,7 @@ body {
 	margin-bottom: 50px;
 	margin-top: 50px;
 	margin-left: 25%;
-	color: #c92d39;
+	color: #d4d4d4;
 	border-radius: 50%;
 	width: 50%;
 	height: 25%;

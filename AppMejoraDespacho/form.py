@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from AppMejoraDespacho.models import *
 import re
+from django.forms.widgets import NumberInput
+import datetime 
 
 
 def validar_archivo(archivo):
@@ -34,8 +36,8 @@ class ingresoForm(forms.Form):
     cont_telefono = forms.CharField(label='Teléfono contacto', max_length=12, required=True)
     comprobante_pago = forms.FileField(label='Comprobante de pago', required=False, validators=[validar_archivo])
     observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
-    fecha_despacho = forms.DateField(label='Fecha de despacho', input_formats=['%d/%m/%Y'], required=True)
-    hora_despacho = forms.TimeField(label='Hora de despacho', input_formats=['%H:%M'], required=True)
+    fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date'}), required=True, initial=(datetime.date.today() + datetime.timedelta(days=2)))
+    hora_despacho = forms.TimeField(label='Hora de despacho', input_formats=['%H:%M'], widget=NumberInput(attrs={'type': 'time'}), required=True, initial='09:00')
 
     def clean_nvv(self):
         '''
