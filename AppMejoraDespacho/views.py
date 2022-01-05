@@ -12,6 +12,8 @@ from django.core.paginator import Paginator
 from AppMejoraDespacho.form import ingresoForm
 import datetime
 
+from .regiones_y_comunas import regiones, comunas
+
 def inicio(request):
 	'''
 	Funcion para mostrar el html inicio de la aplicacion con render
@@ -40,8 +42,9 @@ def ingresar(request):
 				fecha_nvv = datetime.date.today(), #CAMBIAAAAR
 				rut = 0, #CAMBIAAAAR
 				cliente = "k", #CAMBIAAAR
-				direccion = cleaned_data['direccion'],
+				region = cleaned_data['region'],
 				comuna = cleaned_data['comuna'],
+				direccion = cleaned_data['direccion'],
 				nombre_contacto = cleaned_data['cont_nombre'],
 				telefono_contacto = cleaned_data['cont_telefono'],
 				condicion_pago = "xd", #CAMBIAAAAR
@@ -66,3 +69,8 @@ def tabla(request):
 	'''
 	base = Ordenes.objects.all()
 	return render(request, "AppMejoraDespacho/tabla.html",{"queryset": base})
+
+def load_comunas(request):
+    region = request.GET.get('region')
+    com = comunas[int(region)-1]
+    return render(request, 'AppMejoraDespacho/comuna_dropdown_list_options.html', {'comunas': com})

@@ -52,6 +52,26 @@
         {% endfor %}
         <input class="btn btn-default" class="boton-sumbit" id="boton" type="submit" onclick="return validarFormulario()">
     </form>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+      $("#id_region").change(function () {
+        var url = "ajax/load-comunas/";  // get the url of the `load_cities` view
+        var regionId = $(this).val();
+
+        $.ajax({
+          url: url,
+          data: {
+            'region': regionId
+          },
+          success: function (data) {
+            $("#id_comuna").html(data);
+          }
+        });
+
+      });
+    </script>
+
     </body>
 </html>
 

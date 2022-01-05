@@ -31,11 +31,10 @@ label{
     justify-content: space-evenly;
 }
 
-input#id_nombre, input#id_pais, input#id_ciudad, input#id_direccion, textarea{
+input#id_nvv, input#id_direccion, input#id_cont_nombre, input#id_cont_telefono, input#id_observaciones, textarea{
     font-size: large;
     border-radius: 5px;
     background-color: white;
-    font-style: italic;
     color: #5b3924;
 }
 
@@ -47,7 +46,7 @@ input#id_nombre, input#id_pais, input#id_ciudad, input#id_direccion, textarea{
     color: #5b3924;
 }
 
-input#foto{
+input#comprobante_pago{
     color:black;
     font-family: 'Courier New', Courier, monospace;
     font-style: normal;

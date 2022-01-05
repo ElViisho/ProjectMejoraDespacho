@@ -1,4 +1,5 @@
 from django.db import models
+from .regiones_y_comunas import regiones, comunas
 
 class Ordenes(models.Model):
     choices_estados = (
@@ -16,6 +17,7 @@ class Ordenes(models.Model):
     rut = models.CharField(max_length=13, db_index=True)
     cliente = models.CharField(max_length=200, db_index=True)
     direccion = models.CharField(max_length=250)
+    region = models.IntegerField(choices=regiones, db_index=True)
     comuna = models.CharField(max_length=50, db_index=True)
     nombre_contacto = models.CharField(max_length=200)
     telefono_contacto = models.CharField(max_length=12)

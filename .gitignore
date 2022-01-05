@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# files
+AppMejoraDespacho/static/comprobantes_de_pago/
