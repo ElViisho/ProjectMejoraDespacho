@@ -68,7 +68,7 @@ def tabla(request):
 	Funcion de mostrar la pagina con la tabla de la base de datos
 	'''
 	base = Ordenes.objects.all()
-	return render(request, "AppMejoraDespacho/tabla.html",{"queryset": base})
+	return render(request, "AppMejoraDespacho/tabla.html",{"queryset": base, "regiones": regiones, "comunas": comunas})
 
 def load_comunas(request):
     region = request.GET.get('region')

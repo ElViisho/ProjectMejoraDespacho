@@ -27,10 +27,10 @@ class Ordenes(models.Model):
     fecha_despacho = models.DateField(db_index=True)
     hora_de_despacho = models.TimeField()
 
-    fecha_entregado = models.DateField(db_index=True, blank=True, null=True)
+    fecha_entregado = models.DateField(db_index=True, blank=True)
     estado = models.IntegerField(default=0, choices=choices_estados)
     completado = models.IntegerField(default=0, choices=choices_completo)
-    observacion_despacho = models.CharField(max_length=2500, blank=True, null=True)
+    observacion_despacho = models.CharField(max_length=2500, blank=True)
     documento_salida = models.FileField(upload_to='documentos_de_salida/%Y/%m/%d/', default='None')
     numero = models.IntegerField(db_index=True, default=0)
 

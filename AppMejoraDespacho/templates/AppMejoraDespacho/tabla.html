@@ -1,4 +1,5 @@
 {% load static %}
+{%load form_template_extras%}
 <!DOCTYPE html>
 <html>
     <head>
@@ -30,8 +31,9 @@
                         <th scope="col" id="listado_e">Fecha solicitud</th>
                         <th scope="col" id="listado_e">RUT cliente</th>
                         <th scope="col" id="listado_e">Nombre cliente</th>
-                        <th scope="col" id="listado_e">Dirección</th>
+                        <th scope="col" id="listado_e">Región</th>
                         <th scope="col" id="listado_e">Comuna</th>
+                        <th scope="col" id="listado_e">Dirección</th>
                         <th scope="col" id="listado_e">Nombre contacto</th>
                         <th scope="col" id="listado_e">Teléfono contacto</th>
                         <th scope="col" id="listado_e">Condición de pago</th>
@@ -54,8 +56,9 @@
                         <td id="listado_e">{{ item.fecha_solicitud }}</td>
                         <td id="listado_e">{{ item.rut }}</td>
                         <td id="listado_e">{{ item.cliente }}</td>
+                        <td id="listado_e">{{ regiones|get_region:item.region }}</td>
+                        <td id="listado_e">{{ comunas|get_comunas_por_region:item.region|get_comuna:item.comuna }}</td>
                         <td id="listado_e">{{ item.direccion }}</td>
-                        <td id="listado_e">{{ item.comuna }}</td>
                         <td id="listado_e">{{ item.nombre_contacto }}</td>
                         <td id="listado_e">{{ item.telefono_contacto }}</td>
                         <td id="listado_e">{{ item.condicion_pago }}</td>
