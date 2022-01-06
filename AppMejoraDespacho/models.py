@@ -27,7 +27,7 @@ class Ordenes(models.Model):
     fecha_despacho = models.DateField(db_index=True)
     hora_de_despacho = models.TimeField()
 
-    fecha_entregado = models.DateField(db_index=True, blank=True)
+    fecha_entregado = models.DateField(db_index=True, blank=True, null=True)
     estado = models.IntegerField(default=0, choices=choices_estados)
     completado = models.IntegerField(default=0, choices=choices_completo)
     observacion_despacho = models.CharField(max_length=2500, blank=True)

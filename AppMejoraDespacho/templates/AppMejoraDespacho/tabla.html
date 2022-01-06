@@ -1,101 +1,91 @@
+{% extends 'AppMejoraDespacho/base.html' %}
 {% load static %}
 {%load form_template_extras%}
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Dimaco</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-        <script src="{% static 'js/js_form.js' %}"></script>
-        <link rel="stylesheet" href="{% static 'css/perfil.css' %}">
-        <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
-    </head>
-    
-    <!-- Aqui emppieza el codigo esencial en cada pagina -->
-    <body style="background-color: #dfdfdf;">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-grey">
-        <div class="container-fluid">
-            <h1 class="titlep" onclick="window.location='/'">
-            <img src="{% static 'images/logo.png'%}" style="width: 250px; height: 55px; display: inline;">
-            </h1>
-        </div>
-        </nav>
-        <!-- hasta aqui seria lo escencial en cada pagina -->
-        
-        <div class="table-responsive table-l">
-            <table class="table table-hover table-striped table-image" id="listado">
-                <thead>
-                    <tr class="text-center">
-                        <th scope="col" id="listado_e">NVV</th>
-                        <th scope="col" id="listado_e">Fecha NVV</th>
-                        <th scope="col" id="listado_e">Fecha solicitud</th>
-                        <th scope="col" id="listado_e">RUT cliente</th>
-                        <th scope="col" id="listado_e">Nombre cliente</th>
-                        <th scope="col" id="listado_e">Región</th>
-                        <th scope="col" id="listado_e">Comuna</th>
-                        <th scope="col" id="listado_e">Dirección</th>
-                        <th scope="col" id="listado_e">Nombre contacto</th>
-                        <th scope="col" id="listado_e">Teléfono contacto</th>
-                        <th scope="col" id="listado_e">Condición de pago</th>
-                        <th scope="col" id="listado_e">Observaciones</th>
-                        <th scope="col" id="listado_e">Estado</th>
-                        <th scope="col" id="listado_e">Comprobante de pago</th>
-                        <th scope="col" id="listado_e">Fecha despacho</th>
-                        <th scope="col" id="listado_e">Hora despacho</th>
-                        <th scope="col" id="listado_e">Fecha entrega</th>
-                        <th scope="col" id="listado_e">Observaciones despacho</th>
-                        <th scope="col" id="listado_e">Documento de salida</th>
-                        <th scope="col" id="listado_e">Número</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in queryset %}
-                    <tr class="text-center">
-                        <td id="listado_e">{{ item.nvv }}</td>
-                        <td id="listado_e">{{ item.fecha_nvv }}</td>
-                        <td id="listado_e">{{ item.fecha_solicitud }}</td>
-                        <td id="listado_e">{{ item.rut }}</td>
-                        <td id="listado_e">{{ item.cliente }}</td>
-                        <td id="listado_e">{{ regiones|get_region:item.region }}</td>
-                        <td id="listado_e">{{ comunas|get_comunas_por_region:item.region|get_comuna:item.comuna }}</td>
-                        <td id="listado_e">{{ item.direccion }}</td>
-                        <td id="listado_e">{{ item.nombre_contacto }}</td>
-                        <td id="listado_e">{{ item.telefono_contacto }}</td>
-                        <td id="listado_e">{{ item.condicion_pago }}</td>
-                        <td id="listado_e">{{ item.observacion }}</td>
-                        <td id="listado_e">
-                            {% if item.estado == 2 %}
-                            Despachado
-                            {% elif item.estado == 1 %}
-                            Preparado
-                            {% else %}
-                            En preparación
-                            {% endif %}
-                        </td>
-                        <td id="listado_e">
-                            {% if item.comprobante_pago == "None" %}
-                                No hay
-                            {% else %}
-                                <a href="{{ item.comprobante_pago.url }}" target="_blank">link</a>
-                            {% endif %}
-                        </td>
-                        <td id="listado_e">{{ item.fecha_despacho }}</td>
-                        <td id="listado_e">{{ item.hora_de_despacho }}</td>
-                        <td id="listado_e">{{ item.fecha_entregado }}</td>
-                        <td id="listado_e">{{ item.observacion_despacho }}</td>
-                        <td id="listado_e">
-                            {% if item.documento_salida == "None" %}
-                                No hay
-                            {% else %}
-                                <a href="{{ item.documento_salida.url }}" target="_blank">link</a>
-                            {% endif %}
-                        </td>
-                        <td id="listado_e">{{ item.numero }}</td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-            </table>
-        </div>
-        
-    </body>
-</html>
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+<link rel="stylesheet" href="{% static 'css/apprest.css' %}">
+{% endblock header%}
+
+{% block content %}
+<div class="table-responsive table-l">
+    <table class="table table-hover table-striped table-image" id="listado">
+        <thead>
+            <tr class="text-center">
+                <th scope="col" id="listado_e">NVV</th>
+                <th scope="col" id="listado_e">Fecha NVV</th>
+                <th scope="col" id="listado_e">Fecha solicitud</th>
+                <th scope="col" id="listado_e">RUT cliente</th>
+                <th scope="col" id="listado_e">Nombre cliente</th>
+                <th scope="col" id="listado_e">Región</th>
+                <th scope="col" id="listado_e">Comuna</th>
+                <th scope="col" id="listado_e">Dirección</th>
+                <th scope="col" id="listado_e">Nombre contacto</th>
+                <th scope="col" id="listado_e">Teléfono contacto</th>
+                <th scope="col" id="listado_e">Condición de pago</th>
+                <th scope="col" id="listado_e">Observaciones</th>
+                <th scope="col" id="listado_e">Estado</th>
+                <th scope="col" id="listado_e">Comprobante de pago</th>
+                <th scope="col" id="listado_e">Fecha despacho</th>
+                <th scope="col" id="listado_e">Hora despacho</th>
+                <th scope="col" id="listado_e">Fecha entrega</th>
+                <th scope="col" id="listado_e">Observaciones despacho</th>
+                <th scope="col" id="listado_e">Documento de salida</th>
+                <th scope="col" id="listado_e">Número</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in queryset %}
+            <tr class="text-center">
+                <td id="listado_e">{{ item.nvv }}</td>
+                <td id="listado_e">{{ item.fecha_nvv }}</td>
+                <td id="listado_e">{{ item.fecha_solicitud }}</td>
+                <td id="listado_e">{{ item.rut }}</td>
+                <td id="listado_e">{{ item.cliente }}</td>
+                <td id="listado_e">{{ regiones|get_region:item.region }}</td>
+                <td id="listado_e">{{ comunas|get_comunas_por_region:item.region|get_comuna:item.comuna }}</td>
+                <td id="listado_e">{{ item.direccion }}</td>
+                <td id="listado_e">{{ item.nombre_contacto }}</td>
+                <td id="listado_e">{{ item.telefono_contacto }}</td>
+                <td id="listado_e">{{ item.condicion_pago }}</td>
+                <td id="listado_e">{{ item.observacion }}</td>
+                <td id="listado_e">
+                    {% if item.estado == 2 %}
+                    Despachado
+                    {% elif item.estado == 1 %}
+                    Preparado
+                    {% else %}
+                    En preparación
+                    {% endif %}
+                </td>
+                <td id="listado_e">
+                    {% if item.comprobante_pago == "None" %}
+                        No hay
+                    {% else %}
+                        <a href="{{ item.comprobante_pago.url }}" target="_blank">link</a>
+                    {% endif %}
+                </td>
+                <td id="listado_e">{{ item.fecha_despacho }}</td>
+                <td id="listado_e">{{ item.hora_de_despacho }}</td>
+                <td id="listado_e">
+                    {% if item.fecha_entregado == None %}
+                        No entregado
+                    {% else %}
+                        {{ item.fecha_entregado }}
+                    {% endif %}
+                </td>
+                <td id="listado_e">{{ item.observacion_despacho }}</td>
+                <td id="listado_e">
+                    {% if item.documento_salida == "None" %}
+                        No hay
+                    {% else %}
+                        <a href="{{ item.documento_salida.url }}" target="_blank">link</a>
+                    {% endif %}
+                </td>
+                <td id="listado_e">{{ item.numero }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+    </table>
+</div>
+{% endblock content %}

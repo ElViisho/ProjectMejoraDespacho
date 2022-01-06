@@ -1,36 +1,14 @@
+{% extends "AppMejoraDespacho/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Dimaco</title>
-    <link rel="icon"href="{% static 'favicon.ico' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <script src="{% static 'js/js_form.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/perfil.css' %}">
-    <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
-  </head>
-  
-  <!-- Aqui emppieza el codigo esencial en cada pagina -->
-  <body style="background-color: #dfdfdf;">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-grey">
-      <div class="container-fluid">       
-        <h1 class="titlep" onclick="window.location='/'">
-          <img src="{% static 'images/logo.png'%}" style="width: 250px; height: 55px; display: inline;" >
-        </h1>
-      </div>
-    </nav>
-          
-    <!-- hasta aqui seria lo escencial en cada pagina -->
 
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+<link rel="stylesheet" href="{% static 'css/apprest.css' %}">
+{% endblock header%}
 
-    <div class="titulo_pagina">¡Bienvenid@!</div>
-      
-    <button type="button" class="button" onclick="window.location='form'">Nueva orden de venta</button>
-
-    <button type="button" class="button" onclick="window.location='modificar_nvv'">Modificar orden de venta</button>
-
-    <button type="button" class="button" onclick="window.location='tabla'">Tabla de ordenes de venta</button>    
-    
-  </body>
-</html>
+{% block content %}
+<div class="titulo_pagina">¡Bienvenid@!</div>
+<button type="button" class="button" onclick="window.location='form'">Nueva orden de venta</button>
+<button type="button" class="button" onclick="window.location='modificar_nvv'">Modificar orden de venta</button>
+<button type="button" class="button" onclick="window.location='tabla'">Tabla de ordenes de venta</button>    
+{% endblock content %}
