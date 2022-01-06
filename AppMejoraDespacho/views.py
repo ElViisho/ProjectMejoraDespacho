@@ -67,14 +67,15 @@ def modificar_nvv(request):
 	'''
 	Funcion de mostrar la pagina para modificar una nota de venta de la base
 	'''
-	return render(request, "AppMejoraDespacho/modificar_nvv.html")
+	queryset = Ordenes.objects.all()
+	return render(request, "AppMejoraDespacho/modificar_nvv.html", {"queryset": queryset,})
 
 def tabla(request):
 	'''
 	Funcion de mostrar la pagina con la tabla de la base de datos
 	'''
-	base = Ordenes.objects.all()
-	return render(request, "AppMejoraDespacho/tabla.html",{"queryset": base, "regiones": regiones, "comunas": comunas})
+	queryset = Ordenes.objects.all()
+	return render(request, "AppMejoraDespacho/tabla.html",{"queryset": queryset, "regiones": regiones, "comunas": comunas})
 
 def load_comunas(request):
     region = request.GET.get('region')
