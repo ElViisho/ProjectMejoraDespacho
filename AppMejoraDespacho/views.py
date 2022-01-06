@@ -63,6 +63,12 @@ def confirm_nvv(request):
 	'''
 	return render(request, "AppMejoraDespacho/confirm_nvv.html")
 
+def modificar_nvv(request):
+	'''
+	Funcion de mostrar la pagina para modificar una nota de venta de la base
+	'''
+	return render(request, "AppMejoraDespacho/modificar_nvv.html")
+
 def tabla(request):
 	'''
 	Funcion de mostrar la pagina con la tabla de la base de datos
