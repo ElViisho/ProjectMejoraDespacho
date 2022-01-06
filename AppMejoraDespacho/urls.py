@@ -1,7 +1,11 @@
 from django.urls import path
 from . import views
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
+    path("favicon.ico", RedirectView.as_view(url=staticfiles_storage.url("favicon.ico"))),
+
     path('', views.inicio, name="inicio"),
     path('inicio', views.inicio, name="inicio"),
     path('form', views.ingresar, name='formulario'),
