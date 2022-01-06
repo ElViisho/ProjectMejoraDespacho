@@ -52,5 +52,20 @@
 			}
 		});
 	});
+	if ($("#id_region").val() != 7) {
+		var url = "ajax/load-comunas/";
+		var regionId = $("#id_region").val();
+		var comuna_actual = $("#id_comuna").val();
+		$.ajax({
+			url: url,
+			data: {
+				'region': regionId
+			},
+			success: function (data) {
+				$("#id_comuna").html(data),
+				$("#id_comuna").val(comuna_actual);
+			}
+		});
+	};
 </script>
 {% endblock content %}
