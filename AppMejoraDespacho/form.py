@@ -60,7 +60,7 @@ class ingresoForm(forms.Form):
     def clean_nvv(self):
         i = self.cleaned_data['nvv']
         nvv_choices = get_nvvs()
-        return nvv_choices[int(i)][1]
+        return nvv_choices[int(i)-1][1]
 
     def clean_hora_despacho_fin(self):
         '''
