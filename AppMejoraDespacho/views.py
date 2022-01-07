@@ -8,6 +8,7 @@ from django.contrib import messages
 from AppMejoraDespacho.models import *
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db import connections
 
 from AppMejoraDespacho.form import ingresoForm
 import datetime
@@ -81,3 +82,18 @@ def load_comunas(request):
     region = request.GET.get('region')
     com = comunas[int(region)-1]
     return render(request, 'AppMejoraDespacho/comuna_dropdown_list_options.html', {'comunas': com})
+
+def dictfetchall(cursor):
+    "Return all rows from a cursor as a dict"
+    columns = [col[0] for col in cursor.description]
+    return [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ]
+
+def pa_probar(request):
+	cursor = connections['dimaco'].cursor()
+	cursor.execute("SELECT TOP (10) * FROM [DIMACO_NEW].[dbo].[MAEEDO]")
+	rows = dictfetchall(cursor)
+
+	return render(request, "AppMejoraDespacho/pa_probar.html", {"base": rows})

@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Dimaco</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        <script src="{% static 'js/js_form.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+        <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
+    </head>
+    
+    <!-- Aqui emppieza el codigo esencial en cada pagina -->
+    <body style="background-color: #dfdfdf;">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-grey">
+        <div class="container-fluid">
+            <h1 class="titlep" onclick="window.location='/'">
+            <img src="{% static 'images/logo.png'%}" style="width: 250px; height: 55px; display: inline;">
+            </h1>
+        </div>
+        </nav>
+        <!-- hasta aqui seria lo escencial en cada pagina -->
+        
+        <div class="table-responsive table-l">
+            <table class="table table-hover table-striped table-image" id="listado">
+                <thead>
+                    <tr class="text-center">
+                        <th scope="col" id="listado_e">IDmaeedo</th>
+                        <th scope="col" id="listado_e">Empresa</th>
+                        <th scope="col" id="listado_e">TIDO</th>
+                        <th scope="col" id="listado_e">NUDO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in base %}
+                    <tr class="text-center">
+                        <td id="listado_e">{{ item.IDMAEEDO }}</td>
+                        <td id="listado_e">{{ item.EMPRESA }}</td>
+                        <td id="listado_e">{{ item.TIDO }}</td>
+                        <td id="listado_e">{{ item.NUDO }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+        
+        
+    </body>
+</html>

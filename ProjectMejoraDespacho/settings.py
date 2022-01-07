@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+@8dh*nuy^o-n5+anqp=9&e%%u7=fx3m&#u@jd(!j(_t-@-ard
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','192.168.2.48',]
 
 
 # Application definition
@@ -79,6 +79,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'dimaco': {
+        'ENGINE': 'mssql',
+        'NAME': 'DIMACO_NEW',
+        'USER': 'DIMACO_NEW',
+        'PASSWORD': 'DIM**890',
+        'HOST': '192.168.2.251',
+        'PORT': '1433',
     }
 }
 
