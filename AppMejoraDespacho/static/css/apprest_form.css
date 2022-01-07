@@ -75,6 +75,13 @@ input#comprobante_pago{
     height: 50px;
 }
 
+#boton:hover{
+    cursor: pointer;
+    background-color: #ff948c;
+    border-color: rgb(255, 240, 240);
+    transition-duration: 1s;
+}
+
 .selector_hora{
     text-align: center;
     display: flex;
@@ -82,11 +89,22 @@ input#comprobante_pago{
     margin-right: 10%;
 }
 
-#boton:hover{
-    cursor: pointer;
-    background-color: #ff948c;
-    border-color: rgb(255, 240, 240);
-    transition-duration: 1s;
+.selector_nvv{
+    text-align: center;
+}
+
+.uwuw{
+    font-size: 45px;
+	text-align: center;
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;
+	margin-bottom: 50px;
+	margin-top: 50px;
+	margin-left: 25%;
+	color: #444444;
+	border-radius: 50%;
+	width: 50%;
+	height: 25%;
+    display: none;
 }
 
 @media only screen and (max-width: 950px) {

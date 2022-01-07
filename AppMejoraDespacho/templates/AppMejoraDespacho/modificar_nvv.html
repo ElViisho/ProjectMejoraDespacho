@@ -2,9 +2,46 @@
 {% load static %}
 
 {% block header %}
-
+<link rel="stylesheet" href="{% static 'css/apprest.css' %}">
+<link rel="stylesheet" href="{% static 'css/apprest_form.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {% endblock header%}
 
 {% block content %}
+
+<form action="/action_page.php" class="selector_nvv">
+    <label for="nvvs">Elige una NVV para editar:</label>
+    <select name="nvvs" id="nvvs">
+        <option value="None">-----------------</option>
+        {% for item in queryset %}
+            <option value="{{ item }}">{{ item }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+<div id="uwu" class="uwuw">
+uwuuuwuwu
+</div>
+
+<script>
+    $('#nvvs').change(function () {
+        if ($('#nvvs').val() == "None") {
+            $.ajax({
+                success: function() {
+                    $('#uwu').hide();
+                }
+            })
+        }
+        else {
+            $.ajax({
+                success: function() {
+                    $('#uwu').show();
+                }
+            })
+        }})
+    
+</script>
+
+
 
 {% endblock content %}
