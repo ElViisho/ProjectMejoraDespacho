@@ -37,11 +37,13 @@ def dictfetchall(cursor):
         nvvs.append((str(i+1), d[i][0]))
     return tuple(nvvs)
 
-class ingresoForm(forms.Form):
+def get_nvvs():
     cursor = connections['dimaco'].cursor()
     cursor.execute("SELECT TOP (10) [NUDO] FROM [DIMACO_NEW].[dbo].[MAEEDO] WHERE NUDO LIKE 'V%' AND TIDO = 'NVV';")
-    nvv_choices = dictfetchall(cursor)
+    return dictfetchall(cursor)
 
+class ingresoForm(forms.Form):
+    nvv_choices = get_nvvs()
     nvv = forms.ChoiceField(label='NVV', choices=nvv_choices, initial=1, required=True)
     region = forms.ChoiceField(label = 'Región', choices=regiones, initial=7, required=True)
     comuna = forms.ChoiceField(label='Comuna', choices=comunas[6], initial=1, required=True)
@@ -55,9 +57,14 @@ class ingresoForm(forms.Form):
     hora_despacho_inicio = forms.ChoiceField(label='Hora de despacho', choices=horas, initial=datetime.datetime.now().hour, required=True)
     hora_despacho_fin = forms.ChoiceField(label='', choices=horas, initial=datetime.datetime.now().hour + 1, required=True)
 
+    def clean_nvv(self):
+        i = self.cleaned_data['nvv']
+        nvv_choices = get_nvvs()
+        return nvv_choices[int(i)][1]
+
     def clean_hora_despacho_fin(self):
         '''
-        Metodo que validara el campo de telefono
+        Metodo que validara los campos de la hora
         '''
         inicio = self.cleaned_data['hora_despacho_inicio']
         fin = self.cleaned_data['hora_despacho_fin']

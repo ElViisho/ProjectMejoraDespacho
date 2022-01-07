@@ -12,6 +12,7 @@ from django.db import connections
 
 from AppMejoraDespacho.form import ingresoForm
 import datetime
+from django.db import connections
 
 from .choices import regiones, comunas
 
@@ -33,22 +34,42 @@ def ingresar(request):
 		data_obtenida = ingresoForm(request.POST or None, request.FILES or None)
 		if data_obtenida.is_valid():
 			cleaned_data = data_obtenida.cleaned_data
+			nvv = cleaned_data['nvv']
 
 			if cleaned_data['comprobante_pago'] is None:
-				print("xd")
 				cleaned_data['comprobante_pago'] = "None"
 
+			cursor = connections['dimaco'].cursor()
+			cursor.execute("SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDO] WHERE NUDO = %s AND TIDO = 'NVV';", [nvv])
+			datos_maeedo = dictfetchall(cursor)
+
+			cursor.execute("""SELECT * FROM [DIMACO_NEW].[dbo].[MAEEN]
+							INNER JOIN [DIMACO_NEW].[dbo].[MAEEDO] on [DIMACO_NEW].[dbo].[MAEEN].[KOEN] = [DIMACO_NEW].[dbo].[MAEEDO].[ENDO]
+							WHERE [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] = (
+								SELECT [NUDO] 
+								FROM [DIMACO_NEW].[dbo].[MAEEDO] 
+								WHERE NUDO = %s AND TIDO = 'NVV') AND [DIMACO_NEW].[dbo].[MAEEN].[TIPOSUC]='P';""", [nvv])
+			datos_maeen = dictfetchall(cursor)
+
+			cursor.execute("""SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDOOB]
+							INNER JOIN [DIMACO_NEW].[dbo].[MAEEDO] on [DIMACO_NEW].[dbo].[MAEEDOOB].[IDMAEEDO] = [DIMACO_NEW].[dbo].[MAEEDO].[IDMAEEDO]
+							WHERE [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] = (
+								SELECT [NUDO]
+								FROM [DIMACO_NEW].[dbo].[MAEEDO] 
+								WHERE NUDO = %s AND TIDO = 'NVV');""", [nvv])
+			datos_maeedoob = dictfetchall(cursor)
+
 			Ordenes.objects.create(
-				nvv = cleaned_data['nvv'],
-				fecha_nvv = datetime.date.today(), #CAMBIAAAAR
-				rut = 0, #CAMBIAAAAR
-				cliente = "k", #CAMBIAAAR
+				nvv = nvv,
+				fecha_nvv = datos_maeedo[0]["FEEMDO"],
+				rut = datos_maeedo[0]["ENDO"],
+				cliente = datos_maeen[0]["NOKOEN"],
 				region = cleaned_data['region'],
 				comuna = cleaned_data['comuna'],
 				direccion = cleaned_data['direccion'],
 				nombre_contacto = cleaned_data['cont_nombre'],
 				telefono_contacto = cleaned_data['cont_telefono'],
-				condicion_pago = "xd", #CAMBIAAAAR
+				condicion_pago = datos_maeedoob[0]["OBDO"],
 				comprobante_pago = cleaned_data['comprobante_pago'],
 				observacion = cleaned_data['observaciones'],
 				fecha_despacho = cleaned_data['fecha_despacho'],
