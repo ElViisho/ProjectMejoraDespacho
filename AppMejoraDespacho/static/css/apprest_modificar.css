@@ -1,0 +1,23 @@
+.selector_nvv{
+    text-align: center;
+}
+
+.formulario{
+    font-size: 45px;
+	text-align: center;
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;
+	margin-bottom: 50px;
+	margin-top: 50px;
+	margin-left: 25%;
+	color: #444444;
+	border-radius: 50%;
+	width: 50%;
+	height: 25%;
+    display: none;
+}
+
+label{
+    font-size: 25px;
+    color: #444444;
+    font-weight: bold;
+}

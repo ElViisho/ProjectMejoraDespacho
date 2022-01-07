@@ -3,7 +3,7 @@
 
 {% block header %}
 <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
-<link rel="stylesheet" href="{% static 'css/apprest_form.css' %}">
+<link rel="stylesheet" href="{% static 'css/apprest_modificar.css' %}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {% endblock header%}
 
@@ -19,8 +19,8 @@
     </select>
 </form>
 
-<div id="uwu" class="uwuw">
-uwuuuwuwu
+<div id="formulario" class="formulario">
+    <input type="text" id="pri">
 </div>
 
 <script>
@@ -28,14 +28,15 @@ uwuuuwuwu
         if ($('#nvvs').val() == "None") {
             $.ajax({
                 success: function() {
-                    $('#uwu').hide();
+                    $('#formulario').hide();
                 }
             })
         }
         else {
             $.ajax({
                 success: function() {
-                    $('#uwu').show();
+                    $('#formulario').show();
+                    $('#pri').val($('#nvvs').val())
                 }
             })
         }})
