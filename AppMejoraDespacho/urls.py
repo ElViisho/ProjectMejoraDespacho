@@ -12,7 +12,6 @@ urlpatterns = [
     path('confirm_nvv', views.confirm_nvv, name='confirm_nvv'),
     path('modificar_nvv', views.modificar_nvv, name='modificar_nvv'),
     path('tabla', views.tabla, name='tabla'),
-    path('pa', views.pa_probar, name='pa'),
     
     path('ajax/load-comunas/', views.load_comunas, name='ajax_load_comunas'),
 ]

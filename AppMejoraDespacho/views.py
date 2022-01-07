@@ -15,6 +15,7 @@ import datetime
 from django.db import connections
 
 from .choices import regiones, comunas
+from .consultas import *
 
 def inicio(request):
 	'''
@@ -40,23 +41,13 @@ def ingresar(request):
 				cleaned_data['comprobante_pago'] = "None"
 
 			cursor = connections['dimaco'].cursor()
-			cursor.execute("SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDO] WHERE NUDO = %s AND TIDO = 'NVV';", [nvv])
+			cursor.execute(consulta_maeedo, [nvv])
 			datos_maeedo = dictfetchall(cursor)
 
-			cursor.execute("""SELECT * FROM [DIMACO_NEW].[dbo].[MAEEN]
-							INNER JOIN [DIMACO_NEW].[dbo].[MAEEDO] on [DIMACO_NEW].[dbo].[MAEEN].[KOEN] = [DIMACO_NEW].[dbo].[MAEEDO].[ENDO]
-							WHERE [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] = (
-								SELECT [NUDO] 
-								FROM [DIMACO_NEW].[dbo].[MAEEDO] 
-								WHERE NUDO = %s AND TIDO = 'NVV') AND [DIMACO_NEW].[dbo].[MAEEN].[TIPOSUC]='P';""", [nvv])
+			cursor.execute(consulta_maeen, [nvv])
 			datos_maeen = dictfetchall(cursor)
 
-			cursor.execute("""SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDOOB]
-							INNER JOIN [DIMACO_NEW].[dbo].[MAEEDO] on [DIMACO_NEW].[dbo].[MAEEDOOB].[IDMAEEDO] = [DIMACO_NEW].[dbo].[MAEEDO].[IDMAEEDO]
-							WHERE [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] = (
-								SELECT [NUDO]
-								FROM [DIMACO_NEW].[dbo].[MAEEDO] 
-								WHERE NUDO = %s AND TIDO = 'NVV');""", [nvv])
+			cursor.execute(consulta_maeedoob, [nvv])
 			datos_maeedoob = dictfetchall(cursor)
 
 			Ordenes.objects.create(
@@ -104,13 +95,6 @@ def load_comunas(request):
     region = request.GET.get('region')
     com = comunas[int(region)-1]
     return render(request, 'AppMejoraDespacho/comuna_dropdown_list_options.html', {'comunas': com})
-
-def pa_probar(request):
-	cursor = connections['dimaco'].cursor()
-	cursor.execute("SELECT TOP (10) * FROM [DIMACO_NEW].[dbo].[MAEEDO]")
-	rows = dictfetchall(cursor)
-
-	return render(request, "AppMejoraDespacho/pa_probar.html", {"base": rows})
 
 
 
