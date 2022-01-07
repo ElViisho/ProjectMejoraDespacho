@@ -13,7 +13,7 @@ from django.db import connections
 from AppMejoraDespacho.form import ingresoForm
 import datetime
 
-from .regiones_y_comunas import regiones, comunas
+from .choices import regiones, comunas
 
 def inicio(request):
 	'''
@@ -52,7 +52,8 @@ def ingresar(request):
 				comprobante_pago = cleaned_data['comprobante_pago'],
 				observacion = cleaned_data['observaciones'],
 				fecha_despacho = cleaned_data['fecha_despacho'],
-				hora_de_despacho = cleaned_data['hora_despacho']
+				hora_de_despacho_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_inicio'])),
+				hora_de_despacho_fin = datetime.time(hour=int(cleaned_data['hora_despacho_fin'])),
 			)
 			return redirect("confirm_nvv")
 		return render(request, "AppMejoraDespacho/form.html", {"formulario": data_obtenida})
@@ -83,6 +84,16 @@ def load_comunas(request):
     com = comunas[int(region)-1]
     return render(request, 'AppMejoraDespacho/comuna_dropdown_list_options.html', {'comunas': com})
 
+def pa_probar(request):
+	cursor = connections['dimaco'].cursor()
+	cursor.execute("SELECT TOP (10) * FROM [DIMACO_NEW].[dbo].[MAEEDO]")
+	rows = dictfetchall(cursor)
+
+	return render(request, "AppMejoraDespacho/pa_probar.html", {"base": rows})
+
+
+
+
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
     columns = [col[0] for col in cursor.description]
@@ -90,10 +101,3 @@ def dictfetchall(cursor):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ]
-
-def pa_probar(request):
-	cursor = connections['dimaco'].cursor()
-	cursor.execute("SELECT TOP (10) * FROM [DIMACO_NEW].[dbo].[MAEEDO]")
-	rows = dictfetchall(cursor)
-
-	return render(request, "AppMejoraDespacho/pa_probar.html", {"base": rows})

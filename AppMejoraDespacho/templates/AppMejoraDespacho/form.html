@@ -23,15 +23,16 @@
 {% csrf_token %}
 
 {% for field in formulario %}
-	{% if field.name == "check" %}
-		{{ field.label }}
-		{{ field }}
+<div class="form-group block-form">
+	{% if field.name == "hora_despacho_inicio" %}
+		<label>{{ field.label }}</label><br>
+		<div class="selector_hora">{{ field }} {{ formulario.hora_despacho_fin }}</div>
+	{% elif field.name == "hora_despacho_fin" %}
 	{% else %}
-		<div class="form-group block-form">
-			<label>{{ field.label }}</label><br>
-			{{ field }}
-		</div>
+		<label>{{ field.label }}</label><br>
+		{{ field }}
 	{% endif %}
+</div>
 {% endfor %}
 <input class="btn btn-default" class="boton-sumbit" id="boton" type="submit" onclick="return validarFormulario()">
 </form>

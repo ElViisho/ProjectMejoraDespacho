@@ -5,8 +5,10 @@ from django.contrib.auth.models import User
 from AppMejoraDespacho.models import *
 import re
 from django.forms.widgets import NumberInput
+
+from django.db import connections
 import datetime 
-from .regiones_y_comunas import regiones, comunas
+from .choices import regiones, comunas, horas
 
 def validar_archivo(archivo):
     '''
@@ -27,9 +29,20 @@ def validar_archivo(archivo):
     if(size > 3145728 or size < 0):
         raise forms.ValidationError("Error en el campo de comprobante de pago: tamaño del archivo supera los límites, tiene que ser menor que 3 MB, subió uno de: " + str(size))
 
+def dictfetchall(cursor):
+    "Return all rows from a cursor as a dict"
+    d = cursor.fetchall()
+    nvvs = []
+    for i in range(len(d)):
+        nvvs.append((str(i+1), d[i][0]))
+    return tuple(nvvs)
 
 class ingresoForm(forms.Form):
-    nvv = forms.CharField(label='NVV', max_length=20, required=True)
+    cursor = connections['dimaco'].cursor()
+    cursor.execute("SELECT TOP (10) [NUDO] FROM [DIMACO_NEW].[dbo].[MAEEDO] WHERE NUDO LIKE 'V%' AND TIDO = 'NVV';")
+    nvv_choices = dictfetchall(cursor)
+
+    nvv = forms.ChoiceField(label='NVV', choices=nvv_choices, initial=1, required=True)
     region = forms.ChoiceField(label = 'Región', choices=regiones, initial=7, required=True)
     comuna = forms.ChoiceField(label='Comuna', choices=comunas[6], initial=1, required=True)
     direccion = forms.CharField(label='Dirección', max_length=250, required=True)
@@ -38,17 +51,19 @@ class ingresoForm(forms.Form):
     comprobante_pago = forms.FileField(label='Comprobante de pago', required=False, validators=[validar_archivo])
     observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
     fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date'}), required=True, initial=(datetime.date.today() + datetime.timedelta(days=2)))
-    hora_despacho = forms.TimeField(label='Hora de despacho', input_formats=['%H:%M'], widget=NumberInput(attrs={'type': 'time'}), required=True, initial='09:00')
 
-    def clean_nvv(self):
+    hora_despacho_inicio = forms.ChoiceField(label='Hora de despacho', choices=horas, initial=datetime.datetime.now().hour, required=True)
+    hora_despacho_fin = forms.ChoiceField(label='', choices=horas, initial=datetime.datetime.now().hour + 1, required=True)
+
+    def clean_hora_despacho_fin(self):
         '''
-        Metodo que validara el campo de nvv
+        Metodo que validara el campo de telefono
         '''
-        dato = self.cleaned_data['nvv']
-        regex = re.compile(r'([vV][0-9]*)')
-        if(regex.fullmatch(dato) is None):
-            raise forms.ValidationError("Error con el campo NVV: ingrese formato correcto (V123456)")
-        return dato.upper()
+        inicio = self.cleaned_data['hora_despacho_inicio']
+        fin = self.cleaned_data['hora_despacho_fin']
+        if(int(fin) - int(inicio) < 1):
+            raise forms.ValidationError("Error con el campo Hora de despacho: ingrese un rango horario válido")
+        return fin
 
     def clean_cont_telefono(self):
         '''

@@ -75,6 +75,13 @@ input#comprobante_pago{
     height: 50px;
 }
 
+.selector_hora{
+    text-align: center;
+    display: flex;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
 #boton:hover{
     cursor: pointer;
     background-color: #ff948c;
