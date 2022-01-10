@@ -43,10 +43,8 @@ def get_nvvs():
     uwu = []
     for i in ya_en_la_base:
         uwu.append(i['nvv'])
-    print(tuple(uwu))
     cursor = connections['dimaco'].cursor()
     cursor.execute(consulta_NVVs.format(tuple(uwu)))
-    #cursor.execute(consulta_NVVs)
     return dictfetchall(cursor)
 
 class ingresoForm(forms.Form):
@@ -63,6 +61,13 @@ class ingresoForm(forms.Form):
 
     hora_despacho_inicio = forms.ChoiceField(label='Hora de despacho', choices=horas, initial=datetime.datetime.now().hour, required=True)
     hora_despacho_fin = forms.ChoiceField(label='', choices=horas, initial=datetime.datetime.now().hour + 1, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(ingresoForm, self).__init__(*args, **kwargs)
+        self.fields['nvv'].choices = get_nvvs()
+        self.fields['fecha_despacho'].initial = datetime.date.today() + datetime.timedelta(days=2)
+        self.fields['hora_despacho_inicio'].initial = datetime.datetime.now().hour
+        self.fields['hora_despacho_fin'].initial = datetime.datetime.now().hour + 1
 
     def clean_nvv(self):
         i = self.cleaned_data['nvv']
