@@ -39,8 +39,14 @@ def dictfetchall(cursor):
     return tuple(nvvs)
 
 def get_nvvs():
+    ya_en_la_base = Ordenes.objects.values('nvv')
+    uwu = []
+    for i in ya_en_la_base:
+        uwu.append(i['nvv'])
+    print(tuple(uwu))
     cursor = connections['dimaco'].cursor()
-    cursor.execute(consulta_NVVs)
+    cursor.execute(consulta_NVVs.format(tuple(uwu)))
+    #cursor.execute(consulta_NVVs)
     return dictfetchall(cursor)
 
 class ingresoForm(forms.Form):

@@ -4,26 +4,27 @@ consulta_NVVs = """SELECT DISTINCT [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] FROM [DIMA
                 AND [DIMACO_NEW].[dbo].[MAEEDO].[TIDO] = 'NVV'
                 AND [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] LIKE 'V%'
                 AND ESDO <> 'C'
+                AND [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] NOT IN {}
                 AND [DIMACO_NEW].[dbo].[MAEEDO].[IDMAEEDO] IN 
-                    (SELECT [IDMAEEDO] FROM [DIMACO_NEW].[dbo].[MAEDDO] WITH(NOLOCK)
+                    (SELECT [IDMAEEDO] FROM [DIMACO_NEW].[dbo].[MAEDDO] WITH (NOLOCK)
                     WHERE CAPRCO1 > (CAPREX1 + CAPRAD1)
                     AND TIDO = 'NVV'
                     AND SULIDO = '000'
                     AND LILG<>'IM')
                 ORDER BY [DIMACO_NEW].[dbo].[MAEEDO].[NUDO];"""
 
-consulta_maeedo = "SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDO] WHERE NUDO = %s AND TIDO = 'NVV';"
+consulta_maeedo = "SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDO] WITH (NOLOCK) WHERE NUDO = %s AND TIDO = 'NVV';"
 
-consulta_maeen = """SELECT * FROM [DIMACO_NEW].[dbo].[MAEEN]
+consulta_maeen = """SELECT * FROM [DIMACO_NEW].[dbo].[MAEEN] WITH (NOLOCK)
                 INNER JOIN [DIMACO_NEW].[dbo].[MAEEDO] on [DIMACO_NEW].[dbo].[MAEEN].[KOEN] = [DIMACO_NEW].[dbo].[MAEEDO].[ENDO]
                 WHERE [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] = (
                     SELECT [NUDO] 
-                    FROM [DIMACO_NEW].[dbo].[MAEEDO] 
+                    FROM [DIMACO_NEW].[dbo].[MAEEDO] WITH (NOLOCK)
                     WHERE NUDO = %s AND TIDO = 'NVV') AND [DIMACO_NEW].[dbo].[MAEEN].[TIPOSUC]='P';"""
 
-consulta_maeedoob = """SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDOOB]
+consulta_maeedoob = """SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDOOB] WITH (NOLOCK)
                 INNER JOIN [DIMACO_NEW].[dbo].[MAEEDO] on [DIMACO_NEW].[dbo].[MAEEDOOB].[IDMAEEDO] = [DIMACO_NEW].[dbo].[MAEEDO].[IDMAEEDO]
                 WHERE [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] = (
                     SELECT [NUDO]
-                    FROM [DIMACO_NEW].[dbo].[MAEEDO] 
+                    FROM [DIMACO_NEW].[dbo].[MAEEDO] WITH (NOLOCK)
                     WHERE NUDO = %s AND TIDO = 'NVV');"""
