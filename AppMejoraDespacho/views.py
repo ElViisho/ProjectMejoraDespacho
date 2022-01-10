@@ -79,13 +79,13 @@ def confirm_nvv(request):
 	'''
 	return render(request, "AppMejoraDespacho/confirm_nvv.html")
 
-def modificar_nvv(request):
+def cambiar_estado_nvv(request):
 	'''
-	Funcion de mostrar la pagina para modificar una nota de venta de la base
+	Funcion de mostrar la pagina para cambiar el estado de una nota de venta de la base
 	'''
 	queryset = Ordenes.objects.all()
 	serialized = serializers.serialize("json", queryset)
-	return render(request, "AppMejoraDespacho/modificar_nvv.html", {"queryset": queryset, "serialized": serialized, })
+	return render(request, "AppMejoraDespacho/cambiar_estado_nvv.html", {"queryset": queryset, "serialized": serialized, })
 
 def tabla(request):
 	'''
