@@ -9,6 +9,7 @@ from django.forms.widgets import NumberInput
 from django.db import connections
 import datetime 
 from .choices import regiones, comunas, horas
+from .consultas import consulta_NVVs
 
 def validar_archivo(archivo):
     '''
@@ -39,7 +40,7 @@ def dictfetchall(cursor):
 
 def get_nvvs():
     cursor = connections['dimaco'].cursor()
-    cursor.execute("SELECT TOP (10) [NUDO] FROM [DIMACO_NEW].[dbo].[MAEEDO] WHERE NUDO LIKE 'V%' AND TIDO = 'NVV';")
+    cursor.execute(consulta_NVVs)
     return dictfetchall(cursor)
 
 class ingresoForm(forms.Form):

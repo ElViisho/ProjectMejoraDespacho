@@ -19,7 +19,7 @@
 		{% endfor %}
 	{% endif %}
 </div>
-<form class="form" action="" method="POST" enctype="multipart/form-data" onsubmit="return validarFormulario()">
+<form class="form" action="" method="POST" enctype="multipart/form-data">
 {% csrf_token %}
 
 {% for field in formulario %}
@@ -34,7 +34,7 @@
 	{% endif %}
 </div>
 {% endfor %}
-<input class="btn btn-default" class="boton-sumbit" id="boton" type="submit" onclick="return validarFormulario()">
+<input class="btn btn-default" class="boton-sumbit" id="boton" type="submit">
 </form>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
