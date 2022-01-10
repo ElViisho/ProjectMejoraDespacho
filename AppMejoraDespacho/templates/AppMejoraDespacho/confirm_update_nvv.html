@@ -1,0 +1,11 @@
+{% extends "AppMejoraDespacho/base.html" %}
+{% load static %}
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/apprest.css' %}">
+{% endblock header%}
+
+{% block content %}
+<div class="titulo_pagina">Nota actualizada con éxito</div>
+<button type="button" class="button" onclick="window.location='/'">Volver a inicio</button>
+{% endblock content %}

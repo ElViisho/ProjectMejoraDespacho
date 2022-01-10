@@ -93,3 +93,21 @@ class ingresoForm(forms.Form):
         if(regex.fullmatch(dato) is None):
             raise forms.ValidationError("Error con el campo Teléfono: número de teléfono inválido")
         return dato
+
+
+class modifyForm(forms.Form):
+    choices_estados = (
+        (0, 'En Preparación'),
+        (1, 'Preparado'),
+        (2, 'Despachado')
+    )
+    nvv = forms.ChoiceField(label='NVV', choices=(), required=True)
+    estado = forms.ChoiceField(label = 'Estado', choices=choices_estados, initial=0, required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(modifyForm, self).__init__(*args, **kwargs)
+        queryset = Ordenes.objects.all()
+        choices_nvv = [("None", "----------")]
+        for i in queryset:
+            choices_nvv.append((i,i))
+        self.fields['nvv'].choices = choices_nvv

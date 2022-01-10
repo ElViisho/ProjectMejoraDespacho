@@ -50,12 +50,29 @@
     </tbody>
 </table>
 
+<form action= "" class="formulario" id="formulario" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+    {% for field in formulario %}
+    <div class="form-group block-form">
+        {% if field.label == "NVV" %}
+            <div style="display:none">{{ field }}</div>
+        {% else %}
+            <label>{{ field.label }}</label><br>
+            {{ field }}
+        {% endif %}
+    </div>
+    {% endfor %}
+    <input class="btn btn-default" class="boton-sumbit" id="boton" type="submit">
+</form>
+
 <script>
     $('#nvvs').change(function () {
         if ($('#nvvs').val() == "None") {
             $.ajax({
                 success: function() {
                     $('#tabla').hide();
+                    $('#formulario').hide();
                 }
             })
         }
@@ -83,6 +100,9 @@
                     $('#fecha_despacho').html(("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth()+1)).slice(-2) + "/" + date.getFullYear())
                     $('#hora_de_despacho').html(nvv.fields.hora_de_despacho_inicio.substr(0,5) + " - " + nvv.fields.hora_de_despacho_fin.substr(0,5))
                     $('#tabla').show();
+                    $('#id_estado').val(nvv.fields.estado)
+                    $('#id_nvv').val(nvv.pk)
+                    $('#formulario').show();
                 }
             })
         }})

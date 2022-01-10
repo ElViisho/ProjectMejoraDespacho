@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import connections
 
-from AppMejoraDespacho.form import ingresoForm
+from AppMejoraDespacho.form import ingresoForm, modifyForm
 import datetime
 from django.db import connections
 
@@ -83,9 +83,25 @@ def cambiar_estado_nvv(request):
 	'''
 	Funcion de mostrar la pagina para cambiar el estado de una nota de venta de la base
 	'''
-	queryset = Ordenes.objects.all()
-	serialized = serializers.serialize("json", queryset)
-	return render(request, "AppMejoraDespacho/cambiar_estado_nvv.html", {"queryset": queryset, "serialized": serialized, })
+	if request.method == 'GET':
+		formulario = modifyForm()
+		for field in formulario:
+			field.field.widget.attrs.update({"class": "form-control"})
+		queryset = Ordenes.objects.all()
+		serialized = serializers.serialize("json", queryset)
+		return render(request, "AppMejoraDespacho/cambiar_estado_nvv.html", {"queryset": queryset, "serialized": serialized, "formulario": formulario})
+	if request.method == "POST":
+		data_obtenida = modifyForm(request.POST or None)
+		if data_obtenida.is_valid():
+			cleaned_data = data_obtenida.cleaned_data
+			Ordenes.objects.filter(nvv=cleaned_data['nvv']).update(estado=cleaned_data['estado'])
+			return redirect("confirm_update_nvv")
+
+def confirm_update_nvv(request):
+	'''
+	Funcion de mostrar la pagina de exitoso ingreso de la nota de venta a la base
+	'''
+	return render(request, "AppMejoraDespacho/confirm_update_nvv.html")
 
 def tabla(request):
 	'''
