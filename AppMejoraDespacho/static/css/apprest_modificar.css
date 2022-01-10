@@ -2,22 +2,34 @@
     text-align: center;
 }
 
-.formulario{
-    font-size: 45px;
-	text-align: center;
-    font-family: "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;
-	margin-bottom: 50px;
-	margin-top: 50px;
-	margin-left: 25%;
-	color: #444444;
-	border-radius: 50%;
+.datos{
+    display: none;
+}
+
+.nvv {
+	font-size: 30px;
+	margin-bottom: 25px;
+}
+
+.texts {
+	font-size: 20px;
+    margin-bottom: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
 	width: 50%;
 	height: 25%;
-    display: none;
+    padding: 5px;
 }
 
 label{
     font-size: 25px;
     color: #444444;
     font-weight: bold;
+}
+
+table.fixed { table-layout: fixed;}
+
+.selector_hora{
+    font-size: 20px;
+    text-align: center;
 }

@@ -14,6 +14,8 @@ from AppMejoraDespacho.form import ingresoForm
 import datetime
 from django.db import connections
 
+from django.core import serializers
+
 from .choices import regiones, comunas
 from .consultas import *
 
@@ -66,7 +68,7 @@ def ingresar(request):
 				fecha_despacho = cleaned_data['fecha_despacho'],
 				hora_de_despacho_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_inicio'])),
 				hora_de_despacho_fin = datetime.time(hour=int(cleaned_data['hora_despacho_fin'])),
-			)
+			)		
 			return redirect("confirm_nvv")
 		return render(request, "AppMejoraDespacho/form.html", {"formulario": data_obtenida})
 
@@ -82,14 +84,15 @@ def modificar_nvv(request):
 	Funcion de mostrar la pagina para modificar una nota de venta de la base
 	'''
 	queryset = Ordenes.objects.all()
-	return render(request, "AppMejoraDespacho/modificar_nvv.html", {"queryset": queryset,})
+	serialized = serializers.serialize("json", queryset)
+	return render(request, "AppMejoraDespacho/modificar_nvv.html", {"queryset": queryset, "serialized": serialized, })
 
 def tabla(request):
 	'''
 	Funcion de mostrar la pagina con la tabla de la base de datos
 	'''
 	queryset = Ordenes.objects.all()
-	return render(request, "AppMejoraDespacho/tabla.html",{"queryset": queryset, "regiones": regiones, "comunas": comunas})
+	return render(request, "AppMejoraDespacho/tabla.html",{"queryset": queryset, "regiones": regiones, "comunas": comunas,})
 
 def load_comunas(request):
     region = request.GET.get('region')

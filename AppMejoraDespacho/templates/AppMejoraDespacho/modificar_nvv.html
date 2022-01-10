@@ -1,5 +1,7 @@
 {% extends 'AppMejoraDespacho/base.html' %}
 {% load static %}
+{%load form_template_extras%}
+{% load i18n %}
 
 {% block header %}
 <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
@@ -19,30 +21,71 @@
     </select>
 </form>
 
-<div id="formulario" class="formulario">
-    <input type="text" id="pri">
-</div>
+<table class="table datos fixed" id="tabla">
+    <thead>
+        <tr class="text-center">
+            <th scope="col" id="listado_e">NVV</th>
+            <th scope="col" id="listado_e">Región</th>
+            <th scope="col" id="listado_e">Comuna</th>
+            <th scope="col" id="listado_e">Dirección</th>
+            <th scope="col" id="listado_e">Nombre contacto</th>
+            <th scope="col" id="listado_e">Teléfono contacto</th>
+            <th scope="col" id="listado_e">Observaciones</th>
+            <th scope="col" id="listado_e">Fecha despacho</th>
+            <th scope="col" id="listado_e">Hora despacho</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="text-center">
+            <td id="nvv"></td>
+            <td id="region"></td>
+            <td id="comuna"></td>
+            <td id="direccion"></td>
+            <td id="nombre_contacto"></td>
+            <td id="telefono_contacto"></td>
+            <td id="observacion"></td>
+            <td id="fecha_despacho"></td>
+            <td id="hora_de_despacho"></td>
+        </tr>
+    </tbody>
+</table>
 
 <script>
     $('#nvvs').change(function () {
         if ($('#nvvs').val() == "None") {
             $.ajax({
                 success: function() {
-                    $('#formulario').hide();
+                    $('#tabla').hide();
                 }
             })
         }
         else {
+            var data = JSON.parse('{{ serialized | safe }}');
+            var nvv = data.find(function(item) {
+                if (item.pk == $('#nvvs').val()){
+                    return item;
+                }
+            })
+
+            var date = new Date(nvv.fields.fecha_despacho)
+            var time_ini = new Date(nvv.fields.hora_de_despacho_inicio)
+            var time_fin = new Date(nvv.fields.hora_de_despacho_fin)
+
             $.ajax({
                 success: function() {
-                    $('#formulario').show();
-                    $('#pri').val($('#nvvs').val())
+                    $('#nvv').html(nvv.pk)
+                    $('#direccion').html(nvv.fields.direccion)
+                    $('#region').html(regiones[nvv.fields.region-1])
+                    $('#comuna').html(comunas[nvv.fields.region-1][nvv.fields.comuna-1])
+                    $('#nombre_contacto').html(nvv.fields.nombre_contacto)
+                    $('#telefono_contacto').html(nvv.fields.telefono_contacto)
+                    $('#observacion').html(nvv.fields.observacion)
+                    $('#fecha_despacho').html(("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth()+1)).slice(-2) + "/" + date.getFullYear())
+                    $('#hora_de_despacho').html(nvv.fields.hora_de_despacho_inicio.substr(0,5) + " - " + nvv.fields.hora_de_despacho_fin.substr(0,5))
+                    $('#tabla').show();
                 }
             })
         }})
-    
 </script>
-
-
 
 {% endblock content %}
