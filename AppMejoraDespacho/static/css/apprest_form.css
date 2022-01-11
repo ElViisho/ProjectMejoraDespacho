@@ -85,8 +85,12 @@ input#comprobante_pago{
 .selector_hora{
     text-align: center;
     display: flex;
-    margin-left: 10%;
-    margin-right: 10%;
+}
+
+#id_hora_despacho_inicio, #id_hora_despacho_fin{
+    width: 45%;
+    margin-left: 2%;
+    margin-right: 2%
 }
 
 @media only screen and (max-width: 950px) {
