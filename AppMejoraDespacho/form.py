@@ -8,7 +8,7 @@ from django.forms.widgets import NumberInput
 
 from django.db import connections
 import datetime 
-from .choices import regiones, comunas, horas
+from .choices import choices_estados, regiones, comunas, horas
 from .consultas import consulta_NVVs
 
 def validar_archivo(archivo):
@@ -57,17 +57,15 @@ class ingresoForm(forms.Form):
     cont_telefono = forms.CharField(label='Teléfono contacto', max_length=12, required=True)
     comprobante_pago = forms.FileField(label='Comprobante de pago', required=False, validators=[validar_archivo])
     observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
-    fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date'}), required=True, initial=(datetime.date.today() + datetime.timedelta(days=2)))
+    fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(datetime.date.today())}), required=True, initial=(datetime.date.today() + datetime.timedelta(days=2)))
 
-    hora_despacho_inicio = forms.ChoiceField(label='Hora de despacho', choices=horas, initial=datetime.datetime.now().hour, required=True)
-    hora_despacho_fin = forms.ChoiceField(label='', choices=horas, initial=datetime.datetime.now().hour + 1, required=True)
+    hora_despacho_inicio = forms.ChoiceField(label='Hora de despacho', choices=horas, initial=8, required=True)
+    hora_despacho_fin = forms.ChoiceField(label='', choices=horas, initial=9, required=True)
 
     def __init__(self, *args, **kwargs):
         super(ingresoForm, self).__init__(*args, **kwargs)
         self.fields['nvv'].choices = get_nvvs()
         self.fields['fecha_despacho'].initial = datetime.date.today() + datetime.timedelta(days=2)
-        self.fields['hora_despacho_inicio'].initial = datetime.datetime.now().hour
-        self.fields['hora_despacho_fin'].initial = datetime.datetime.now().hour + 1
 
     def clean_nvv(self):
         i = self.cleaned_data['nvv']
@@ -82,6 +80,10 @@ class ingresoForm(forms.Form):
         fin = self.cleaned_data['hora_despacho_fin']
         if(int(fin) - int(inicio) < 1):
             raise forms.ValidationError("Error con el campo Hora de despacho: ingrese un rango horario válido")
+
+        fecha = (self.cleaned_data['fecha_despacho'])
+        if (fecha == datetime.date.today() and ((datetime.datetime.now().hour > int(inicio)) or (datetime.datetime.now().hour > int(fin)))):
+            raise forms.ValidationError("Error con el campo Hora de despacho: rango horario en el pasado")
         return fin
 
     def clean_cont_telefono(self):
@@ -96,11 +98,6 @@ class ingresoForm(forms.Form):
 
 
 class modifyForm(forms.Form):
-    choices_estados = (
-        (0, 'En Preparación'),
-        (1, 'Preparado'),
-        (2, 'Despachado')
-    )
     nvv = forms.ChoiceField(label='NVV', choices=(), required=True)
     estado = forms.ChoiceField(label = 'Estado', choices=choices_estados, initial=0, required=True)
     fecha_entregado = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date'}), required=False)

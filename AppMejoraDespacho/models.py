@@ -1,16 +1,7 @@
 from django.db import models
-from .choices import regiones, comunas
+from .choices import choices_estados, regiones
 
 class Ordenes(models.Model):
-    choices_estados = (
-        (0, 'En Preparación'),
-        (1, 'Preparado'),
-        (2, 'Despachado')
-    )
-    choices_completo = (
-        (0, 'No'),
-        (1, 'Si')
-    )
     nvv = models.CharField(max_length = 20, primary_key=True)
     fecha_nvv = models.DateField(db_index=True)
     fecha_solicitud = models.DateField(auto_now_add=True, db_index=True)
@@ -30,7 +21,6 @@ class Ordenes(models.Model):
 
     fecha_entregado = models.DateField(db_index=True, blank=True, null=True)
     estado = models.IntegerField(default=0, choices=choices_estados)
-    completado = models.IntegerField(default=0, choices=choices_completo)
     observacion_despacho = models.CharField(max_length=2500, blank=True)
     documento_salida = models.FileField(upload_to='documentos_de_salida/%Y/%m/%d/', default='None')
     numero = models.IntegerField(db_index=True, default=0)
