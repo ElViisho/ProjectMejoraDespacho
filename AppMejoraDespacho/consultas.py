@@ -11,6 +11,9 @@ consulta_NVVs = """SELECT DISTINCT [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] FROM [DIMA
                     AND TIDO = 'NVV'
                     AND SULIDO = '000'
                     AND LILG<>'IM')
+                AND [DIMACO_NEW].[dbo].[MAEEDO].[IDMAEEDO] IN (
+					SELECT DISTINCT IDMAEEDO FROM [DIMACO_NEW].[dbo].[MAEEDOOB] WITH (NOLOCK)
+					WHERE MOTIVO='2.' OR MOTIVO='4.')
                 ORDER BY [DIMACO_NEW].[dbo].[MAEEDO].[NUDO];"""
 
 consulta_maeedo = "SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDO] WITH (NOLOCK) WHERE NUDO = %s AND TIDO = 'NVV';"
