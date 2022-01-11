@@ -37,10 +37,8 @@
         }
     })
 
-    let text = `¿Confirmas que quieres eliminar la nota de venta ${$('#id_nvv').val()}? <br>`;
-
     function prompt_confirm() {
-        $('#confirm_texto').html(text);
+        $('#confirm_texto').html(`¿Confirmas que quieres eliminar la nota de venta ${$('#id_nvv').val()}? <br>`);
         $('#confirm_prompt_background').show();
         $('#confirm_prompt').show();
         $('#confirm_texto').show();
