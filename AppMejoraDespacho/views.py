@@ -85,17 +85,22 @@ def cambiar_estado_nvv(request):
 	'''
 	if request.method == 'GET':
 		formulario = modifyForm()
-		for field in formulario:
-			field.field.widget.attrs.update({"class": "form-control"})
 		queryset = Ordenes.objects.all()
 		serialized = serializers.serialize("json", queryset)
+		for field in formulario:
+			field.field.widget.attrs.update({"class": "form-control"})
 		return render(request, "AppMejoraDespacho/cambiar_estado_nvv.html", {"queryset": queryset, "serialized": serialized, "formulario": formulario})
 	if request.method == "POST":
 		data_obtenida = modifyForm(request.POST or None)
 		if data_obtenida.is_valid():
 			cleaned_data = data_obtenida.cleaned_data
-			Ordenes.objects.filter(nvv=cleaned_data['nvv']).update(estado=cleaned_data['estado'])
+			estado = cleaned_data['estado']
+			fecha_entregado = cleaned_data['fecha_entregado']
+			Ordenes.objects.filter(nvv=cleaned_data['nvv']).update(estado=estado, fecha_entregado=fecha_entregado, observacion_despacho=cleaned_data["observacion_despacho"])
 			return redirect("confirm_update_nvv")
+		queryset = Ordenes.objects.all()
+		serialized = serializers.serialize("json", queryset)
+		return render(request, "AppMejoraDespacho/cambiar_estado_nvv.html", {"queryset": queryset, "serialized": serialized, "formulario": data_obtenida})
 
 def confirm_update_nvv(request):
 	'''

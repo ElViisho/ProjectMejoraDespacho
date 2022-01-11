@@ -10,6 +10,17 @@
 {% endblock header%}
 
 {% block content %}
+<div class="mensajeAlerta">
+	{% if formulario.errors %}
+		{% for field in formulario %}
+			{% for error in field.errors %}
+				<div class="alert alert-danger" role="alert" style="text-align: center; margin-left: 15%; margin-right: 15%;">
+					{{ error|escape }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+	{% endif %}
+</div>
 
 <form action="/action_page.php" class="selector_nvv">
     <label for="nvvs">Elige una NVV para editar:</label>
@@ -58,7 +69,7 @@
         {% if field.label == "NVV" %}
             <div style="display:none">{{ field }}</div>
         {% else %}
-            <label>{{ field.label }}</label><br>
+            <label id="{{ field.name }}">{{ field.label }}</label><br>
             {{ field }}
         {% endif %}
     </div>
@@ -67,6 +78,45 @@
 </form>
 
 <script>
+    window.onbeforeunload = function() {
+        sessionStorage.setItem("nvv", $('#nvvs').val());
+        sessionStorage.setItem("direccion", $('#direccion').html());
+        sessionStorage.setItem("region", $('#region').html());
+        sessionStorage.setItem("comuna", $('#comuna').html());
+        sessionStorage.setItem("nombre_contacto", $('#nombre_contacto').html());
+        sessionStorage.setItem("telefono_contacto", $('#telefono_contacto').html());
+        sessionStorage.setItem("observacion", $('#observacion').html());
+        sessionStorage.setItem("fecha_despacho", $('#fecha_despacho').html());
+        sessionStorage.setItem("hora_de_despacho", $('#hora_de_despacho').html());
+    }
+    window.onload = function() {
+        var nvv_cargado = sessionStorage.getItem("nvv");
+        if (nvv_cargado != null && nvv_cargado != "None") {
+            $('#nvvs').val(nvv_cargado);
+            $('#tabla').show();
+            $('#formulario').show();
+
+            $('#direccion').html(sessionStorage.getItem("direccion"));
+            $('#region').html(sessionStorage.getItem("region"));
+            $('#comuna').html(sessionStorage.getItem("comuna"));
+            $('#nombre_contacto').html(sessionStorage.getItem("nombre_contacto"));
+            $('#telefono_contacto').html(sessionStorage.getItem("telefono_contacto"));
+            $('#observacion').html(sessionStorage.getItem("observacion"));
+            $('#fecha_despacho').html(sessionStorage.getItem("fecha_despacho"));
+            $('#hora_de_despacho').html(sessionStorage.getItem("hora_de_despacho"));
+        }
+    }
+
+    function getNvv() {
+        var data = JSON.parse('{{ serialized | safe }}');
+        var nvv = data.find(function(item) {
+            if (item.pk == $('#nvvs').val()){
+                return item;
+            }
+        })
+        return nvv;
+    }
+
     $('#nvvs').change(function () {
         if ($('#nvvs').val() == "None") {
             $.ajax({
@@ -77,35 +127,76 @@
             })
         }
         else {
-            var data = JSON.parse('{{ serialized | safe }}');
-            var nvv = data.find(function(item) {
-                if (item.pk == $('#nvvs').val()){
-                    return item;
-                }
-            })
+            var nvv = getNvv();
 
-            var date = new Date(nvv.fields.fecha_despacho)
-            var time_ini = new Date(nvv.fields.hora_de_despacho_inicio)
-            var time_fin = new Date(nvv.fields.hora_de_despacho_fin)
+            var date = new Date(nvv.fields.fecha_despacho);
+            var time_ini = new Date(nvv.fields.hora_de_despacho_inicio);
+            var time_fin = new Date(nvv.fields.hora_de_despacho_fin);
+
+            var fecha_entregado = nvv.fields.fecha_entregado;
 
             $.ajax({
                 success: function() {
-                    $('#nvv').html(nvv.pk)
-                    $('#direccion').html(nvv.fields.direccion)
-                    $('#region').html(regiones[nvv.fields.region-1])
-                    $('#comuna').html(comunas[nvv.fields.region-1][nvv.fields.comuna-1])
-                    $('#nombre_contacto').html(nvv.fields.nombre_contacto)
-                    $('#telefono_contacto').html(nvv.fields.telefono_contacto)
-                    $('#observacion').html(nvv.fields.observacion)
-                    $('#fecha_despacho').html(("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth()+1)).slice(-2) + "/" + date.getFullYear())
-                    $('#hora_de_despacho').html(nvv.fields.hora_de_despacho_inicio.substr(0,5) + " - " + nvv.fields.hora_de_despacho_fin.substr(0,5))
+                    $('#nvv').html(nvv.pk);
+                    $('#direccion').html(nvv.fields.direccion);
+                    $('#region').html(regiones[nvv.fields.region-1]);
+                    $('#comuna').html(comunas[nvv.fields.region-1][nvv.fields.comuna-1]);
+                    $('#nombre_contacto').html(nvv.fields.nombre_contacto);
+                    $('#telefono_contacto').html(nvv.fields.telefono_contacto);
+                    $('#observacion').html(nvv.fields.observacion);
+                    $('#fecha_despacho').html(("0" + date.getDate()).slice(-2) + "/" + ("0" + (date.getMonth()+1)).slice(-2) + "/" + date.getFullYear());
+                    $('#hora_de_despacho').html(nvv.fields.hora_de_despacho_inicio.substr(0,5) + " - " + nvv.fields.hora_de_despacho_fin.substr(0,5));
                     $('#tabla').show();
-                    $('#id_estado').val(nvv.fields.estado)
-                    $('#id_nvv').val(nvv.pk)
+                    $('#id_nvv').val(nvv.pk);
+                    $('#id_estado').val(nvv.fields.estado);
                     $('#formulario').show();
                 }
             })
-        }})
+        }
+
+        var fecha_entregado = nvv.fields.fecha_entregado;
+        if (nvv.fields.estado == 2) {
+            $.ajax({
+                success: function() {
+                    $('#id_fecha_entregado').val(fecha_entregado);
+                    $('#fecha_entregado').show();
+                    $('#id_fecha_entregado').show();
+                }
+            })
+        }
+        else {
+            $.ajax({
+                success: function() {
+                    $('#id_fecha_entregado').hide();
+                    $('#fecha_entregado').hide();
+                    $('#id_fecha_entregado').val(fecha_entregado);
+                }
+            })
+        }
+    })
+
+    $('#id_estado').change(function () {
+        var nvv = getNvv();
+        var fecha_entregado = nvv.fields.fecha_entregado;
+        if ($(this).val() == 2) {
+            $.ajax({
+                success: function() {
+                    $('#id_fecha_entregado').val(fecha_entregado);
+                    $('#fecha_entregado').show();
+                    $('#id_fecha_entregado').show();
+                }
+            })
+        }
+        else {
+            $.ajax({
+                success: function() {
+                    $('#id_fecha_entregado').hide();
+                    $('#fecha_entregado').hide();
+                    $('#id_fecha_entregado').val(fecha_entregado);
+                }
+            })
+        }
+    })
 </script>
 
 {% endblock content %}
