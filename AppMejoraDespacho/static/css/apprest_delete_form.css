@@ -1,0 +1,54 @@
+.confirm_prompt_background {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0%;
+	left: 0%;
+	background-color: grey;
+	opacity: 50%;
+}
+
+.confirm_prompt {
+	position: absolute;
+	width: 50%;
+	height: 40%;
+	top: 25%;
+	left: 25%;
+	background-color: #dfdfdf;
+	border-style: solid;
+	border-color: #cecece;
+	border-radius: 5%;
+	text-align:center;
+}
+
+.confirm_texto {
+	font-size: 25px;
+    color: #444444;
+    font-weight: bold;
+	margin-top: 10%;
+}
+
+#boton_confirm, #boton_cancel {
+	font-size: 20px;
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-style: normal;
+    transition: background-color 1s , border-color 1s;
+    background-color: #f42414;
+    color: #dfdfdf;
+    font-size: 20px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #cc542c;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    width: 25%;
+    height: 50px;
+}
+
+#boton_confirm:hover, #boton_cancel:hover{
+    cursor: pointer;
+    background-color: #ff948c;
+    border-color: rgb(255, 240, 240);
+    transition-duration: 1s;
+}

@@ -124,3 +124,14 @@ class modifyForm(forms.Form):
         if(fecha_entregado is None):
             raise forms.ValidationError("Error con el campo Fecha de entrega: ingrese un valor")
         return fecha_entregado
+
+class deleteForm(forms.Form):
+    nvv = forms.ChoiceField(label='Eliga una NVV para eliminar', choices=(), required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(deleteForm, self).__init__(*args, **kwargs)
+        queryset = Ordenes.objects.all()
+        choices_nvv = [("None", "----------")]
+        for i in queryset:
+            choices_nvv.append((i,i))
+        self.fields['nvv'].choices = choices_nvv

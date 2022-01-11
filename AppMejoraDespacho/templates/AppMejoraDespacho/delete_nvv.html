@@ -1,0 +1,62 @@
+{% extends 'AppMejoraDespacho/base.html' %}
+{% load static %}
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/apprest.css' %}">
+<link rel="stylesheet" href="{% static 'css/apprest_form.css' %}">
+<link rel="stylesheet" href="{% static 'css/apprest_delete_form.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock header%}
+
+{% block content %}
+
+<form action= "" class="formulario" id="formulario" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+    {% for field in formulario %}
+    <div class="form-group block-form">
+        <label>{{ field.label }}</label><br>
+        {{ field }}
+    </div>
+    {% endfor %}
+    <input class="btn btn-default boton-sumbit" onclick="prompt_confirm()" id="boton" disabled value="Eliminar" readonly>
+
+<div id ="confirm_prompt_background" class="confirm_prompt_background" style="display: none;"></div>
+<div id="confirm_prompt" class="confirm_prompt" style="display: none;">
+<div id="confirm_texto" class="confirm_texto"></div>
+<input class="btn" id="boton_confirm" type="submit" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
+</div>
+</form>
+
+<script>
+    $('#id_nvv').change(function () {
+        if ($(this).val() == "None") {
+            $('#boton').prop('disabled', true);
+        }
+        else {
+            $('#boton').prop('disabled', false);
+        }
+    })
+
+    let text = `¿Confirmas que quieres eliminar la nota de venta ${$('#id_nvv').val()}? <br>`;
+
+    function prompt_confirm() {
+        $('#confirm_texto').html(text);
+        $('#confirm_prompt_background').show();
+        $('#confirm_prompt').show();
+        $('#confirm_texto').show();
+        $('#boton_confirm').show();
+        $('#boton_cancel').show();
+    }
+
+    function cancelar() {
+        $('#confirm_prompt_background').hide();
+        $('#confirm_prompt').hide();
+        $('#confirm_texto').hide();
+        $('#boton_confirm').hide();
+        $('#boton_cancel').hide();
+    }
+
+</script>
+
+
+{% endblock content %}
