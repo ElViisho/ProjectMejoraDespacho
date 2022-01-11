@@ -40,7 +40,7 @@ def dictfetchall(cursor):
 
 def get_nvvs():
     ya_en_la_base = Ordenes.objects.values('nvv')
-    uwu = []
+    uwu = ['', '']
     for i in ya_en_la_base:
         uwu.append(i['nvv'])
     cursor = connections['dimaco'].cursor()
