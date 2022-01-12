@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from AppMejoraDespacho.models import *
-import re
+import re, magic
 from django.forms.widgets import NumberInput
 
 from django.db import connections
@@ -17,20 +17,21 @@ def validar_archivo(archivo):
     '''
     Funcion que validara el tamaño y la extensión del archivo que se subira.
     Esta estara presente en la clase IngresoForm como validador del campo comprobante_pago.
-    Solo levantara un ValidationError si no cumple las condiciones impuestas.
-
-    Inputs:
-        archivo: Un objeto de la clase File de Django
-    
+    Solo levantara un ValidationError si no cumple las condiciones impuestas.    
     '''
-    valid_extension = ["png", "jpg", "pdf"]
+
+    valid_mime_types = ['application/pdf', 'image/png', 'image/jpeg']
+    file_mime_type = magic.from_buffer(archivo.read(1024), mime=True)
+    if file_mime_type not in valid_mime_types:
+        raise forms.ValidationError("Error en el campo de comprobante de pago: tipo de archivo no valido (tiene que ser png, jpeg, jpg o pdf)")
+    valid_extension = ["png", "jpg", "pdf", "jpeg", "pjp", "pjpeg", "jfif"]
     size = archivo.size
     name = archivo.name.split(".")
     extension = name[len(name)-1].lower()
     if (extension not in valid_extension):
         raise forms.ValidationError("Error en el campo de comprobante de pago: extensión no valida (tiene que ser png, jpg o pdf), subió uno: " + extension)
-    if(size > 3145728 or size < 0):
-        raise forms.ValidationError("Error en el campo de comprobante de pago: tamaño del archivo supera los límites, tiene que ser menor que 3 MB, subió uno de: " + str(size))
+    if(size > 5283920 or size < 0):
+        raise forms.ValidationError("Error en el campo de comprobante de pago: tamaño del archivo supera los límites, tiene que ser menor que 5 MB, subió uno de: " + str(size))
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -57,7 +58,7 @@ class ingresoForm(forms.Form):
     direccion = forms.CharField(label='Dirección', max_length=250, required=True)
     cont_nombre = forms.CharField(label='Nombre contacto', max_length=200, required=True)
     cont_telefono = forms.CharField(label='Teléfono contacto', max_length=12, required=True)
-    comprobante_pago = forms.FileField(label='Comprobante de pago', required=False, validators=[validar_archivo], widget=AdminResubmitFileWidget())
+    comprobante_pago = forms.FileField(label='Comprobante de pago', required=False, validators=[validar_archivo], widget=AdminResubmitFileWidget(attrs={"accept":"image/png, image/jpg, image/jpeg, application/pdf"}))
     observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
     fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(datetime.date.today())}), required=True, initial=(datetime.date.today() + datetime.timedelta(days=2)))
 

@@ -4,3 +4,4 @@ pytz
 sqlparse
 mssql-django
 django-file-resubmit
+python-magic-bin
