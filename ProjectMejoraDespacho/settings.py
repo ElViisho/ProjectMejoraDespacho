@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'AppMejoraDespacho',
+    'file_resubmit',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +88,17 @@ DATABASES = {
         'PASSWORD': 'DIM**890',
         'HOST': '192.168.2.251',
         'PORT': '1433',
+    }
+}
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    "file_resubmit": {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        "LOCATION": '/tmp/file_resubmit/'
     }
 }
 

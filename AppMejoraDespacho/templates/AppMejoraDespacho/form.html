@@ -34,6 +34,14 @@
 				{{ opt }}
 			{% endfor %}
 		</select>
+	{% elif field.name == "comprobante_pago" %}
+	<nobr>
+		<label>{{ field.label }}</label>
+		<label for="id_comprobante_pago" class="custom-file-upload">
+		<i class="fa fa-cloud-upload"></i> Subir archivo
+		</label> <div id="file_name"></div>
+		{{ field }}
+	</nobr>
 	{% elif field.name == "hora_despacho_inicio" %}
 		<label>{{ field.label }}</label><br>
 		<div class="selector_hora">{{ field }} {{ formulario.hora_despacho_fin }}</div>
@@ -60,6 +68,15 @@
 				$('#id_nvv').val(nvv);
 			}
 		})
+	})
+
+	$("#id_comprobante_pago").change(function () {
+		let file = $(this).val()
+		let name = file.split("\\")
+    	let nombre = name[name.length-1]
+		if (file != null) {
+			$('#file_name').html(nombre)
+		}
 	})
 	
 	$("#id_region").change(function () {

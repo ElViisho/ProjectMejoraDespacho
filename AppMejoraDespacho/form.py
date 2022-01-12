@@ -11,6 +11,8 @@ import datetime
 from .choices import choices_estados, regiones, comunas, horas
 from .consultas import consulta_NVVs
 
+from file_resubmit.admin import AdminResubmitFileWidget
+
 def validar_archivo(archivo):
     '''
     Funcion que validara el tamaño y la extensión del archivo que se subira.
@@ -55,7 +57,7 @@ class ingresoForm(forms.Form):
     direccion = forms.CharField(label='Dirección', max_length=250, required=True)
     cont_nombre = forms.CharField(label='Nombre contacto', max_length=200, required=True)
     cont_telefono = forms.CharField(label='Teléfono contacto', max_length=12, required=True)
-    comprobante_pago = forms.FileField(label='Comprobante de pago', required=False, validators=[validar_archivo])
+    comprobante_pago = forms.FileField(label='Comprobante de pago', required=False, validators=[validar_archivo], widget=AdminResubmitFileWidget())
     observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
     fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(datetime.date.today())}), required=True, initial=(datetime.date.today() + datetime.timedelta(days=2)))
 

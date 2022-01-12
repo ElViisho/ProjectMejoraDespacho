@@ -3,3 +3,4 @@ Django
 pytz
 sqlparse
 mssql-django
+django-file-resubmit
