@@ -4,6 +4,9 @@
 {% block header %}
 <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
 <link rel="stylesheet" href="{% static 'css/apprest_form.css' %}">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {% endblock header%}
 
 {% block content %}
@@ -24,7 +27,15 @@
 
 {% for field in formulario %}
 <div class="form-group block-form">
-	{% if field.name == "hora_despacho_inicio" %}
+	{% if field.name == "nvv" %}
+		<label>{{ field.label }}</label><br>
+		<div style="display: none;">{{ field }}</div>
+		<select class="js-states form-control js-example-basic-single" id="nvv_selector">
+			{% for opt in field %}
+				{{ opt }}
+			{% endfor %}
+		</select>
+	{% elif field.name == "hora_despacho_inicio" %}
 		<label>{{ field.label }}</label><br>
 		<div class="selector_hora">{{ field }} {{ formulario.hora_despacho_fin }}</div>
 	{% elif field.name == "hora_despacho_fin" %}
@@ -37,8 +48,21 @@
 <input class="btn btn-default" class="boton-sumbit" id="boton" type="submit" value="Subir" readonly>
 </form>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
+	$(document).ready(function() {
+		$('.js-example-basic-single').select2();
+	});
+
+	$('#nvv_selector').change(function() {
+		var nvv = $(this).val()
+
+		$.ajax({
+			success: function () {
+				$('#id_nvv').val(nvv)
+			}
+		})
+	})
+	
 	$("#id_region").change(function () {
 		var url = "ajax/load-comunas/";
 		var regionId = $(this).val();
