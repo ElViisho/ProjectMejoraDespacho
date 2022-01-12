@@ -56,14 +56,16 @@ class ingresoForm(forms.Form):
     region = forms.ChoiceField(label = 'Región', choices=regiones, initial=7, required=True)
     comuna = forms.ChoiceField(label='Comuna', choices=comunas[6], initial=1, required=True)
     direccion = forms.CharField(label='Dirección', max_length=250, required=True)
-    cont_nombre = forms.CharField(label='Nombre contacto', max_length=200, required=True)
-    cont_telefono = forms.CharField(label='Teléfono contacto', max_length=12, required=True)
-    comprobante_pago = forms.FileField(label='Comprobante de pago', required=False, validators=[validar_archivo], widget=AdminResubmitFileWidget(attrs={"accept":"image/png, image/jpg, image/jpeg, application/pdf"}))
-    observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
+    cont_nombre = forms.CharField(label='Nombre contacto de despacho', max_length=200, required=True)
+    cont_telefono = forms.CharField(label='Teléfono contacto de despacho', max_length=12, required=True)
+    comprobante_pago = forms.FileField(label='Comprobante de pago (opcional)', required=False, validators=[validar_archivo], widget=AdminResubmitFileWidget(attrs={"accept":"image/png, image/jpg, image/jpeg, application/pdf"}))
     fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(datetime.date.today())}), required=True, initial=(datetime.date.today() + datetime.timedelta(days=2)))
 
     hora_despacho_inicio = forms.ChoiceField(label='Hora de despacho', choices=horas, initial=8, required=True)
     hora_despacho_fin = forms.ChoiceField(label='', choices=horas, initial=9, required=True)
+    
+
+    observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
 
     def __init__(self, *args, **kwargs):
         super(ingresoForm, self).__init__(*args, **kwargs)

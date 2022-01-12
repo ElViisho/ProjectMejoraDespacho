@@ -40,7 +40,7 @@
                 {% language 'es' %}
                 <td id="listado_e">{{ item.nvv }}</td>
                 <td id="listado_e">{{ item.fecha_nvv|date:"d F Y" }}</td>
-                <td id="listado_e">{{ item.fecha_solicitud|date:"d F Y" }}</td>
+                <td id="listado_e">{{ item.fecha_solicitud|date:"d F Y H:i" }}</td>
                 <td id="listado_e">{{ item.rut }}</td>
                 <td id="listado_e">{{ item.cliente }}</td>
                 <td id="listado_e">{{ regiones|get_region:item.region }}</td>

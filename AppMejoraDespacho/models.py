@@ -4,7 +4,7 @@ from .choices import choices_estados, regiones
 class Ordenes(models.Model):
     nvv = models.CharField(max_length = 20, primary_key=True)
     fecha_nvv = models.DateField(db_index=True)
-    fecha_solicitud = models.DateField(auto_now_add=True, db_index=True)
+    fecha_solicitud = models.DateTimeField(auto_now_add=True, db_index=True)
     rut = models.CharField(max_length=13, db_index=True)
     cliente = models.CharField(max_length=200, db_index=True)
     direccion = models.CharField(max_length=250)
