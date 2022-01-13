@@ -68,6 +68,12 @@ input#id_cont_telefono {
     display: none;
 }
 
+#phone {
+    width: 100%;
+    padding: 10px;
+    border-style: none;
+    border-radius: 5px;
+}
 
 #boton{
     font-size: 20px;
