@@ -140,6 +140,13 @@ def tabla(request):
 	queryset = Ordenes.objects.all()
 	return render(request, "AppMejoraDespacho/tabla.html",{"queryset": queryset, "regiones": regiones, "comunas": comunas,})
 
+def tabla_modificable(request):
+	'''
+	Funcion de mostrar la pagina con la tabla de la base de datos
+	'''
+	queryset = Ordenes.objects.all()
+	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"queryset": queryset, "regiones": regiones, "comunas": comunas,})
+
 def load_comunas(request):
     region = request.GET.get('region')
     com = comunas[int(region)-1]
