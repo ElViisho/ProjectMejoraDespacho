@@ -3,6 +3,7 @@
 
 {% block header %}
 <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
+<script src="{% static 'js/js_storage_clear.js' %}"></script>
 {% endblock header%}
 
 {% block content %}
@@ -11,10 +12,4 @@
 <button type="button" class="button" onclick="window.location='cambiar_estado_nvv'">Cambiar estado orden de venta</button>
 <button type="button" class="button" onclick="window.location='tabla'">Tabla de ordenes de venta</button>
 <button type="button" class="button" onclick="window.location='delete_nvv'">Eliminar orden de venta</button>
-
-<script>
-    window.onload = function () {
-        sessionStorage.clear();
-    }
-</script>
 {% endblock content %}

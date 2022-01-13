@@ -146,8 +146,6 @@ def load_comunas(request):
     return render(request, 'AppMejoraDespacho/comuna_dropdown_list_options.html', {'comunas': com})
 
 
-
-
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
     columns = [col[0] for col in cursor.description]

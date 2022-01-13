@@ -43,6 +43,13 @@ label{
 }
 input#id_comprobante_pago {
     display: none;
+    color:black;
+    font-family: 'Courier New', Courier, monospace;
+    font-style: normal;
+    transition: background-color 1s , border-color 1s;
+    background-color: rgb(233, 211, 170);
+    border-radius: 5px;
+    text-align: center;
 }
 #file_name {
     font-size: 20px;
@@ -57,23 +64,10 @@ input#id_nvv, input#id_direccion, input#id_cont_nombre, input#id_cont_telefono, 
     color: #5b3924;
 }
 
-#descripcion{
-    border-radius: 5px;
-    background-color: white;
-    font-style: italic;
-    text-align: justify;
-    color: #5b3924;
+input#id_cont_telefono {
+    display: none;
 }
 
-input#comprobante_pago{
-    color:black;
-    font-family: 'Courier New', Courier, monospace;
-    font-style: normal;
-    transition: background-color 1s , border-color 1s;
-    background-color: rgb(233, 211, 170);
-    border-radius: 5px;
-    text-align: center;
-}
 
 #boton{
     font-size: 20px;

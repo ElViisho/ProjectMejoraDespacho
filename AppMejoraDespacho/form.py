@@ -108,17 +108,7 @@ class ingresoForm(forms.Form):
                 raise forms.ValidationError("Error con el campo Hora de despacho: ingrese un rango horario válido")
             return fin_extra
         except:
-            return
-
-    def clean_cont_telefono(self):
-        '''
-        Metodo que validara el campo de telefono
-        '''
-        dato = self.cleaned_data['cont_telefono']
-        regex = re.compile(r'(\+?[0-9]+)')
-        if(regex.fullmatch(dato) is None):
-            raise forms.ValidationError("Error con el campo Teléfono: número de teléfono inválido")
-        return dato
+            return self.cleaned_data['hora_despacho_extra_fin']
 
 
 class modifyForm(forms.Form):
