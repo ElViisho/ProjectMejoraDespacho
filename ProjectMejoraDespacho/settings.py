@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'AppMejoraDespacho',
     'file_resubmit',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

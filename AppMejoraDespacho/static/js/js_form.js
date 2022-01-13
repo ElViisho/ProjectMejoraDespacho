@@ -12,23 +12,43 @@ $('#nvv_selector').change(function() {
     })
 })
 
-const phoneInputField = document.querySelector("#phone");
-const phoneInput = window.intlTelInput(phoneInputField, {
+var phoneInputField = document.querySelector("#phone");
+var phoneInput = window.intlTelInput(phoneInputField, {
     initialCountry: "cl",
     preferredCountries: ["cl", "ar", "pe", "bo"],
     utilsScript:
-    "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+       "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
 });
 
+
 $('#phone').change(function() {
-    var phone = phoneInput.getNumber()
+    var phoneNumber = phoneInput.getNumber();
 
     $.ajax({
         success: function() {
-            $('#id_cont_telefono').val(phone);
+            $('#id_cont_telefono').val(phoneNumber);
         }
     })
 })
+
+$("#phone").keyup(function () {
+    var phoneNumber = phoneInput.getNumber(intlTelInputUtils.numberFormat.E164);
+
+    $.ajax({
+        success: function () {
+            $('#id_cont_telefono').val(phoneNumber);
+        }
+    })
+})
+
+window.onload = function () {
+    var phone  = $("#id_cont_telefono").val();
+    $("#phone").val(phone);
+}
+
+
+
+
 
 $("#id_comprobante_pago").change(function () {
     let file = $(this).val()

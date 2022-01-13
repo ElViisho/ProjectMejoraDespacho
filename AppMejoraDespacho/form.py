@@ -12,6 +12,7 @@ from .choices import choices_estados, regiones, comunas, horas
 from .consultas import consulta_NVVs
 
 from file_resubmit.admin import AdminResubmitFileWidget
+from phonenumber_field.formfields import PhoneNumberField
 
 def validar_archivo(archivo):
     '''
@@ -57,7 +58,7 @@ class ingresoForm(forms.Form):
     comuna = forms.ChoiceField(label='Comuna', choices=comunas[6], initial=1, required=True)
     direccion = forms.CharField(label='Dirección', max_length=250, required=True)
     cont_nombre = forms.CharField(label='Nombre contacto de despacho', max_length=200, required=True)
-    cont_telefono = forms.CharField(label='Teléfono contacto de despacho', max_length=12, required=True)
+    cont_telefono = PhoneNumberField(label='Teléfono contacto de despacho')
     comprobante_pago = forms.FileField(label='Comprobante de pago (opcional)', required=False, validators=[validar_archivo], widget=AdminResubmitFileWidget(attrs={"accept":"image/png, image/jpg, image/jpeg, application/pdf"}))
     fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(datetime.date.today())}), required=True, initial=(datetime.date.today() + datetime.timedelta(days=2)))
 

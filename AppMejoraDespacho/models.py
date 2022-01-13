@@ -1,5 +1,6 @@
 from django.db import models
 from .choices import choices_estados, regiones
+from phonenumber_field.modelfields import PhoneNumberField
 
 class Ordenes(models.Model):
     nvv = models.CharField(max_length = 20, primary_key=True)
@@ -11,7 +12,7 @@ class Ordenes(models.Model):
     region = models.IntegerField(choices=regiones, db_index=True)
     comuna = models.CharField(max_length=50, db_index=True)
     nombre_contacto = models.CharField(max_length=200)
-    telefono_contacto = models.CharField(max_length=12)
+    telefono_contacto = PhoneNumberField(null=False, blank=False)
     condicion_pago = models.CharField(max_length=100)
     comprobante_pago = models.FileField(upload_to='comprobantes_de_pago/%Y/%m/%d/', blank=True)
     observacion = models.CharField(max_length=2500, blank=True)
