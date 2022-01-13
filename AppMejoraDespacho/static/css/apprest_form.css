@@ -64,9 +64,6 @@ input#id_nvv, input#id_direccion, input#id_cont_nombre, input#id_cont_telefono, 
     color: #5b3924;
 }
 
-input#id_cont_telefono {
-    display: none;
-}
 
 #phone {
     width: 100%;

@@ -34,23 +34,7 @@
 {% csrf_token %}
 
 {% for field in formulario %}
-	{% if field.name == "nvv" %}
-	<div class="form-group block-form">
-		<label>{{ field.label }}</label><br>
-		<div style="display: none;">{{ field }}</div>
-		<select class="form-control" id="nvv_selector" style="width: 100%">
-			{% for opt in field %}
-				{{ opt }}
-			{% endfor %}
-		</select>
-	</div>
-	{% elif field.name == "cont_telefono" %}
-	<div class="form-group block-form">
-		<label>{{ field.label }}</label>
-		<input id="phone" type="tel" name="phone"/>
-		{{ field }}
-	</div>
-	{% elif field.name == "comprobante_pago" %}
+	{% if field.name == "comprobante_pago" %}
 	<div class="form-group block-form">
 	<nobr>
 		<label>{{ field.label }}</label>

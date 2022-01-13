@@ -1,18 +1,14 @@
 $(document).ready(function() {
-    $('#nvv_selector').select2();
+    document.getElementById('id_nvv').style.width = "100%";
+    document.getElementById('id_region').style.width = "100%";
+    document.getElementById('id_comuna').style.width = "100%";
+    document.getElementById('id_cont_telefono').style.width = "100%";
+    $('#id_nvv').select2();
+    $('#id_region').select2();
+    $('#id_comuna').select2();
 });
 
-$('#nvv_selector').change(function() {
-    var nvv = $(this).val();
-
-    $.ajax({
-        success: function () {
-            $('#id_nvv').val(nvv);
-        }
-    })
-})
-
-var phoneInputField = document.querySelector("#phone");
+var phoneInputField = document.getElementById("id_cont_telefono");
 var phoneInput = window.intlTelInput(phoneInputField, {
     initialCountry: "cl",
     preferredCountries: ["cl", "ar", "pe", "bo"],
@@ -22,35 +18,11 @@ var phoneInput = window.intlTelInput(phoneInputField, {
     separateDialCode: "true"
 });
 
-
-$('#phone').change(function() {
-    var phoneNumber = phoneInput.getNumber();
-
-    $.ajax({
-        success: function() {
-            $('#id_cont_telefono').val(phoneNumber);
-        }
-    })
-})
-
-$("#phone").keyup(function () {
+$('#id_cont_telefono').change(function () {
     var phoneNumber = phoneInput.getNumber(intlTelInputUtils.numberFormat.E164);
-
-    $.ajax({
-        success: function () {
-            $('#id_cont_telefono').val(phoneNumber);
-        }
-    })
+    $("#id_cont_telefono").val(phoneNumber);
+    $('#formulario').set('cont_telefono', phoneNumber);
 })
-
-window.onload = function () {
-    var phone  = $("#id_cont_telefono").val();
-    $("#phone").val(phone);
-    
-}
-
-
-
 
 
 $("#id_comprobante_pago").change(function () {

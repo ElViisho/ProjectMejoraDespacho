@@ -58,7 +58,7 @@ class ingresoForm(forms.Form):
     comuna = forms.ChoiceField(label='Comuna', choices=comunas[6], initial=1, required=True)
     direccion = forms.CharField(label='Dirección', max_length=250, required=True)
     cont_nombre = forms.CharField(label='Nombre contacto de despacho', max_length=200, required=True)
-    cont_telefono = PhoneNumberField(label='Teléfono contacto de despacho')
+    cont_telefono = PhoneNumberField(label='Teléfono contacto de despacho', required=True, error_messages={'invalid':'Error en el campo Teléfono: ingrese un valor válido (ej.: 987654321 o +56987654321)'})
     comprobante_pago = forms.FileField(label='Comprobante de pago (opcional)', required=False, validators=[validar_archivo], widget=AdminResubmitFileWidget(attrs={"accept":"image/png, image/jpg, image/jpeg, application/pdf"}))
     fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(datetime.date.today())}), required=True, initial=(datetime.date.today() + datetime.timedelta(days=2)))
 
@@ -90,11 +90,11 @@ class ingresoForm(forms.Form):
         inicio = self.cleaned_data['hora_despacho_inicio']
         fin = self.cleaned_data['hora_despacho_fin']
         if(int(fin) - int(inicio) < 1):
-            raise forms.ValidationError("Error con el campo Hora de despacho: ingrese un rango horario válido")
+            raise forms.ValidationError("Error en el campo Hora de despacho: ingrese un rango horario válido")
 
         fecha = (self.cleaned_data['fecha_despacho'])
         if (fecha == datetime.date.today() and ((datetime.datetime.now().hour > int(inicio)) or (datetime.datetime.now().hour > int(fin)))):
-            raise forms.ValidationError("Error con el campo Hora de despacho: rango horario en el pasado")
+            raise forms.ValidationError("Error en el campo Hora de despacho: rango horario en el pasado")
         return fin
 
     def clean_hora_despacho_extra_fin(self):
@@ -106,7 +106,7 @@ class ingresoForm(forms.Form):
             inicio_extra = self.cleaned_data['hora_despacho_extra_inicio']
             fin_extra = self.cleaned_data['hora_despacho_extra_fin']
             if((int(fin_extra) - int(inicio_extra) < 1) or ((int(inicio_extra) - int(fin) < 1))):
-                raise forms.ValidationError("Error con el campo Hora de despacho: ingrese un rango horario válido")
+                raise forms.ValidationError("Error en el campo Hora de despacho: ingrese un rango horario válido")
             return fin_extra
         except:
             return self.cleaned_data['hora_despacho_extra_fin']
@@ -134,7 +134,7 @@ class modifyForm(forms.Form):
         if (estado != '2'): return None
         fecha_entregado = self.cleaned_data['fecha_entregado']
         if(fecha_entregado is None):
-            raise forms.ValidationError("Error con el campo Fecha de entrega: ingrese un valor")
+            raise forms.ValidationError("Error en el campo Fecha de entrega: ingrese un valor")
         return fecha_entregado
 
 class deleteForm(forms.Form):
