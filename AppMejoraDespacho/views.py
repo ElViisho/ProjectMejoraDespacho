@@ -68,6 +68,8 @@ def ingresar(request):
 				fecha_despacho = cleaned_data['fecha_despacho'],
 				hora_de_despacho_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_inicio'])),
 				hora_de_despacho_fin = datetime.time(hour=int(cleaned_data['hora_despacho_fin'])),
+				hora_despacho_extra_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_extra_inicio'])),
+				hora_despacho_extra_fin = datetime.time(hour=int(cleaned_data['hora_despacho_extra_fin'])),
 			)		
 			return redirect("confirm_nvv")
 		return render(request, "AppMejoraDespacho/form.html", {"formulario": data_obtenida})

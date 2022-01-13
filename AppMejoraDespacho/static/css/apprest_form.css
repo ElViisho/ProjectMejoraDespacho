@@ -106,10 +106,15 @@ input#comprobante_pago{
     display: flex;
 }
 
-#id_hora_despacho_inicio, #id_hora_despacho_fin{
-    width: 45%;
+#id_hora_despacho_inicio, #id_hora_despacho_fin, #id_hora_despacho_extra_inicio, #id_hora_despacho_extra_fin{
+    width: 100%;
     margin-left: 2%;
-    margin-right: 2%
+    margin-right: 2%;
+    margin-bottom: 10px;
+}
+
+td:first-child {
+    width: 15%;
 }
 
 @media only screen and (max-width: 950px) {

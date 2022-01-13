@@ -25,16 +25,18 @@
 {% csrf_token %}
 
 {% for field in formulario %}
-<div class="form-group block-form">
 	{% if field.name == "nvv" %}
+	<div class="form-group block-form">
 		<label>{{ field.label }}</label><br>
 		<div style="display: none;">{{ field }}</div>
-		<select class="js-states form-control js-example-basic-single" id="nvv_selector">
+		<select class="form-control" id="nvv_selector">
 			{% for opt in field %}
 				{{ opt }}
 			{% endfor %}
 		</select>
+	</div>
 	{% elif field.name == "comprobante_pago" %}
+	<div class="form-group block-form">
 	<nobr>
 		<label>{{ field.label }}</label>
 		<label for="id_comprobante_pago" class="custom-file-upload">
@@ -42,22 +44,45 @@
 		</label> <div id="file_name"></div>
 		{{ field }}
 	</nobr>
+	</div>
 	{% elif field.name == "hora_despacho_inicio" %}
+	<div class="form-group block-form">
 		<label>{{ field.label }}</label><br>
-		<div class="selector_hora">{{ field }} {{ formulario.hora_despacho_fin }}</div>
-	{% elif field.name == "hora_despacho_fin" %}
+		<table class="table">
+			<tbody>
+				<nobr>
+				<tr class="text-center">
+					<div class="selector_hora">
+						<td>Rango 1</td>
+						<td>{{ field }} </td>
+						<td>{{ formulario.hora_despacho_fin }}</td>
+					</div>
+				</tr>
+				<tr class="text-center">
+					<div class="selector_hora">
+						<td>Rango 2 (opcional)</td>
+						<td>{{ formulario.hora_despacho_extra_inicio }}</td>
+						<td>{{ formulario.hora_despacho_extra_fin }}</td>
+					</div>
+				</tr>
+				</nobr>
+			</tbody>
+		</table>
+	</div>
+	{% elif field.name == "hora_despacho_fin" or field.name == "hora_despacho_extra_inicio" or field.name == "hora_despacho_extra_fin" %}
 	{% else %}
+	<div class="form-group block-form">
 		<label>{{ field.label }}</label><br>
 		{{ field }}
+	</div>
 	{% endif %}
-</div>
 {% endfor %}
 <input class="btn btn-default" class="boton-sumbit" id="boton" type="submit" value="Subir" readonly>
 </form>
 
 <script>
 	$(document).ready(function() {
-		$('.js-example-basic-single').select2();
+		$('#nvv_selector').select2();
 	});
 
 	$('#nvv_selector').change(function() {

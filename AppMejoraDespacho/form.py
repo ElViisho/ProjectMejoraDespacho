@@ -63,7 +63,12 @@ class ingresoForm(forms.Form):
 
     hora_despacho_inicio = forms.ChoiceField(label='Hora de despacho', choices=horas, initial=8, required=True)
     hora_despacho_fin = forms.ChoiceField(label='', choices=horas, initial=9, required=True)
-    
+    horas_extra = [("0", "-------")]
+    for i in horas:
+        horas_extra.append(i)
+    horas_extra = tuple(horas_extra)
+    hora_despacho_extra_inicio = forms.ChoiceField(label='Hora de despacho extra', choices=horas_extra, initial=0)
+    hora_despacho_extra_fin = forms.ChoiceField(label='', choices=horas_extra, initial=0)
 
     observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
 
@@ -90,6 +95,20 @@ class ingresoForm(forms.Form):
         if (fecha == datetime.date.today() and ((datetime.datetime.now().hour > int(inicio)) or (datetime.datetime.now().hour > int(fin)))):
             raise forms.ValidationError("Error con el campo Hora de despacho: rango horario en el pasado")
         return fin
+
+    def clean_hora_despacho_extra_fin(self):
+        '''
+        Metodo que validara los campos de la hora extra
+        '''
+        try:
+            fin = self.cleaned_data['hora_despacho_fin']
+            inicio_extra = self.cleaned_data['hora_despacho_extra_inicio']
+            fin_extra = self.cleaned_data['hora_despacho_extra_fin']
+            if((int(fin_extra) - int(inicio_extra) < 1) or ((int(inicio_extra) - int(fin) < 1))):
+                raise forms.ValidationError("Error con el campo Hora de despacho: ingrese un rango horario válido")
+            return fin_extra
+        except:
+            return
 
     def clean_cont_telefono(self):
         '''

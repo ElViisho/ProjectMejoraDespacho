@@ -18,6 +18,8 @@ class Ordenes(models.Model):
     fecha_despacho = models.DateField(db_index=True)
     hora_de_despacho_inicio = models.TimeField()
     hora_de_despacho_fin = models.TimeField()
+    hora_despacho_extra_inicio = models.TimeField()
+    hora_despacho_extra_fin = models.TimeField()
 
     fecha_entregado = models.DateField(db_index=True, blank=True, null=True)
     estado = models.IntegerField(default=0, choices=choices_estados)
