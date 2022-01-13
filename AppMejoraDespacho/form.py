@@ -51,6 +51,9 @@ def get_nvvs():
     cursor.execute(consulta_NVVs.format(tuple(uwu)))
     return dictfetchall(cursor)
 
+def now_plus_n(n):
+    return datetime.date.today() + datetime.timedelta(days=n)
+
 class ingresoForm(forms.Form):
     nvv_choices = get_nvvs()
     nvv = forms.ChoiceField(label='NVV', choices=nvv_choices, initial=1, required=True)
@@ -60,7 +63,11 @@ class ingresoForm(forms.Form):
     cont_nombre = forms.CharField(label='Nombre contacto de despacho', max_length=200, required=True)
     cont_telefono = PhoneNumberField(label='Teléfono contacto de despacho', required=True, error_messages={'invalid':'Error en el campo Teléfono: ingrese un valor válido (ej.: 987654321 o +56987654321)'})
     comprobante_pago = forms.FileField(label='Comprobante de pago (opcional)', required=False, validators=[validar_archivo], widget=AdminResubmitFileWidget(attrs={"accept":"image/png, image/jpg, image/jpeg, application/pdf"}))
-    fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(datetime.date.today())}), required=True, initial=(datetime.date.today() + datetime.timedelta(days=2)))
+    now = datetime.datetime.now()
+    n=2
+    if (now.hour >= 4):
+        n = 3
+    fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(now_plus_n(n-1))}), required=True, initial=(now_plus_n(n)))
 
     hora_despacho_inicio = forms.ChoiceField(label='Hora de despacho', choices=horas, initial=8, required=True)
     hora_despacho_fin = forms.ChoiceField(label='', choices=horas, initial=9, required=True)
@@ -76,7 +83,6 @@ class ingresoForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(ingresoForm, self).__init__(*args, **kwargs)
         self.fields['nvv'].choices = get_nvvs()
-        self.fields['fecha_despacho'].initial = datetime.date.today() + datetime.timedelta(days=2)
 
     def clean_nvv(self):
         i = self.cleaned_data['nvv']
