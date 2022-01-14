@@ -3,41 +3,6 @@ body {
 	font-family:  "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;;
 }
 
-.menu {
-	margin-bottom: 2%;
-	grid-column: auto;
-	padding-bottom: 8px;
-	text-align: center;
-	background-color: #ffffff;
-	border-radius: 5px;
-}
-
-.opcion-menu{ 
-	background-color: #5353539c;
-	display: inline-block;
-	text-align: center;
-	margin: 10px;
-	color: rgb(255, 255, 255);
-	padding-top: 8px;
-	padding-bottom: 8px;
-	padding-left: 8px;
-	padding-right: 8px;
-	border-radius: 5px;
-	transition: background-color 1s, border-radius 1s;
-}
-
-.opcion-menu:hover {
-	cursor: pointer;
-	background-color: white;
-	color: rgb(230, 204, 204);
-	border-color: white;
-}
-
-.opcion-link{
-	color: black;
-	text-decoration: none;
-}
-
 .titulo_pagina {
 	font-size: 45px;
 	text-align: center;
@@ -73,57 +38,3 @@ body {
 	display: flex;	
 }
 
-input#buscador{
-    border-radius: 5px;
-	width: fit-content;
-    background-color: rgb(255 228 196);
-    text-align: justify;
-    color: rgb(119, 86, 65);
-}
-
-input#buscador_boton{
-    color:black;
-    font-family: 'Courier New', Courier, monospace;
-    font-style: normal;
-    transition: background-color 1s , border-color 1s;
-    background-color: rgb(233, 211, 170);
-    border-radius: 5px;
-    border-color: rgb(119, 86, 65);
-    border-style: solid;
-    border-radius: 5px;
-    text-align: center;
-}
-
-input#buscador_boton:hover{
-	cursor: pointer;
-}
-
-.icons{
-	text-align: center;
-	margin-bottom: 5%;
-}
-
-@media only screen and (max-width: 700px) {
-	.menu{
-		display: block;
-	}
-}
-
-@media only screen and (min-width: 850px) {
-	.titulo {
-		margin-left: 25%;
-		margin-right: 25%;
-	}
-}
-
-.calificacion{
-    background-color: white;
-    border: 1px solid rgba(0,0,0,.125);
-    padding: 15px;
-    margin-bottom: 10px;
-}
-
-.calif:hover{
-    background-color: rgb(248, 240, 240);
-    cursor: pointer;
-}

@@ -18,7 +18,7 @@
 <form id="filtrado" action="" mehtod="POST">
     {% csrf_token %}
     <div class="block-form_filtrado">        
-        <label class="text-filtro">NVV: </label>
+        <label class="text-filtro">NVV:</label>
         <select id="filtro_NVV" name="filtro_NVV">
             <option value=''>---------------</option>
             {% for item in queryset %}
@@ -26,7 +26,7 @@
             {% endfor %}
         </select>
         
-        <label class="text-filtro">Región: </label>
+        <label class="text-filtro">Región:</label>
         <select id="filtro_region" name="filtro_region">
             <option value=0>---------------</option>
             {% for item in regiones %}
@@ -34,14 +34,16 @@
             {% endfor %}
         </select>
         
-        <label class="text-filtro">Comuna: </label>
+        <label class="text-filtro">Comuna:</label>
         <select disabled id="filtro_comuna" name="filtro_comuna">
             <option value=0>---------------</option>
         </select>
 
-        <div class="boton_filtro">
-            <input type="submit" id="boton_filtro" value="Filtrar">
+        <div class="botones_filtro">
+            <input type="submit" id="boton_" value="Filtrar">
+            <input type="submit" class="boton_" onclick="borrarFiltros()" value="Borrar filtros"></button>
         </div>
+        
     </div>
     
 </form>

@@ -64,3 +64,39 @@ $("#filtro_region").change(function () {
         }
     });
 });
+
+
+window.onbeforeunload = function() {
+    sessionStorage.setItem("filtro_NVV", $('#filtro_NVV').val());
+    sessionStorage.setItem("filtro_region", $('#filtro_region').val());
+    sessionStorage.setItem("filtro_comuna", $('#filtro_comuna').val());
+}
+window.onload = function() {
+    $('#filtro_NVV').val(sessionStorage.getItem("filtro_NVV"));
+    var region = sessionStorage.getItem("filtro_region");
+    if (region != 0 && region != null) {
+        $('#filtro_region').val(region);
+        var url = "ajax/load-comunas/";
+        var regionId = $('#filtro_region').val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'region': regionId
+            },
+            success: function (data) {
+                $("#filtro_comuna").prop('disabled', false);
+                $("#filtro_comuna").html("<option value=0>---------------</option>")
+                $("#filtro_comuna").append(data);
+                $('#filtro_comuna').val(sessionStorage.getItem("filtro_comuna"));
+            }
+        });
+    }
+}
+
+
+function borrarFiltros() {
+    $('#filtro_NVV').val('');
+    $('#filtro_region').val(0);
+    $('#filtro_comuna').val(0);
+}
