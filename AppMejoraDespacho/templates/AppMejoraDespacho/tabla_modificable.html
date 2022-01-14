@@ -40,8 +40,8 @@
         </select>
 
         <div class="botones_filtro">
-            <input type="submit" id="boton_" value="Filtrar">
-            <input type="submit" class="boton_" onclick="borrarFiltros()" value="Borrar filtros"></button>
+            <input type="submit" class="boton" value="Filtrar">
+            <input type="submit" class="boton" onclick="borrarFiltros()" value="Borrar filtros">
         </div>
         
     </div>
@@ -153,13 +153,13 @@
 <div class="pagination">
     <span class="step-links">
         {% if datos.has_previous %}
-            <a href="?{% url_replace page=datos.previous_page_number %}">Prev</a>
+            <input type="submit" class="boton boton_page" onclick="window.location='?{% url_replace page=datos.previous_page_number %}'" value="Prev">
         {% endif %}
         <span class="current">
             Page {{ datos.number }} of {{ datos.paginator.num_pages }}
         </span>
         {% if datos.has_next %}
-            <a href="?{% url_replace page=datos.next_page_number %}">Next</a>
+            <input type="submit" class="boton boton_page" onclick="window.location='?{% url_replace page=datos.next_page_number %}'" value="Next">
         {% endif %}
     </span>
 </div>
