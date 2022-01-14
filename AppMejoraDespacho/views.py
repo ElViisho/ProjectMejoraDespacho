@@ -144,6 +144,9 @@ def tabla_modificable(request):
 	'''
 	Funcion de mostrar la pagina con la tabla de la base de datos
 	'''
+	if request.method == "POST":
+		data = request.POST
+		Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
 	queryset = Ordenes.objects.all()
 	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"queryset": queryset, "regiones": regiones, "comunas": comunas,})
 
