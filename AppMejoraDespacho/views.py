@@ -81,35 +81,6 @@ def confirm_nvv(request):
 	'''
 	return render(request, "AppMejoraDespacho/confirm_nvv.html")
 
-def cambiar_estado_nvv(request):
-	'''
-	Funcion de mostrar la pagina para cambiar el estado de una nota de venta de la base
-	'''
-	if request.method == 'GET':
-		formulario = modifyForm()
-		queryset = Ordenes.objects.all()
-		serialized = serializers.serialize("json", queryset)
-		for field in formulario:
-			field.field.widget.attrs.update({"class": "form-control"})
-		return render(request, "AppMejoraDespacho/cambiar_estado_nvv.html", {"queryset": queryset, "serialized": serialized, "formulario": formulario})
-	if request.method == "POST":
-		data_obtenida = modifyForm(request.POST or None)
-		if data_obtenida.is_valid():
-			cleaned_data = data_obtenida.cleaned_data
-			estado = cleaned_data['estado']
-			fecha_entregado = cleaned_data['fecha_entregado']
-			Ordenes.objects.filter(nvv=cleaned_data['nvv']).update(estado=estado, fecha_entregado=fecha_entregado, observacion_despacho=cleaned_data["observacion_despacho"])
-			return redirect("confirm_update_nvv")
-		queryset = Ordenes.objects.all()
-		serialized = serializers.serialize("json", queryset)
-		return render(request, "AppMejoraDespacho/cambiar_estado_nvv.html", {"queryset": queryset, "serialized": serialized, "formulario": data_obtenida})
-
-def confirm_update_nvv(request):
-	'''
-	Funcion de mostrar la pagina de exitoso ingreso de la nota de venta a la base
-	'''
-	return render(request, "AppMejoraDespacho/confirm_update_nvv.html")
-
 def delete_nvv(request):
 	'''
 	Funcion de mostrar la pagina para eliminar una nota de venta de la base
