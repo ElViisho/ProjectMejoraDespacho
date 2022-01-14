@@ -144,11 +144,24 @@ def tabla_modificable(request):
 	'''
 	Funcion de mostrar la pagina con la tabla de la base de datos
 	'''
+	queryset = Ordenes.objects.all()
+	datos = queryset
+	if request.method == "GET":
+		nvv_query = request.GET.get('filtro_NVV')
+		if nvv_query != '' and nvv_query is not None:
+			datos = queryset.filter(nvv__icontains=nvv_query)
+		region_query = request.GET.get('filtro_region')
+		if region_query != '0' and region_query is not None:
+			datos = datos.filter(region=region_query)
+		comuna_query = request.GET.get('filtro_comuna')
+		if comuna_query != '0' and comuna_query is not None:
+			datos = datos.filter(comuna=comuna_query)
+
 	if request.method == "POST":
 		data = request.POST
 		Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
-	queryset = Ordenes.objects.all()
-	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"queryset": queryset, "regiones": regiones, "comunas": comunas,})
+	
+	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"datos": datos, "queryset": queryset, "regiones": regiones, "comunas": comunas,})
 
 def load_comunas(request):
     region = request.GET.get('region')

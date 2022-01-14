@@ -6,10 +6,45 @@
 {% block header %}
 <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
 <script src="{% static 'js/js_choices.js' %}"></script>
-<script src="{% static 'js/js_storage_clear.js' %}"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {% endblock header%}
 
 {% block content %}
+
+
+<form id="filtrado" action="" mehtod="POST">
+    {% csrf_token %}
+    <div class="block-form_filtrado">        
+        <label class="text-filtro">NVV: </label>
+        <select id="filtro_NVV" name="filtro_NVV">
+            <option value=''>---------------</option>
+            {% for item in queryset %}
+                <option value="{{ item.nvv }}">{{ item.nvv }}</option>
+            {% endfor %}
+        </select>
+        
+        <label class="text-filtro">Región: </label>
+        <select id="filtro_region" name="filtro_region">
+            <option value=0>---------------</option>
+            {% for item in regiones %}
+                <option value="{{ item.0 }}">{{ item.1 }}</option>
+            {% endfor %}
+        </select>
+        
+        <label class="text-filtro">Comuna: </label>
+        <select disabled id="filtro_comuna" name="filtro_comuna">
+            <option value=0>---------------</option>
+        </select>
+
+        <div class="boton_filtro">
+            <input type="submit" id="boton_filtro" value="Filtrar">
+        </div>
+    </div>
+    
+</form>
+
+
 <div class="table-responsive table-l">
     <table class="table table-hover table-striped table-image" id="listado">
         <thead>
@@ -37,7 +72,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in queryset %}
+            {% for item in datos %}
             <tr class="text-center" id="{{ item.nvv }}">
                 {% language 'es' %}
                 <td>{{ item.nvv }}</td>
@@ -111,43 +146,6 @@
     </table>
 </div>
 
-<script>
-
-    function getCookie(c_name)
-    {
-        if (document.cookie.length > 0)
-        {
-            c_start = document.cookie.indexOf(c_name + "=");
-            if (c_start != -1)
-            {
-                c_start = c_start + c_name.length + 1;
-                c_end = document.cookie.indexOf(";", c_start);
-                if (c_end == -1) c_end = document.cookie.length;
-                return unescape(document.cookie.substring(c_start,c_end));
-            }
-        }
-        return "";
-    }
-    
-    $('.Estado').change(function () {
-        var url = window.location.href;
-        var option = $(this).val();
-        var nvv = this.id;
-
-        $.ajaxSetup({
-            headers: { "X-CSRFToken": getCookie("csrftoken") }
-        });
-
-        $.ajax({
-            success: function () {
-                $.post(url, {"option": option, "nvv": nvv});
-            }
-        })
-
-        
-    })
-
-    
-</script>
+<script src="{% static 'js/js_tabla_modificable.js' %}"></script>
 
 {% endblock content %}
