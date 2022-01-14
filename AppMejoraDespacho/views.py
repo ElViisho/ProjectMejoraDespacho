@@ -62,7 +62,7 @@ def ingresar(request):
 				direccion = cleaned_data['direccion'],
 				nombre_contacto = cleaned_data['cont_nombre'],
 				telefono_contacto = cleaned_data['cont_telefono'],
-				condicion_pago = datos_maeedoob[0]["OBDO"],
+				condicion_pago = datos_maeedoob[0]["CPDO"],
 				comprobante_pago = cleaned_data['comprobante_pago'],
 				observacion = cleaned_data['observaciones'],
 				fecha_despacho = cleaned_data['fecha_despacho'],
@@ -138,11 +138,30 @@ def tabla(request):
 	Funcion de mostrar la pagina con la tabla de la base de datos
 	'''
 	queryset = Ordenes.objects.all()
-	return render(request, "AppMejoraDespacho/tabla.html",{"queryset": queryset, "regiones": regiones, "comunas": comunas,})
+	datos = queryset
+	if request.method == "GET":
+		nvv_query = request.GET.get('filtro_NVV')
+		if nvv_query != '' and nvv_query is not None:
+			datos = queryset.filter(nvv__icontains=nvv_query)
+		region_query = request.GET.get('filtro_region')
+		if region_query != '0' and region_query is not None:
+			datos = datos.filter(region=region_query)
+		comuna_query = request.GET.get('filtro_comuna')
+		if comuna_query != '0' and comuna_query is not None:
+			datos = datos.filter(comuna=comuna_query)
+		p = Paginator(datos, 5)
+		page_num = request.GET.get('page',1)
+		page = p.page(page_num)
+
+	if request.method == "POST":
+		data = request.POST
+		Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
+	
+	return render(request, "AppMejoraDespacho/tabla.html",{"datos": page, "queryset": queryset, "regiones": regiones, "comunas": comunas,})
 
 def tabla_modificable(request):
 	'''
-	Funcion de mostrar la pagina con la tabla de la base de datos
+	Funcion de mostrar la pagina con la tabla modificable de la base de datos
 	'''
 	queryset = Ordenes.objects.all()
 	datos = queryset
@@ -156,7 +175,7 @@ def tabla_modificable(request):
 		comuna_query = request.GET.get('filtro_comuna')
 		if comuna_query != '0' and comuna_query is not None:
 			datos = datos.filter(comuna=comuna_query)
-		p = Paginator(datos, 7) #El segundo parametro corresponde a la cantidad de restaturantes por pagina
+		p = Paginator(datos, 5)
 		page_num = request.GET.get('page',1)
 		page = p.page(page_num)
 

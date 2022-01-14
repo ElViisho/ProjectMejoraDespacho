@@ -2,10 +2,11 @@
 {% load static %}
 {% load form_template_extras %}
 {% load i18n %}
-{% load tabla_modificable_tags%}
+{% load tabla_tags %}
 
 {% block header %}
 <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
+<link rel="stylesheet" href="{% static 'css/tabla.css' %}">
 <script src="{% static 'js/js_choices.js' %}"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -161,6 +162,6 @@
     </span>
 </div>
 
-<script src="{% static 'js/js_tabla_modificable.js' %}"></script>
+<script src="{% static 'js/js_tabla.js' %}"></script>
 
 {% endblock content %}
