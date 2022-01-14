@@ -32,71 +32,45 @@ $('.Estado').change(function () {
     
 })
 
-$(document).ready(function() {
-    document.getElementById('filtro_NVV').style.width = "20%";
-    $('#filtro_NVV').select2();
-    document.getElementById('filtro_region').style.width = "20%";
-    $('#filtro_region').select2();
-    document.getElementById('filtro_comuna').style.width = "20%";
-    $('#filtro_comuna').select2();
-});
-
-
-$("#filtro_region").change(function () {
-    var url = "ajax/load-comunas/";
-    var regionId = $(this).val();
-
-    $.ajax({
-        url: url,
-        data: {
-            'region': regionId
+$(document).ready(function() { 
+    $('#listado').DataTable({        
+        "columns": [
+            null,
+            null,
+            null,
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+            null,
+            null,
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+            null,
+            { "searchable": false, orderable: false },
+            null,
+            null,
+            null,
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+          ],
+        "search": {
+            "smart": false
         },
-        success: function (data) {
-            if (regionId == 0) {
-                $("#filtro_comuna").prop('disabled', true);
-                $("#filtro_comuna").html("<option value=0>---------------</option>")
-            }
-            else {
-                $("#filtro_comuna").prop('disabled', false);
-                $("#filtro_comuna").html("<option value=0>---------------</option>")
-                $("#filtro_comuna").append(data);
-            }
-        }
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.11.3/i18n/es-cl.json'
+        },
+        "scrollX": true,
+        "scrollY": "70vh",
+        "scrollCollapse": true,
+        buttons: {
+            buttons: [
+                { extend: 'next', className: 'boton' },
+                { extend: 'previous', className: 'boton' }
+            ]
+        },
     });
 });
 
-
-window.onbeforeunload = function() {
-    sessionStorage.setItem("filtro_NVV", $('#filtro_NVV').val());
-    sessionStorage.setItem("filtro_region", $('#filtro_region').val());
-    sessionStorage.setItem("filtro_comuna", $('#filtro_comuna').val());
-}
-window.onload = function() {
-    $('#filtro_NVV').val(sessionStorage.getItem("filtro_NVV"));
-    var region = sessionStorage.getItem("filtro_region");
-    if (region != 0 && region != null) {
-        $('#filtro_region').val(region);
-        var url = "ajax/load-comunas/";
-        var regionId = $('#filtro_region').val();
-
-        $.ajax({
-            url: url,
-            data: {
-                'region': regionId
-            },
-            success: function (data) {
-                $("#filtro_comuna").prop('disabled', false);
-                $("#filtro_comuna").html("<option value=0>---------------</option>")
-                $("#filtro_comuna").append(data);
-                $('#filtro_comuna').val(sessionStorage.getItem("filtro_comuna"));
-            }
-        });
-    }
-}
-
-
-function borrarFiltros() {
-    $('#filtro_NVV').val('');
-    $('#filtro_region').val(0);
-    $('#filtro_comuna').val(0);
-}
