@@ -1,7 +1,8 @@
 {% extends 'AppMejoraDespacho/base.html' %}
 {% load static %}
-{%load form_template_extras%}
+{% load form_template_extras %}
 {% load i18n %}
+{% load tabla_modificable_tags%}
 
 {% block header %}
 <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
@@ -144,6 +145,20 @@
             {% endfor %}
             </tbody>
     </table>
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if datos.has_previous %}
+            <a href="?{% url_replace page=datos.previous_page_number %}">Prev</a>
+        {% endif %}
+        <span class="current">
+            Page {{ datos.number }} of {{ datos.paginator.num_pages }}
+        </span>
+        {% if datos.has_next %}
+            <a href="?{% url_replace page=datos.next_page_number %}">Next</a>
+        {% endif %}
+    </span>
 </div>
 
 <script src="{% static 'js/js_tabla_modificable.js' %}"></script>

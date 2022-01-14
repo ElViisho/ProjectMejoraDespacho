@@ -156,12 +156,15 @@ def tabla_modificable(request):
 		comuna_query = request.GET.get('filtro_comuna')
 		if comuna_query != '0' and comuna_query is not None:
 			datos = datos.filter(comuna=comuna_query)
+		p = Paginator(datos, 7) #El segundo parametro corresponde a la cantidad de restaturantes por pagina
+		page_num = request.GET.get('page',1)
+		page = p.page(page_num)
 
 	if request.method == "POST":
 		data = request.POST
 		Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
 	
-	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"datos": datos, "queryset": queryset, "regiones": regiones, "comunas": comunas,})
+	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"datos": page, "queryset": queryset, "regiones": regiones, "comunas": comunas,})
 
 def load_comunas(request):
     region = request.GET.get('region')
