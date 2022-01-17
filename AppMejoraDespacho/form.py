@@ -72,13 +72,13 @@ class ingresoForm(forms.Form):
         n = 3
     fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(now_plus_n(n))}), required=True, initial=(now_plus_n(n)))
 
-    hora_despacho_inicio = forms.ChoiceField(label='Rango horario de despacho', choices=horas, initial=8, required=True)
-    hora_despacho_fin = forms.ChoiceField(label='', choices=horas, initial=9, required=True)
+    hora_despacho_inicio = forms.ChoiceField(label='Rango horario de despacho', choices=horas[:-1], initial=8, required=True)
+    hora_despacho_fin = forms.ChoiceField(label='', choices=horas[1:], initial=9, required=True)
     horas_extra = [("0", "-------")]
-    for i in horas:
+    for i in horas[2:]:
         horas_extra.append(i)
     horas_extra = tuple(horas_extra)
-    hora_despacho_extra_inicio = forms.ChoiceField(label='Hora de despacho extra', choices=horas_extra, initial=0)
+    hora_despacho_extra_inicio = forms.ChoiceField(label='Hora de despacho extra', choices=horas_extra[:-1], initial=0)
     hora_despacho_extra_fin = forms.ChoiceField(label='', choices=horas_extra, initial=0)
 
     observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))

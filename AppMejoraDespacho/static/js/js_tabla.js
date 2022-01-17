@@ -47,7 +47,7 @@ $(document).ready(function() {
     $('#listado tbody').on('click', 'td.dt-control', function () {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
-        var data = row.data()[11].split(",")
+        var data = row.data()[11].split("\\,")
  
         if ( row.child.isShown() ) {
             // This row is already open - close it

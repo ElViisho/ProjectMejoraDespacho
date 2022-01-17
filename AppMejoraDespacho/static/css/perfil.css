@@ -14,3 +14,25 @@
     padding-left: 1%;
     cursor: pointer;
 }
+
+.button{
+    background-color: #f42414;
+	color: #dfdfdf;
+	font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-style: normal;
+    text-align: center;
+	font-size: 20px;
+	width: 300px;
+	height: 50px;
+	padding-top: 7.5px;
+	border-radius: 5px;
+	border-style: solid;
+	border-color: #cc542c;
+	transition: background-color 1s , border-color 1s;
+	justify-content: center;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	display: flex;	
+}
