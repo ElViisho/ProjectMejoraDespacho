@@ -110,6 +110,10 @@ input#id_nvv, input#id_direccion, input#id_cont_nombre, input#id_cont_telefono, 
     margin-bottom: 10px;
 }
 
+.sublabel {
+    font-size: 14px;
+}
+
 td:first-child {
     width: 15%;
 }

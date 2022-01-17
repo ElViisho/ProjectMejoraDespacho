@@ -46,7 +46,9 @@
 	</div>
 	{% elif field.name == "hora_despacho_inicio" %}
 	<div class="form-group block-form">
-		<label>{{ field.label }}</label><br>
+		<label>{{ field.label }}</label>
+		<label class="sublabel">En caso de haber horario en el que no se puede despachar, ingresar los rangos válidos de despacho. <br>
+				Ej: horario despacho 11-18 con hora de almuerzo 14-16, ingresar horarios de despacho 11-14 y 16-18</label><br>
 		<table class="table">
 			<tbody>
 				<nobr>
