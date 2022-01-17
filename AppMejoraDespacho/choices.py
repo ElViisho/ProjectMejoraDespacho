@@ -1,7 +1,9 @@
 choices_estados = (
         (0, 'En Preparación'),
         (1, 'Preparado'),
-        (2, 'Despachado')
+        (2, 'Tubos'),
+        (3, 'Cañería'),
+        (4, 'Rollos')
 )
 
 regiones = (

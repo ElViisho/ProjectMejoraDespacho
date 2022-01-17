@@ -1,12 +1,17 @@
 
 .dataTables_paginate, .dataTables_info {
-    margin-right: 10px;
-    margin-left: 10px;
+    margin-right: 20px;
+    margin-left: 20px;
     margin-bottom: 20px;
+    margin-top: 10px;
 }
 
 .dataTables_length, .dataTables_filter {
-    margin-right: 10px;
-    margin-left: 10px;
+    margin-right: 20px;
+    margin-left: 20px;
     margin-bottom: 10px;
+}
+
+#listado, .dataTable {
+    width: 100% !important;
 }

@@ -67,7 +67,7 @@ class ingresoForm(forms.Form):
     n=2
     if (now.hour >= 4):
         n = 3
-    fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(now_plus_n(n-1))}), required=True, initial=(now_plus_n(n)))
+    fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(now_plus_n(n))}), required=True, initial=(now_plus_n(n)))
 
     hora_despacho_inicio = forms.ChoiceField(label='Hora de despacho', choices=horas, initial=8, required=True)
     hora_despacho_fin = forms.ChoiceField(label='', choices=horas, initial=9, required=True)

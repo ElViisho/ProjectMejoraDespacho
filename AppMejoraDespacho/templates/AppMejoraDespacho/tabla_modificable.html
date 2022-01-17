@@ -11,7 +11,9 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
 <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 {% endblock header%}
 
 {% block content %}
@@ -19,71 +21,73 @@
 <div class="table-responsive table-l">
     <table class="table table-hover table-striped table-image" id="listado">
         <thead>
-            <tr class="text-center">
-                <th scope="col">NVV</th>
-                <th scope="col">Fecha NVV</th>
-                <th scope="col">Fecha solicitud</th>
-                <th scope="col">RUT cliente</th>
-                <th scope="col">Nombre cliente</th>
-                <th scope="col">Región</th>
-                <th scope="col">Comuna</th>
-                <th scope="col">Dirección</th>
-                <th scope="col">Nombre contacto</th>
-                <th scope="col">Teléfono contacto</th>
-                <th scope="col">Condición de pago</th>
-                <th scope="col">Observaciones</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Comprobante de pago</th>
-                <th scope="col">Fecha despacho</th>
-                <th scope="col">Hora despacho</th>
-                <th scope="col">Fecha entrega</th>
-                <th scope="col">Observaciones despacho</th>
-                <th scope="col">Documento de salida</th>
-                <th scope="col">Número</th>
+            <tr class="text-center display nowrap">
+                <th></th>
+                <th>NVV</th>
+                <th>Fecha solicitud</th>
+                <th>Región</th>
+                <th>Comuna</th>
+                <th>Dirección</th>
+                <th>Nombre contacto</th>
+                <th>Teléfono contacto</th>
+                <th>Estado</th>
+                <th>Fecha despacho</th>
+                <th>Hora despacho</th>
+                <th style="display: none;">Datos extra</th>
             </tr>
         </thead>
         <tbody>
             {% for item in datos %}
             <tr class="text-center" id="{{ item.nvv }}">
-                {% language 'es' %}
+                <td class="dt-control"></td>
                 <td>{{ item.nvv }}</td>
-                <td>{{ item.fecha_nvv|date:"d F Y" }}</td>
                 <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td>
-                <td>{{ item.rut }}</td>
-                <td>{{ item.cliente }}</td>
                 <td>{{ regiones|get_region:item.region }}</td>
                 <td>{{ comunas|get_comunas_por_region:item.region|get_comuna:item.comuna }}</td>
                 <td>{{ item.direccion }}</td>
                 <td>{{ item.nombre_contacto }}</td>
                 <td>{{ item.telefono_contacto }}</td>
-                <td>{{ item.condicion_pago }}</td>
-                <td>{{ item.observacion }}</td>
                 <td>
-                    {% if item.estado == 2 %}
+                    {% if item.estado == 4 %}   
                         <select class='Estado' id='{{ item.nvv }}'>
                             <option value=0>En preparación</option>
                             <option value=1>Preparado</option>
-                            <option selected value=2>Despachado</option>
+                            <option value=2>Tubos</option>
+                            <option selected value=3>Cañería</option>
+                            <option value=4>Rollos</option>
+                        </select>
+                    {% elif item.estado == 3 %}   
+                        <select class='Estado' id='{{ item.nvv }}'>
+                            <option value=0>En preparación</option>
+                            <option value=1>Preparado</option>
+                            <option value=2>Tubos</option>
+                            <option selected value=3>Cañería</option>
+                            <option value=4>Rollos</option>
+                        </select>
+                    {% elif item.estado == 2 %}   
+                        <select class='Estado' id='{{ item.nvv }}'>
+                            <option value=0>En preparación</option>
+                            <option value=1>Preparado</option>
+                            <option selected value=2>Tubos</option>
+                            <option value=3>Cañería</option>
+                            <option value=4>Rollos</option>
                         </select>
                     {% elif item.estado == 1 %}
                         <select class='Estado' id='{{ item.nvv }}'>
                             <option value=0>En preparación</option>
                             <option selected value=1>Preparado</option>
-                            <option value=2>Despachado</option>
+                            <option value=2>Tubos</option>
+                            <option value=3>Cañería</option>
+                            <option value=4>Rollos</option>
                         </select>
                     {% else %}
                         <select class='Estado' id='{{ item.nvv }}'>
                             <option selected value=0>En preparación</option>
                             <option value=1>Preparado</option>
-                            <option value=2>Despachado</option>
+                            <option value=2>Tubos</option>
+                            <option value=3>Cañería</option>
+                            <option value=4>Rollos</option>
                         </select>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if item.comprobante_pago == "None" %}
-                        No hay
-                    {% else %}
-                        <a href="{{ item.comprobante_pago.url }}" target="_blank">link</a>
                     {% endif %}
                 </td>
                 <td>{{ item.fecha_despacho|date:"d F Y" }}</td>
@@ -94,23 +98,16 @@
                         {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}, {{ item.hora_despacho_extra_inicio }} - {{ item.hora_despacho_extra_fin }}
                     {% endif %}
                 </td>
-                <td>
-                    {% if item.fecha_entregado == None %}
-                        No entregado
-                    {% else %}
-                        {{ item.fecha_entregado|date:"d F Y" }}
-                    {% endif %}
+
+
+                <td style="display: none;">
+                    {{item.fecha_nvv}},{{item.cliente}},{{item.rut}},{{item.condicion_pago}},{% if item.comprobante_pago == "None" %}
+                    No hay
+                {% else %}
+                    <a href="{{ item.comprobante_pago.url }}" target="_blank">link</a>
+                {% endif %},{{item.observacion}}
                 </td>
-                <td>{{ item.observacion_despacho }}</td>
-                <td>
-                    {% if item.documento_salida == "None" %}
-                        No hay
-                    {% else %}
-                        <a href="{{ item.documento_salida.url }}" target="_blank">link</a>
-                    {% endif %}
-                </td>
-                {% endlanguage %}
-                <td>{{ item.numero }}</td>
+                
             </tr>
             {% endfor %}
             </tbody>

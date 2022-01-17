@@ -22,11 +22,9 @@ class Ordenes(models.Model):
     hora_despacho_extra_inicio = models.TimeField()
     hora_despacho_extra_fin = models.TimeField()
 
-    fecha_entregado = models.DateField(db_index=True, blank=True, null=True)
     estado = models.IntegerField(default=0, choices=choices_estados)
     observacion_despacho = models.CharField(max_length=2500, blank=True)
     documento_salida = models.FileField(upload_to='documentos_de_salida/%Y/%m/%d/', default='None')
-    numero = models.IntegerField(db_index=True, default=0)
 
     def __str__(self):
         return self.nvv

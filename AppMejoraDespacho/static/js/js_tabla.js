@@ -28,34 +28,10 @@ $('.Estado').change(function () {
             $.post(url, {"option": option, "nvv": nvv});
         }
     })
-
-    
 })
 
 $(document).ready(function() { 
-    $('#listado').DataTable({        
-        "columns": [
-            null,
-            null,
-            null,
-            { "searchable": false, orderable: false },
-            { "searchable": false, orderable: false },
-            null,
-            null,
-            { "searchable": false, orderable: false },
-            { "searchable": false, orderable: false },
-            { "searchable": false, orderable: false },
-            { "searchable": false, orderable: false },
-            { "searchable": false, orderable: false },
-            null,
-            { "searchable": false, orderable: false },
-            null,
-            null,
-            null,
-            { "searchable": false, orderable: false },
-            { "searchable": false, orderable: false },
-            { "searchable": false, orderable: false },
-          ],
+    var table = $('#listado').DataTable({        
         "search": {
             "smart": false
         },
@@ -65,12 +41,55 @@ $(document).ready(function() {
         "scrollX": true,
         "scrollY": "70vh",
         "scrollCollapse": true,
-        buttons: {
-            buttons: [
-                { extend: 'next', className: 'boton' },
-                { extend: 'previous', className: 'boton' }
-            ]
-        },
+        order: [ 2, 'asc' ],
     });
+
+    $('#listado tbody').on('click', 'td.dt-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+        var data = row.data()[11].split(",")
+ 
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( format(data) ).show();
+            tr.addClass('shown');
+        }
+    } );
 });
 
+function format (d) {
+    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+        '<tr>'+
+            '<td>Fecha NVV:</td>'+
+            '<td>'+d[0]+'</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>Cliente:</td>'+
+            '<td>'+d[1]+'</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>RUT Cliente:</td>'+
+            '<td>' + d[2] + '</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>Condición de pago:</td>'+
+            '<td>' + d[3] + '</td>'+
+        '</tr>'+
+        '<tr>' +
+            '<td> Comprobante de pago:</td>' +
+            '<td>' +
+                d[4] +
+            '</td>' +
+        '</tr>' +
+        '<tr>'+
+            '<td>Obervaciones:</td>'+
+            '<td>' + d[5] + '</td>'+
+        '</tr>'+
+    '</table>';
+}
+ 

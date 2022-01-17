@@ -15,6 +15,7 @@ import datetime
 from django.db import connections
 
 from django.core import serializers
+import json
 
 from .choices import regiones, comunas
 from .consultas import *
@@ -121,13 +122,34 @@ def tabla_modificable(request):
 	'''
 	Funcion de mostrar la pagina con la tabla modificable de la base de datos
 	'''
-	queryset = Ordenes.objects.all()
-	datos = queryset
+	cursor = connections['default'].cursor()
+	cursor.execute("SELECT * FROM AppMejoraDespacho_ordenes")
+	queryset = datos = Ordenes.objects.all()
+	dictionary = {"data": [
+		{
+			"nvv":       "Tiger Nixon",
+			"position":   "System Architect",
+			"salary":     "$3,120",
+			"start_date": "2011/04/25",
+			"office":     "Edinburgh",
+			"extn":       "5421"
+		},
+		{
+			"nvv":       "Garrett Winters",
+			"position":   "Director",
+			"salary":     "$5,300",
+			"start_date": "2011/07/25",
+			"office":     "Edinburgh",
+			"extn":       "8422"
+		}
+	]}
+	
+	
 	if request.method == "POST":
 		data = request.POST
 		Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
 	
-	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"datos": datos, "queryset": queryset, "regiones": regiones, "comunas": comunas,})
+	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"datos": datos, "queryset": queryset, "dictionary": dictionary, "regiones": regiones, "comunas": comunas,})
 
 def load_comunas(request):
     region = request.GET.get('region')
