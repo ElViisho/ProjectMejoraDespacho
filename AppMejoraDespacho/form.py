@@ -117,32 +117,6 @@ class ingresoForm(forms.Form):
         except:
             return self.cleaned_data['hora_despacho_extra_fin']
 
-
-class modifyForm(forms.Form):
-    nvv = forms.ChoiceField(label='NVV', choices=(), required=True)
-    estado = forms.ChoiceField(label = 'Estado', choices=choices_estados, initial=0, required=True)
-    fecha_entregado = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date'}), required=False)
-    observacion_despacho = forms.CharField(label='Observaciones de entrega', required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
-
-    def __init__(self, *args, **kwargs):
-        super(modifyForm, self).__init__(*args, **kwargs)
-        queryset = Ordenes.objects.all()
-        choices_nvv = [("None", "----------")]
-        for i in queryset:
-            choices_nvv.append((i,i))
-        self.fields['nvv'].choices = choices_nvv
-
-    def clean_fecha_entregado(self):
-        '''
-        Metodo que validara el campo de la fecha que se entregó el paquete
-        '''
-        estado = self.cleaned_data['estado']
-        if (estado != '2'): return None
-        fecha_entregado = self.cleaned_data['fecha_entregado']
-        if(fecha_entregado is None):
-            raise forms.ValidationError("Error en el campo Fecha de entrega: ingrese un valor")
-        return fecha_entregado
-
 class deleteForm(forms.Form):
     nvv = forms.ChoiceField(label='Eliga una NVV para eliminar', choices=(), required=True)
 

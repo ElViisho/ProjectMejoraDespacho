@@ -105,19 +105,6 @@ def confirm_delete_nvv(request):
 	'''
 	return render(request, "AppMejoraDespacho/confirm_delete_nvv.html")
 
-def tabla(request):
-	'''
-	Funcion de mostrar la pagina con la tabla de la base de datos
-	'''
-	queryset = Ordenes.objects.all()
-	datos = queryset
-
-	if request.method == "POST":
-		data = request.POST
-		Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
-	
-	return render(request, "AppMejoraDespacho/tabla.html",{"datos": queryset, "queryset": queryset, "regiones": regiones, "comunas": comunas,})
-
 def tabla_modificable(request):
 	'''
 	Funcion de mostrar la pagina con la tabla modificable de la base de datos
