@@ -112,7 +112,7 @@ function format (d) {
         '<tr>'+
             '<td>Número de guía:</td>'+
             '<nobr>'+ 
-            '<td><input type="text" name="numero_guia" maxlength="20" id="numero_guia" class="numero_guia"> </td>' + 
+            '<td><input type="text" name="numero_guia" maxlength="20" id="numero_guia" class="numero_guia" value="' + d[6] +'"> </td>' + 
             '<td><input class="btn btn-default boton-sumbit" onclick="prompt_confirm()" id="boton" disabled value="Subir número de guía" readonly></td>'+
             '</nobr>' +
         '</tr>'+
