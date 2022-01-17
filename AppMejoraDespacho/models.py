@@ -24,6 +24,7 @@ class Ordenes(models.Model):
 
     estado = models.IntegerField(default=0, choices=choices_estados)
     observacion_despacho = models.CharField(max_length=2500, blank=True)
+    numero_guia = models.CharField(max_length=100, blank=True)
     documento_salida = models.FileField(upload_to='documentos_de_salida/%Y/%m/%d/', default='None')
 
     def __str__(self):

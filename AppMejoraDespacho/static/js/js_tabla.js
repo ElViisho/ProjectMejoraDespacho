@@ -25,10 +25,12 @@ $('.Estado').change(function () {
 
     $.ajax({
         success: function () {
-            $.post(url, {"option": option, "nvv": nvv});
+            $.post(url, {"type": "estado", "nvv": nvv, "option": option,});
         }
     })
 })
+
+let nvv = "";
 
 $(document).ready(function() { 
     var table = $('#listado').DataTable({        
@@ -42,7 +44,7 @@ $(document).ready(function() {
         "scrollY": "70vh",
         "scrollCollapse": true,
         order: [ 2, 'asc' ],
-    });
+    });    
 
     $('#listado tbody').on('click', 'td.dt-control', function () {
         var tr = $(this).closest('tr');
@@ -55,9 +57,22 @@ $(document).ready(function() {
             tr.removeClass('shown');
         }
         else {
-            // Open this row
+            // Open this row and close others
+            if ( table.row( '.shown' ).length ) {
+                $('.dt-control', table.row( '.shown' ).node()).click();
+            }
+            nvv = row.data()[1];
             row.child( format(data) ).show();
             tr.addClass('shown');
+
+            $('#numero_guia').change(function () {
+                if ($(this).val() == "") {
+                    $('#boton').prop('disabled', true);
+                }
+                else {
+                    $('#boton').prop('disabled', false);
+                }
+            })
         }
     } );
 });
@@ -67,29 +82,73 @@ function format (d) {
         '<tr>'+
             '<td>Fecha NVV:</td>'+
             '<td>'+d[0]+'</td>'+
+            '<td></td>'+
         '</tr>'+
         '<tr>'+
             '<td>Cliente:</td>'+
             '<td>'+d[1]+'</td>'+
+            '<td></td>'+
         '</tr>'+
         '<tr>'+
             '<td>RUT Cliente:</td>'+
             '<td>' + d[2] + '</td>'+
+            '<td></td>'+
         '</tr>'+
         '<tr>'+
             '<td>Condición de pago:</td>'+
             '<td>' + d[3] + '</td>'+
+            '<td></td>'+
         '</tr>'+
         '<tr>' +
             '<td> Comprobante de pago:</td>' +
-            '<td>' +
-                d[4] +
-            '</td>' +
+            '<td>' + d[4] + '</td>' +
+            '<td></td>'+
         '</tr>' +
         '<tr>'+
             '<td>Obervaciones:</td>'+
             '<td>' + d[5] + '</td>'+
+            '<td></td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>Número de guía:</td>'+
+            '<nobr>'+ 
+            '<td><input type="text" name="numero_guia" maxlength="20" id="numero_guia" class="numero_guia"> </td>' + 
+            '<td><input class="btn btn-default boton-sumbit" onclick="prompt_confirm()" id="boton" disabled value="Subir número de guía" readonly></td>'+
+            '</nobr>' +
         '</tr>'+
     '</table>';
 }
- 
+
+function prompt_confirm() {
+    $('#confirm_texto').html(`¿Confirmas que quieres subir el número de guía para la nota de venta ${nvv}? (Esto eliminará la nota de la tabla)<br>`);
+    $('#confirm_prompt_background').show();
+    $('#confirm_prompt').show();
+    $('#confirm_texto').show();
+    $('#boton_confirm').show();
+    $('#boton_cancel').show();
+}
+
+function cancelar() {
+    $('#confirm_prompt_background').hide();
+    $('#confirm_prompt').hide();
+    $('#confirm_texto').hide();
+    $('#boton_confirm').hide();
+    $('#boton_cancel').hide();
+}
+
+function confirmar() {
+    var url = window.location.href;
+    var numero = $('#numero_guia').val();
+
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": getCookie("csrftoken") }
+    });
+
+    $.ajax({
+        success: function () {
+            $.post(url, {"type": "numero_guia", "nvv": nvv, "numero": numero,}),
+            cancelar();
+            location.reload();
+        }
+    })
+}

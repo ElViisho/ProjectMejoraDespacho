@@ -105,38 +105,30 @@ def confirm_delete_nvv(request):
 	'''
 	return render(request, "AppMejoraDespacho/confirm_delete_nvv.html")
 
-def tabla_modificable(request):
+def tabla_modificable_mostrar(request):
+	ocultar = "False"
+	return tabla_modificable(request, ocultar)
+
+def tabla_modificable_ocultar(request):
+	ocultar = "True"
+	return tabla_modificable(request, ocultar)
+
+def tabla_modificable(request, ocultar):
 	'''
 	Funcion de mostrar la pagina con la tabla modificable de la base de datos
 	'''
 	cursor = connections['default'].cursor()
 	cursor.execute("SELECT * FROM AppMejoraDespacho_ordenes")
 	queryset = datos = Ordenes.objects.all()
-	dictionary = {"data": [
-		{
-			"nvv":       "Tiger Nixon",
-			"position":   "System Architect",
-			"salary":     "$3,120",
-			"start_date": "2011/04/25",
-			"office":     "Edinburgh",
-			"extn":       "5421"
-		},
-		{
-			"nvv":       "Garrett Winters",
-			"position":   "Director",
-			"salary":     "$5,300",
-			"start_date": "2011/07/25",
-			"office":     "Edinburgh",
-			"extn":       "8422"
-		}
-	]}
-	
 	
 	if request.method == "POST":
 		data = request.POST
-		Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
+		if (data['type'] == 'estado'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
+		elif (data['type'] == 'numero_guia'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(numero_guia=data['numero'])
 	
-	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"datos": datos, "queryset": queryset, "dictionary": dictionary, "regiones": regiones, "comunas": comunas,})
+	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"datos": datos, "queryset": queryset, "regiones": regiones, "comunas": comunas, "ocultar": ocultar,})
 
 def load_comunas(request):
     region = request.GET.get('region')

@@ -15,3 +15,39 @@
 #listado, .dataTable {
     width: 100% !important;
 }
+#boton{
+    transition: background-color 1s , border-color 1s;
+    background-color: #f42414;
+    color: #dfdfdf;
+    font-size: 20px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #cc542c;
+    text-align: center;
+    height: 50px;
+}
+
+#boton:hover, .boton_ocultar:hover{
+    cursor: pointer;
+    background-color: #ff948c;
+    border-color: rgb(255, 240, 240);
+    transition-duration: 1s;
+}
+
+.boton_ocultar{
+    transition: background-color 1s , border-color 1s;
+    background-color: #f42414;
+    color: #dfdfdf;
+    font-size: 15px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #cc542c;
+    text-align: center;
+    height: 25px;
+    margin-bottom: 30px;
+    width: 15%;
+}
+
+.boton_ocultar_div {
+    text-align: center;
+}

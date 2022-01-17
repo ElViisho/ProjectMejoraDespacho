@@ -7,6 +7,7 @@
 {% block header %}
 <link rel="stylesheet" href="{% static 'css/apprest.css' %}">
 <link rel="stylesheet" href="{% static 'css/tabla.css' %}">
+<link rel="stylesheet" href="{% static 'css/apprest_delete_form.css' %}">
 <script src="{% static 'js/js_choices.js' %}"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -38,82 +39,100 @@
         </thead>
         <tbody>
             {% for item in datos %}
-            <tr class="text-center" id="{{ item.nvv }}">
-                <td class="dt-control"></td>
-                <td>{{ item.nvv }}</td>
-                <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td>
-                <td>{{ regiones|get_region:item.region }}</td>
-                <td>{{ comunas|get_comunas_por_region:item.region|get_comuna:item.comuna }}</td>
-                <td>{{ item.direccion }}</td>
-                <td>{{ item.nombre_contacto }}</td>
-                <td>{{ item.telefono_contacto }}</td>
-                <td>
-                    {% if item.estado == 4 %}   
-                        <select class='Estado' id='{{ item.nvv }}'>
-                            <option value=0>En preparación</option>
-                            <option value=1>Preparado</option>
-                            <option value=2>Tubos</option>
-                            <option selected value=3>Cañería</option>
-                            <option value=4>Rollos</option>
-                        </select>
-                    {% elif item.estado == 3 %}   
-                        <select class='Estado' id='{{ item.nvv }}'>
-                            <option value=0>En preparación</option>
-                            <option value=1>Preparado</option>
-                            <option value=2>Tubos</option>
-                            <option selected value=3>Cañería</option>
-                            <option value=4>Rollos</option>
-                        </select>
-                    {% elif item.estado == 2 %}   
-                        <select class='Estado' id='{{ item.nvv }}'>
-                            <option value=0>En preparación</option>
-                            <option value=1>Preparado</option>
-                            <option selected value=2>Tubos</option>
-                            <option value=3>Cañería</option>
-                            <option value=4>Rollos</option>
-                        </select>
-                    {% elif item.estado == 1 %}
-                        <select class='Estado' id='{{ item.nvv }}'>
-                            <option value=0>En preparación</option>
-                            <option selected value=1>Preparado</option>
-                            <option value=2>Tubos</option>
-                            <option value=3>Cañería</option>
-                            <option value=4>Rollos</option>
-                        </select>
-                    {% else %}
-                        <select class='Estado' id='{{ item.nvv }}'>
-                            <option selected value=0>En preparación</option>
-                            <option value=1>Preparado</option>
-                            <option value=2>Tubos</option>
-                            <option value=3>Cañería</option>
-                            <option value=4>Rollos</option>
-                        </select>
-                    {% endif %}
-                </td>
-                <td>{{ item.fecha_despacho|date:"d F Y" }}</td>
-                <td>
-                    {% if item.hora_despacho_extra_inicio|date:"G" == "0" %}
-                        {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}
-                    {% else %}
-                        {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }},<br>{{ item.hora_despacho_extra_inicio }} - {{ item.hora_despacho_extra_fin }}
-                    {% endif %}
-                </td>
-
-
-                <td style="display: none;">
-                    {{item.fecha_nvv}}\,&{{item.cliente}}\,{{item.rut}}\,{{item.condicion_pago}}\,{% if item.comprobante_pago == "None" %}
-                    No hay
+                {% if ocultar == 'True' and item.numero_guia != '' %}
                 {% else %}
-                    <a href="{{ item.comprobante_pago.url }}" target="_blank">link</a>
-                {% endif %}\,{{item.observacion}}
-                </td>
-                
-            </tr>
+                <tr class="text-center" id="{{ item.nvv }}">
+                    <td class="dt-control"></td>
+                    <td>{{ item.nvv }}</td>
+                    <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td>
+                    <td>{{ regiones|get_region:item.region }}</td>
+                    <td>{{ comunas|get_comunas_por_region:item.region|get_comuna:item.comuna }}</td>
+                    <td>{{ item.direccion }}</td>
+                    <td>{{ item.nombre_contacto }}</td>
+                    <td>{{ item.telefono_contacto }}</td>
+                    <td>
+                        {% if item.estado == 4 %}   
+                            <select class='Estado' id='{{ item.nvv }}'>
+                                <option value=0>En preparación</option>
+                                <option value=1>Preparado</option>
+                                <option value=2>Tubos</option>
+                                <option value=3>Cañería</option>
+                                <option selected value=4>Rollos</option>
+                            </select>
+                        {% elif item.estado == 3 %}   
+                            <select class='Estado' id='{{ item.nvv }}'>
+                                <option value=0>En preparación</option>
+                                <option value=1>Preparado</option>
+                                <option value=2>Tubos</option>
+                                <option selected value=3>Cañería</option>
+                                <option value=4>Rollos</option>
+                            </select>
+                        {% elif item.estado == 2 %}   
+                            <select class='Estado' id='{{ item.nvv }}'>
+                                <option value=0>En preparación</option>
+                                <option value=1>Preparado</option>
+                                <option selected value=2>Tubos</option>
+                                <option value=3>Cañería</option>
+                                <option value=4>Rollos</option>
+                            </select>
+                        {% elif item.estado == 1 %}
+                            <select class='Estado' id='{{ item.nvv }}'>
+                                <option value=0>En preparación</option>
+                                <option selected value=1>Preparado</option>
+                                <option value=2>Tubos</option>
+                                <option value=3>Cañería</option>
+                                <option value=4>Rollos</option>
+                            </select>
+                        {% else %}
+                            <select class='Estado' id='{{ item.nvv }}'>
+                                <option selected value=0>En preparación</option>
+                                <option value=1>Preparado</option>
+                                <option value=2>Tubos</option>
+                                <option value=3>Cañería</option>
+                                <option value=4>Rollos</option>
+                            </select>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.fecha_despacho|date:"d F Y" }}</td>
+                    <td>
+                        {% if item.hora_despacho_extra_inicio|date:"G" == "0" %}
+                            {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}
+                        {% else %}
+                            {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }},<br>{{ item.hora_despacho_extra_inicio }} - {{ item.hora_despacho_extra_fin }}
+                        {% endif %}
+                    </td>
+
+                    <td style="display: none;">
+                        {{item.fecha_nvv}}\,&{{item.cliente}}\,{{item.rut}}\,{{item.condicion_pago}}\,{% if item.comprobante_pago == "None" %}
+                        No hay
+                    {% else %}
+                        <a href="{{ item.comprobante_pago.url }}" target="_blank">link</a>
+                    {% endif %}\,{{item.observacion}}
+                    </td>
+                    
+                </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
     </table>
 </div>
+
+<div class="boton_ocultar_div">
+    {% if ocultar == 'True'%}
+        <input class="boton_ocultar" onclick="window.location='tabla_modificable_mostrar'" id="boton_ocultar" value="Mostrar NVV con número de guía" readonly>
+    {% else %} 
+        <input class="boton_ocultar" onclick="window.location='tabla_modificable'" id="boton_ocultar" value="Ocultar NVV con número de guía" readonly>
+    {% endif %}
+
+</div>
+
+<div id ="confirm_prompt_background" class="confirm_prompt_background" style="display: none;"></div>
+<div id="confirm_prompt" class="confirm_prompt" style="display: none;">
+<div id="confirm_texto" class="confirm_texto"></div>
+<input class="btn" onclick="confirmar()" id="boton_confirm" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
+
 {% endlanguage %}
+<script>var ocultar = "{{ ocultar }}"</script>
 <script src="{% static 'js/js_tabla.js' %}"></script>
 
 {% endblock content %}
