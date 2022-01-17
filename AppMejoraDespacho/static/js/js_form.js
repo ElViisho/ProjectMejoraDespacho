@@ -6,7 +6,29 @@ $(document).ready(function() {
     $('#id_nvv').select2();
     $('#id_region').select2();
     $('#id_comuna').select2();
+
+
+    const picker = document.getElementById('id_fecha_despacho');
+    const initialDate = picker.value;
+    var timeout = null;
+    picker.addEventListener('keyup', function(e){
+        var that = this;
+        if (timeout !== null) {
+            clearTimeout(timeout)
+        }
+        timeout = setTimeout(function() {
+            var day = new Date(that.value).getUTCDay();
+            if([6,0].includes(day)){
+                e.preventDefault();
+                that.value=initialDate;
+                alert('fecha inválida');
+            }
+        }, 1000)
+        
+    });
 });
+
+
 
 var phoneInputField = document.getElementById("id_cont_telefono");
 var phoneInput = window.intlTelInput(phoneInputField, {

@@ -52,7 +52,10 @@ def get_nvvs():
     return dictfetchall(cursor)
 
 def now_plus_n(n):
-    return datetime.date.today() + datetime.timedelta(days=n)
+    dia = datetime.date.today() + datetime.timedelta(days=n)
+    while (dia.weekday() in [5,6]):
+        dia += datetime.timedelta(days=1)
+    return dia
 
 class ingresoForm(forms.Form):
     nvv_choices = get_nvvs()
@@ -65,7 +68,7 @@ class ingresoForm(forms.Form):
     comprobante_pago = forms.FileField(label='Comprobante de pago (opcional)', required=False, validators=[validar_archivo], widget=AdminResubmitFileWidget(attrs={"accept":"image/png, image/jpg, image/jpeg, application/pdf"}))
     now = datetime.datetime.now()
     n=2
-    if (now.hour >= 4):
+    if (now.hour >= 16):
         n = 3
     fecha_despacho = forms.DateField(label='Fecha de despacho', widget=NumberInput(attrs={'type': 'date', 'min': str(now_plus_n(n))}), required=True, initial=(now_plus_n(n)))
 
