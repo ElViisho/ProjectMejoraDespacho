@@ -20,14 +20,14 @@ consulta_maeedo = "SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDO] WITH (NOLOCK) WHERE
 
 consulta_maeen = """SELECT * FROM [DIMACO_NEW].[dbo].[MAEEN] WITH (NOLOCK)
                 INNER JOIN [DIMACO_NEW].[dbo].[MAEEDO] on [DIMACO_NEW].[dbo].[MAEEN].[KOEN] = [DIMACO_NEW].[dbo].[MAEEDO].[ENDO]
-                WHERE [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] = (
-                    SELECT [NUDO] 
-                    FROM [DIMACO_NEW].[dbo].[MAEEDO] WITH (NOLOCK)
-                    WHERE NUDO = %s AND TIDO = 'NVV') AND [DIMACO_NEW].[dbo].[MAEEN].[TIPOSUC]='P';"""
+                WHERE [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] = %s
+                AND [DIMACO_NEW].[dbo].[MAEEN].[TIPOSUC]='P';"""
 
 consulta_maeedoob = """SELECT * FROM [DIMACO_NEW].[dbo].[MAEEDOOB] WITH (NOLOCK)
                 INNER JOIN [DIMACO_NEW].[dbo].[MAEEDO] on [DIMACO_NEW].[dbo].[MAEEDOOB].[IDMAEEDO] = [DIMACO_NEW].[dbo].[MAEEDO].[IDMAEEDO]
-                WHERE [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] = (
-                    SELECT [NUDO]
-                    FROM [DIMACO_NEW].[dbo].[MAEEDO] WITH (NOLOCK)
-                    WHERE NUDO = %s AND TIDO = 'NVV');"""
+                WHERE [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] = %s;"""
+
+consulta_tabfu = """SELECT DISTINCT NOKOFU FROM [DIMACO_NEW].[dbo].[TABFU] WITH (NOLOCK)
+                INNER JOIN [DIMACO_NEW].[dbo].[MAEDDO] on [DIMACO_NEW].[dbo].[TABFU].[KOFU] = [DIMACO_NEW].[dbo].[MAEDDO].[KOFULIDO]
+                WHERE [DIMACO_NEW].[dbo].[MAEDDO].[NUDO] = %s
+                AND [DIMACO_NEW].[dbo].[MAEDDO].[TIDO] = 'NVV';"""

@@ -93,6 +93,16 @@ $(document).ready(function() {
 
 function format (d) {
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+        '<tr>' +
+            '<td>Nombre vendedor:</td>' +
+            '<td>' + d[7] + '</td>' +
+            '<td></td>'+
+        '</tr>' +
+        '<tr>' +
+            '<td>Nombre asistente:</td>' +
+            '<td>' + d[8] + '</td>' +
+            '<td></td>'+
+        '</tr>' +
         '<tr>'+
             '<td>Fecha NVV:</td>'+
             '<td>'+d[0]+'</td>'+
@@ -114,7 +124,7 @@ function format (d) {
             '<td></td>'+
         '</tr>'+
         '<tr>' +
-            '<td> Comprobante de pago:</td>' +
+            '<td>Comprobante de pago:</td>' +
             '<td>' + d[4] + '</td>' +
             '<td></td>'+
         '</tr>' +

@@ -82,9 +82,13 @@ def ingresar(request):
 			cursor.execute(consulta_maeedoob, [nvv])
 			datos_maeedoob = dictfetchall(cursor)
 
+			cursor.execute(consulta_tabfu, [nvv])
+			datos_tabfu = dictfetchall(cursor)
+
 			Ordenes.objects.create(
 				nvv = nvv,
 				fecha_nvv = datos_maeedo[0]["FEEMDO"],
+				nombre_vendedor = datos_tabfu[0]["NOKOFU"],
 				rut = datos_maeedo[0]["ENDO"],
 				cliente = datos_maeen[0]["NOKOEN"],
 				region = cleaned_data['region'],
@@ -100,6 +104,7 @@ def ingresar(request):
 				hora_de_despacho_fin = datetime.time(hour=int(cleaned_data['hora_despacho_fin'])),
 				hora_despacho_extra_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_extra_inicio'])),
 				hora_despacho_extra_fin = datetime.time(hour=int(cleaned_data['hora_despacho_extra_fin'])),
+				nombre_asistente = request.user.get_full_name(),
 			)		
 			return redirect("confirm_nvv")
 		return render(request, "AppMejoraDespacho/form.html", {"formulario": data_obtenida})

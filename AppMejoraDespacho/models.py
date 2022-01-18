@@ -27,5 +27,8 @@ class Ordenes(models.Model):
     numero_guia = models.CharField(max_length=100, blank=True)
     documento_salida = models.FileField(upload_to='voucher_de_despacho/%Y/%m/%d/', default='None')
 
+    nombre_vendedor = models.CharField(max_length=200, db_index=True)
+    nombre_asistente = models.CharField(max_length=200, db_index=True)
+
     def __str__(self):
         return self.nvv
