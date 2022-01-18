@@ -51,7 +51,11 @@
                     <td>{{ item.nombre_contacto }}</td>
                     <td>{{ item.telefono_contacto }}</td>
                     <td>
-                        {% if item.estado == 4 %}   
+                        {% if item.numero_guia != '' %}
+                            <select class='Estado_listo' id='{{ item.nvv }}' disabled>
+                                <option selected value=5>Despachado</option>
+                            </select>
+                        {% elif item.estado == 4 %}   
                             <select class='Estado' id='{{ item.nvv }}'>
                                 <option value=0>En preparación</option>
                                 <option value=1>Preparado</option>
