@@ -6,13 +6,17 @@
     font-weight: normal;
 }
 
+.table{
+	table-layout: fixed;
+}
+
 .titlep{
     color:whitesmoke;
     font-family: Brush Script MT;
     font-size: 50px;
     font-weight: normal;
-    padding-left: 1%;
     cursor: pointer;
+    text-align: center;
 }
 
 .button{
@@ -36,3 +40,32 @@
 	margin-bottom: 20px;
 	display: flex;	
 }
+
+.button_inicio{
+    background-color: #007b34;
+	color: #dfdfdf;
+	font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-style: normal;
+	font-size: 15px;
+	width: 150px;
+	height: 40px;
+	border-radius: 5px;
+	border-style: solid;
+	border-color: #007030;
+	transition: background-color 1s , border-color 1s;
+	margin-left: 10px;
+	margin-bottom: 20px;
+}
+
+.button:hover{
+    cursor: pointer;
+    background-color: #ff948c;
+    transition-duration: 1s;
+}
+
+.button_inicio:hover{
+    cursor: pointer;
+    background-color: #499b6c;
+    transition-duration: 1s;
+}
+

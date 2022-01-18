@@ -13,14 +13,15 @@
     
     <!-- Aqui emppieza el codigo esencial en cada pagina -->
     <body style="background-color: #dfdfdf;">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-grey">
-        <div class="container-fluid">
-            <h1 class="titlep" onclick="window.location='/'">
-            <img src="{% static 'images/logo.png'%}" style="width: 250px; height: 55px; display: inline;">
-            </h1>
-        </div>
-        <button type="button" class="button" onclick="window.location='/'" style="margin-right: 20px;">Volver a inicio</button>
-        </nav>
+        <table class="table">
+            <thead>
+                <th id="button"><button type="button" class="button_inicio" onclick="window.location='/'" style="margin-right: 20px;">Volver a inicio</button></th>
+                <th id="logo"><h1 class="titlep" onclick="window.location='/'">
+                    <img src="{% static 'images/logo.png'%}" style="width: 250px; height: 55px;">
+                </h1></th>
+                <th></th>
+            </thead>
+        </table>
         <!-- hasta aqui seria lo escencial en cada pagina -->
 
         {% block content %}{% endblock content %}

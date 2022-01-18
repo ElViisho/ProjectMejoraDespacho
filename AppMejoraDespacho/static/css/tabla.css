@@ -30,7 +30,6 @@
 #boton:hover, .boton_ocultar:hover{
     cursor: pointer;
     background-color: #ff948c;
-    border-color: rgb(255, 240, 240);
     transition-duration: 1s;
 }
 
