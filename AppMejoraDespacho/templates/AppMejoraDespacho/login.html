@@ -11,10 +11,11 @@
     </head>
 
 	<body style="background-color: #dfdfdf;">
-		<h1 class="titlep">
+		<h1 class="titlep" style="cursor: default;">
 			<img src="{% static 'images/logo.png'%}" style="width: 250px; height: 55px;"></h1>
         <main class="form-signin">
-            <form action="{% provider_login_url 'google' %}">	
+            <form action="{% provider_login_url 'google' %}" method="post">
+                {% csrf_token %}
 				<input type="submit" value="Iniciar sesión" class="button_iniciar_sesion" readonly>
             </form>
         </main>

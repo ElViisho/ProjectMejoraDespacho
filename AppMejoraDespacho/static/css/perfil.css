@@ -69,3 +69,7 @@
     transition-duration: 1s;
 }
 
+.logout{
+	text-align: right;
+	vertical-align: super;
+}
