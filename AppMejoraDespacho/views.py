@@ -20,6 +20,35 @@ import json
 from .choices import regiones, comunas
 from .consultas import *
 
+def loginPage(request):
+	'''
+	Funcion para mostrar la pagina de login de la app
+	Pagina: login
+	'''
+	context = {}
+	if request.user.is_authenticated:
+		return redirect('inicio')
+	
+	else:
+		if request.method  == 'POST':
+			username = request.POST.get('username')
+			password = request.POST.get('password')
+			user = authenticate(request, username=username, password=password)
+
+			if user is not None:
+				login(request, user)
+				return redirect('inicio')
+			else:
+				context = {"error":" Usuario y/o contraseña incorrecta, vuelva a intentarlo"}
+
+		
+		return render(request, "AppMejoraDespacho/login.html", context)
+
+def logoutUser(request):
+	logout(request)
+	return redirect('login')
+
+@login_required(login_url='login')
 def inicio(request):
 	'''
 	Funcion para mostrar el html inicio de la aplicacion con render
@@ -27,7 +56,7 @@ def inicio(request):
 	'''
 	return render(request, "AppMejoraDespacho/inicio.html")
 
-
+@login_required(login_url='login')
 def ingresar(request):
 	if request.method == 'GET':
 		formulario = ingresoForm()
@@ -75,13 +104,14 @@ def ingresar(request):
 			return redirect("confirm_nvv")
 		return render(request, "AppMejoraDespacho/form.html", {"formulario": data_obtenida})
 
-
+@login_required(login_url='login')
 def confirm_nvv(request):
 	'''
 	Funcion de mostrar la pagina de exitoso ingreso de la nota de venta a la base
 	'''
 	return render(request, "AppMejoraDespacho/confirm_nvv.html")
 
+@login_required(login_url='login')
 def delete_nvv(request):
 	'''
 	Funcion de mostrar la pagina para eliminar una nota de venta de la base
@@ -99,19 +129,22 @@ def delete_nvv(request):
 			return redirect("confirm_delete_nvv")
 		return render(request, "AppMejoraDespacho/delete_nvv.html", {"formulario": data_obtenida})
 
+@login_required(login_url='login')
 def confirm_delete_nvv(request):
 	'''
 	Funcion de mostrar la pagina de exitoso ingreso de la nota de venta a la base
 	'''
 	return render(request, "AppMejoraDespacho/confirm_delete_nvv.html")
 
+@login_required(login_url='login')
 def tabla_modificable_mostrar(request):
 	ocultar = "False"
 	return tabla_modificable(request, ocultar)
 
+@login_required(login_url='login')
 def tabla_modificable_ocultar(request):
 	ocultar = "True"
-	return tabla_modificable(request, ocultar)
+	return  tabla_modificable(request, ocultar)
 
 def tabla_modificable(request, ocultar):
 	'''

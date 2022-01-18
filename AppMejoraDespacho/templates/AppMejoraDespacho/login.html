@@ -1,0 +1,22 @@
+{% load static %}
+{% load socialaccount %}
+
+<!DOCTYPE html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Dimaco</title>
+		<link rel="icon"href="{% static 'favicon.ico' %}">
+		<link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+		<link rel="stylesheet" href="{% static 'css/login.css' %}">
+    </head>
+
+	<body style="background-color: #dfdfdf;">
+		<h1 class="titlep">
+			<img src="{% static 'images/logo.png'%}" style="width: 250px; height: 55px;"></h1>
+        <main class="form-signin">
+            <form action="{% provider_login_url 'google' %}">	
+				<input type="submit" value="Iniciar sesión" class="button_iniciar_sesion" readonly>
+            </form>
+        </main>
+	</body>
+</html>
