@@ -33,7 +33,21 @@ $('.Estado').change(function () {
 let nvv = "";
 
 $(document).ready(function() { 
-    var table = $('#listado').DataTable({        
+    var table = $('#listado').DataTable({  
+        "columns": [
+            { "searchable": false, orderable: false },
+            null,
+            null,
+            null,
+            null,
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+            null,
+            null,
+            { "searchable": false, orderable: false },
+        ],    
         "search": {
             "smart": false
         },
