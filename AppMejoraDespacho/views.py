@@ -56,7 +56,13 @@ def inicio(request):
 	Funcion para mostrar el html inicio de la aplicacion con render
 	Pagina: inicio
 	'''
-	return render(request, "AppMejoraDespacho/inicio.html")
+	grupos = list(request.user.groups.values_list('name', flat= True))
+	permisos = 'Básico'
+	if (len(grupos) > 0):
+		permisos = grupos[0]
+	if request.user.is_superuser:
+		permisos = 'Eliminar'
+	return render(request, "AppMejoraDespacho/inicio.html", {"permisos": permisos})
 
 @login_required(login_url='login')
 def ingresar(request):
@@ -123,6 +129,8 @@ def delete_nvv(request):
 	'''
 	Funcion de mostrar la pagina para eliminar una nota de venta de la base
 	'''
+	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] != 'Eliminar'):
+		return redirect('inicio')
 	if request.method == 'GET':
 		formulario = deleteForm()
 		for field in formulario:
@@ -169,7 +177,13 @@ def tabla_modificable(request, con_guia):
 			Ordenes.objects.filter(nvv=nvv).update(listo=listo)
 			change_numero_guia(nvv, listo)
 	
-	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"queryset": queryset, "regiones": regiones, "comunas": comunas, "con_guia": con_guia,})
+	grupos = list(request.user.groups.values_list('name', flat= True))
+	permisos = 'Básico'
+	if (len(grupos) > 0):
+		permisos = grupos[0]
+	if request.user.is_superuser:
+		permisos = 'Despacho'
+	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"permisos": permisos, "queryset": queryset, "regiones": regiones, "comunas": comunas, "con_guia": con_guia,})
 
 def change_numero_guia(nvv, listo):
 	if not listo:

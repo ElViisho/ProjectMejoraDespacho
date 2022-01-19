@@ -105,22 +105,24 @@ $(document).ready(function() {
         }
     } );
 
-    $('.Estado').on('change', function () {
-        var url = window.location.href;
-        var option = $(this).val();
-        var nvv = this.id;
+    if (permisos == 'Despacho') {
+        $('.Estado').on('change', function () {
+            var url = window.location.href;
+            var option = $(this).val();
+            var nvv = this.id;
 
-        $.ajaxSetup({
-            headers: { "X-CSRFToken": getCookie("csrftoken") }
-        });
+            $.ajaxSetup({
+                headers: { "X-CSRFToken": getCookie("csrftoken") }
+            });
 
-        $.ajax({
-            success: function () {
-                $.post(url, {"type": "estado", "nvv": nvv, "option": option,}),
-                table.cell('#estado_string' + nvv).data(option)
-            }
+            $.ajax({
+                success: function () {
+                    $.post(url, {"type": "estado", "nvv": nvv, "option": option,}),
+                    table.cell('#estado_string' + nvv).data(option)
+                }
+            })
         })
-        })
+    }
 });
 
 var listo = 0;
@@ -129,6 +131,12 @@ function format (d) {
     listo = d[9];
     if (d[9] == 1) boton_guia_despacho = "Borrar número de guía";
     else boton_guia_despacho = "Marcar como despachado";
+
+    var boton_despacho = '';
+    if (permisos == 'Despacho') {
+    boton_despacho = '<tr>'+
+    `<td colspan='2' style='text-align: center'><input class="btn btn-default boton-sumbit" onclick="prompt_confirm(${listo})" id="boton" value="${boton_guia_despacho}" readonly></td>` +
+    '</tr>';}   
 
     return '<table class="child_table" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>' +
@@ -167,9 +175,7 @@ function format (d) {
             '<td>Número de guía:</td>'+
             '<td>' + d[6] + '</td>' +
         '</tr>'+
-        '<tr>'+
-        `<td colspan='2' style='text-align: center'><input class="btn btn-default boton-sumbit" onclick="prompt_confirm(${listo})" id="boton" value="${boton_guia_despacho}" readonly></td>` +
-        '</tr>'+
+        boton_despacho +
     '</table>';
 }
 

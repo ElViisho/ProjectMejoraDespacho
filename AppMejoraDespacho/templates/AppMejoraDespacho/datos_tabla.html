@@ -17,46 +17,76 @@
             <select class='Estado_listo' id='{{ item.nvv }}' disabled>
                 <option selected value=5>Despachado</option>
             </select>
-        {% elif item.estado == 4 %}   
-            <select class='Estado' id='{{ item.nvv }}'>
-                <option value=0>En preparación</option>
-                <option value=1>Preparado</option>
-                <option value=2>Tubos</option>
-                <option value=3>Cañería</option>
-                <option selected value=4>Rollos</option>
-            </select>
+        {% elif item.estado == 4 %}
+            {% if permisos == "Despacho" %}
+                <select class='Estado' id='{{ item.nvv }}'>  
+                    <option value=0>En preparación</option>
+                    <option value=1>Preparado</option>
+                    <option value=2>Tubos</option>
+                    <option value=3>Cañería</option>
+                    <option selected value=4>Rollos</option>
+                </select>
+            {% else %}
+                <select disabled class='Estado' id='{{ item.nvv }}'>
+                    <option selected value=4>Rollos</option>
+                </select>
+            {% endif %}
         {% elif item.estado == 3 %}   
-            <select class='Estado' id='{{ item.nvv }}'>
-                <option value=0>En preparación</option>
-                <option value=1>Preparado</option>
-                <option value=2>Tubos</option>
-                <option selected value=3>Cañería</option>
-                <option value=4>Rollos</option>
-            </select>
+            {% if permisos == "Despacho" %}
+                <select class='Estado' id='{{ item.nvv }}'>  
+                    <option value=0>En preparación</option>
+                    <option value=1>Preparado</option>
+                    <option value=2>Tubos</option>
+                    <option selected value=3>Cañería</option>
+                    <option value=4>Rollos</option>
+                </select>
+            {% else %}
+                <select disabled class='Estado' id='{{ item.nvv }}'>
+                    <option selected value=3>Cañería</option>
+                </select>
+            {% endif %}
         {% elif item.estado == 2 %}   
-            <select class='Estado' id='{{ item.nvv }}'>
-                <option value=0>En preparación</option>
-                <option value=1>Preparado</option>
-                <option selected value=2>Tubos</option>
-                <option value=3>Cañería</option>
-                <option value=4>Rollos</option>
-            </select>
+            {% if permisos == "Despacho" %}
+                <select class='Estado' id='{{ item.nvv }}'>  
+                    <option value=0>En preparación</option>
+                    <option value=1>Preparado</option>
+                    <option selected value=2>Tubos</option>
+                    <option value=3>Cañería</option>
+                    <option value=4>Rollos</option>
+                </select>
+            {% else %}
+                <select disabled class='Estado' id='{{ item.nvv }}'>
+                    <option selected value=2>Tubos</option>
+                </select>
+            {% endif %}
         {% elif item.estado == 1 %}
-            <select class='Estado' id='{{ item.nvv }}'>
-                <option value=0>En preparación</option>
-                <option selected value=1>Preparado</option>
-                <option value=2>Tubos</option>
-                <option value=3>Cañería</option>
-                <option value=4>Rollos</option>
-            </select>
+            {% if permisos == "Despacho" %}
+                <select class='Estado' id='{{ item.nvv }}'>  
+                    <option value=0>En preparación</option>
+                    <option selected value=1>Preparado</option>
+                    <option value=2>Tubos</option>
+                    <option value=3>Cañería</option>
+                    <option value=4>Rollos</option>
+                </select>
+            {% else %}
+                <select disabled class='Estado' id='{{ item.nvv }}'>
+                    <option selected value=1>Preparado</option>
+                </select>
+            {% endif %}
         {% else %}
-            <select class='Estado' id='{{ item.nvv }}'>
-                <option selected value=0>En preparación</option>
-                <option value=1>Preparado</option>
-                <option value=2>Tubos</option>
-                <option value=3>Cañería</option>
-                <option value=4>Rollos</option>
-            </select>
+            {% if permisos == "Despacho" %}
+                <select class='Estado' id='{{ item.nvv }}'>  
+                    <option selected value=0>En preparación</option>
+                    <option value=1>Preparado</option>
+                    <option value=2>Tubos</option>
+                    <option value=3>Cañería</option>
+                    <option value=4>Rollos</option>
+                </select>
+            {% else %}
+                <select disabled class='Estado' id='{{ item.nvv }}'>
+                    <option selected value=0>En preparación</option>
+                </select>
+            {% endif %}
         {% endif %}
     </td>
     <td>{{ item.fecha_despacho|date:"d F Y" }}</td>
