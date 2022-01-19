@@ -10,21 +10,13 @@ $(document).ready(function() {
 
     const picker = document.getElementById('id_fecha_despacho');
     const initialDate = picker.value;
-    var timeout = null;
-    picker.addEventListener('keyup', function(e){
-        var that = this;
-        if (timeout !== null) {
-            clearTimeout(timeout)
-        }
-        timeout = setTimeout(function() {
-            var day = new Date(that.value).getUTCDay();
-            if([6,0].includes(day)){
-                e.preventDefault();
-                that.value=initialDate;
-                alert('fecha inválida');
-            }
-        }, 1000)
-        
+    picker.addEventListener('change', function(e){
+        var day = new Date(this.value).getUTCDay();
+        if([6,0].includes(day)){
+            e.preventDefault();
+            this.value=initialDate;
+            alert('fecha inválida');
+        } 
     });
 });
 

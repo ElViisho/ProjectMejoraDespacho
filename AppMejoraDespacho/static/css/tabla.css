@@ -25,6 +25,7 @@
     border-color: #cc542c;
     text-align: center;
     height: 50px;
+    width: 300px;
 }
 
 #boton:hover, .boton_ocultar:hover{
@@ -44,7 +45,6 @@
     text-align: center;
     height: 25px;
     margin-bottom: 30px;
-    width: 15%;
 }
 
 .boton_ocultar_div {

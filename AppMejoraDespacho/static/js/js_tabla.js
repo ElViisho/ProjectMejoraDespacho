@@ -91,60 +91,64 @@ $(document).ready(function() {
     } );
 });
 
+var listo = 0;
+
 function format (d) {
+    listo = d[9];
+    if (d[9] == 1) boton_guia_despacho = "Borrar número de guía";
+    else boton_guia_despacho = "Marcar como despachado";
+
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>' +
             '<td>Nombre vendedor:</td>' +
             '<td>' + d[7] + '</td>' +
-            '<td></td>'+
         '</tr>' +
         '<tr>' +
-            '<td>Nombre asistente:</td>' +
+            '<td>Solicitado por:</td>' +
             '<td>' + d[8] + '</td>' +
-            '<td></td>'+
         '</tr>' +
         '<tr>'+
-            '<td>Fecha NVV:</td>'+
+            '<td>Fecha emisión NVV:</td>'+
             '<td>'+d[0]+'</td>'+
-            '<td></td>'+
         '</tr>'+
         '<tr>'+
             '<td>Cliente:</td>'+
             '<td>'+d[1]+'</td>'+
-            '<td></td>'+
         '</tr>'+
         '<tr>'+
             '<td>RUT Cliente:</td>'+
             '<td>' + d[2] + '</td>'+
-            '<td></td>'+
         '</tr>'+
         '<tr>'+
             '<td>Condición de pago:</td>'+
             '<td>' + d[3] + '</td>'+
-            '<td></td>'+
         '</tr>'+
         '<tr>' +
             '<td>Comprobante de pago:</td>' +
             '<td>' + d[4] + '</td>' +
-            '<td></td>'+
         '</tr>' +
         '<tr>'+
             '<td>Obervaciones:</td>'+
             '<td>' + d[5] + '</td>'+
-            '<td></td>'+
         '</tr>'+
         '<tr>'+
             '<td>Número de guía:</td>'+
-            '<nobr>'+ 
-            '<td><input type="text" name="numero_guia" maxlength="20" id="numero_guia" class="numero_guia" value="' + d[6] +'"> </td>' + 
-            '<td><input class="btn btn-default boton-sumbit" onclick="prompt_confirm()" id="boton" disabled value="Subir número de guía" readonly></td>'+
-            '</nobr>' +
+            '<td>' + d[6] + '</td>' +
+        '</tr>'+
+        '<tr>'+
+        `<td><input class="btn btn-default boton-sumbit" onclick="prompt_confirm(${listo})" id="boton" value="${boton_guia_despacho}" readonly></td>` +
+            '<td></td>' +
         '</tr>'+
     '</table>';
 }
 
-function prompt_confirm() {
-    $('#confirm_texto').html(`¿Confirmas que quieres subir el número de guía para la nota de venta ${nvv}? (Esto eliminará la nota de la tabla)<br>`);
+function prompt_confirm(listo) {
+    if (listo) {
+        $('#confirm_texto').html(`¿Confirmas que quieres borrar la guía de despacho de la orden ${nvv}? (Dejará de estar marcada como despachada)<br>`);
+    }
+    else {
+        $('#confirm_texto').html(`¿Confirmas que quieres marcar la orden ${nvv} como despachada? (Esto la hará invisible en la tabla)<br>`);
+    }
     $('#confirm_prompt_background').show();
     $('#confirm_prompt').show();
     $('#confirm_texto').show();
@@ -162,7 +166,6 @@ function cancelar() {
 
 function confirmar() {
     var url = window.location.href;
-    var numero = $('#numero_guia').val();
 
     $.ajaxSetup({
         headers: { "X-CSRFToken": getCookie("csrftoken") }
@@ -170,9 +173,8 @@ function confirmar() {
 
     $.ajax({
         success: function () {
-            $.post(url, {"type": "numero_guia", "nvv": nvv, "numero": numero,}),
-            cancelar();
-            location.reload();
+            $.post(url, {"type": "numero_guia", "nvv": nvv, "listo": listo}, window.location.reload());
         }
     })
+
 }

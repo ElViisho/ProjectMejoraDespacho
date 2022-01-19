@@ -31,3 +31,8 @@ consulta_tabfu = """SELECT DISTINCT NOKOFU FROM [DIMACO_NEW].[dbo].[TABFU] WITH 
                 INNER JOIN [DIMACO_NEW].[dbo].[MAEDDO] on [DIMACO_NEW].[dbo].[TABFU].[KOFU] = [DIMACO_NEW].[dbo].[MAEDDO].[KOFULIDO]
                 WHERE [DIMACO_NEW].[dbo].[MAEDDO].[NUDO] = %s
                 AND [DIMACO_NEW].[dbo].[MAEDDO].[TIDO] = 'NVV';"""
+
+consulta_guia_despacho = """SELECT DISTINCT TIDO, NUDO, FEEMLI FROM [DIMACO_NEW].[dbo].[MAEDDO] WITH (NOLOCK)
+                WHERE NUDOPA = %s
+                AND TIDO IN ('FCV', 'GDV')
+                AND SULIDO = '000';"""

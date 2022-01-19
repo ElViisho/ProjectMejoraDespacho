@@ -20,6 +20,8 @@ import json
 from .choices import regiones, comunas
 from .consultas import *
 
+import time
+
 def loginPage(request):
 	'''
 	Funcion para mostrar la pagina de login de la app
@@ -142,31 +144,43 @@ def confirm_delete_nvv(request):
 	return render(request, "AppMejoraDespacho/confirm_delete_nvv.html")
 
 @login_required(login_url='login')
-def tabla_modificable_mostrar(request):
-	ocultar = "False"
-	return tabla_modificable(request, ocultar)
+def tabla_modificable_con_guia(request):
+	con_guia = "True"
+	return tabla_modificable(request, con_guia)
 
 @login_required(login_url='login')
-def tabla_modificable_ocultar(request):
-	ocultar = "True"
-	return  tabla_modificable(request, ocultar)
+def tabla_modificable_sin_guia(request):
+	con_guia = "False"
+	return  tabla_modificable(request, con_guia)
 
-def tabla_modificable(request, ocultar):
+def tabla_modificable(request, con_guia):
 	'''
 	Funcion de mostrar la pagina con la tabla modificable de la base de datos
 	'''
-	cursor = connections['default'].cursor()
-	cursor.execute("SELECT * FROM AppMejoraDespacho_ordenes")
-	queryset = datos = Ordenes.objects.all()
+	queryset = Ordenes.objects.all()
 	
 	if request.method == "POST":
 		data = request.POST
 		if (data['type'] == 'estado'):
 			Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
 		elif (data['type'] == 'numero_guia'):
-			Ordenes.objects.filter(nvv=data['nvv']).update(numero_guia=data['numero'])
+			nvv = data['nvv']
+			listo = 1-int(data['listo'])
+			Ordenes.objects.filter(nvv=nvv).update(listo=listo)
+			change_numero_guia(nvv, listo)
 	
-	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"datos": datos, "queryset": queryset, "regiones": regiones, "comunas": comunas, "ocultar": ocultar,})
+	return render(request, "AppMejoraDespacho/tabla_modificable.html",{"queryset": queryset, "regiones": regiones, "comunas": comunas, "con_guia": con_guia,})
+
+def change_numero_guia(nvv, listo):
+	if not listo:
+		Ordenes.objects.filter(nvv=nvv).update(numero_guia='')
+	else:
+		cursor = connections['dimaco'].cursor()
+		cursor.execute(consulta_guia_despacho, [nvv])
+		datos = dictfetchall(cursor)
+		if datos:
+			n_guia = datos[0]['TIDO']+' Número '+ datos[0]['NUDO']
+			Ordenes.objects.filter(nvv=nvv).update(numero_guia=n_guia)
 
 def load_comunas(request):
     region = request.GET.get('region')

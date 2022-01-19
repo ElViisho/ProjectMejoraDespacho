@@ -30,5 +30,7 @@ class Ordenes(models.Model):
     nombre_vendedor = models.CharField(max_length=200, db_index=True)
     nombre_asistente = models.CharField(max_length=200, db_index=True)
 
+    listo = models.IntegerField(default=0, choices=((0, "No"),(1, "Si")))
+
     def __str__(self):
         return self.nvv
