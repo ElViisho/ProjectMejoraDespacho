@@ -190,6 +190,7 @@ def tabla_modificable(request, con_guia):
 def change_numero_guia(nvv, listo):
 	if not listo:
 		Ordenes.objects.filter(nvv=nvv).update(numero_guia='')
+		return True
 	else:
 		cursor = connections['dimaco'].cursor()
 		cursor.execute(consulta_guia_despacho, [nvv])
