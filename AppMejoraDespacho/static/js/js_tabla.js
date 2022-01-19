@@ -14,27 +14,13 @@ function getCookie(c_name)
     return "";
 }
 
-$('.Estado').change(function () {
-    var url = window.location.href;
-    var option = $(this).val();
-    var nvv = this.id;
-
-    $.ajaxSetup({
-        headers: { "X-CSRFToken": getCookie("csrftoken") }
-    });
-
-    $.ajax({
-        success: function () {
-            $.post(url, {"type": "estado", "nvv": nvv, "option": option,});
-        }
-    })
-})
+const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
 let nvv = "";
 
 $(document).ready(function() { 
     var table = $('#listado').DataTable({ 
-        "dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
+        "dom": '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>',
         "columns": [
             { "searchable": false, orderable: false },
             null,
@@ -48,6 +34,22 @@ $(document).ready(function() {
             null,
             null,
             { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false, render: function (data, type, row) {
+                x = []
+                for (i in data){
+                    switch(data[i]){
+                        case "0": x.push("En preparación"); break;
+                        case "1": x.push("Preparado"); break;
+                        case "2": x.push("Tubos"); break;
+                        case "3": x.push("Cañería"); break;
+                        case "4": x.push("Rollos"); break;
+                        case "5": x.push("Despachado"); break;
+                        default: x.push(""); break;
+                    }
+                }
+                return x;
+            }
+            }
         ],    
         "search": {
             "smart": false
@@ -64,9 +66,18 @@ $(document).ready(function() {
         buttons: [
             {
                 extend: 'excel',
-                text: 'Save current page',
+                classname: 'excel',
+                text: 'Exportar tabla a excel',
+                filename: function() {
+                    d = new Date()
+                    return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear();
+                },
+                exportOptions: {
+                    columns: [ 1, 2, 3, 4, 5, 7, 9, 10, 12]
+                },
+                title: "Ordenes de despacho",
             }
-        ],
+        ]
     });    
 
     $('#listado tbody').on('click', 'td.show_hide', function () {
@@ -91,17 +102,25 @@ $(document).ready(function() {
             nvv = row.data()[1];
             row.child( format(data) ).show();
             tr.addClass('shown');
-
-            $('#numero_guia').change(function () {
-                if ($(this).val() == "") {
-                    $('#boton').prop('disabled', true);
-                }
-                else {
-                    $('#boton').prop('disabled', false);
-                }
-            })
         }
     } );
+
+    $('.Estado').on('change', function () {
+        var url = window.location.href;
+        var option = $(this).val();
+        var nvv = this.id;
+
+        $.ajaxSetup({
+            headers: { "X-CSRFToken": getCookie("csrftoken") }
+        });
+
+        $.ajax({
+            success: function () {
+                $.post(url, {"type": "estado", "nvv": nvv, "option": option,}),
+                table.cell('#estado_string' + nvv).data(option)
+            }
+        })
+        })
 });
 
 var listo = 0;

@@ -75,5 +75,6 @@
         <a href="{{ item.comprobante_pago.url }}" target="_blank">Link</a>
     {% endif %}\,{{item.observacion}}\,{{item.numero_guia}}\,{{item.nombre_vendedor}}\,{{item.nombre_asistente}}\,{{item.listo}}
     </td>
+    <td style="display: none;" id="estado_string{{ item.nvv }}" >{{item.estado}}</td>
     
 </tr>

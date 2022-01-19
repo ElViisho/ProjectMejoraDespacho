@@ -1,10 +1,38 @@
-div.dataTables_length {
+.dataTables_length {
     padding-left: 2em;
 }
-div.dataTables_length,
-div.dataTables_filter {
+.dataTables_length,
+.dataTables_filter {
     padding-top: 0.55em;
+    padding-right: 1em;
 }
+
+.dataTables_info {
+    padding-left: 1em;
+}
+
+.dt-buttons {
+    padding-left: 1em;
+}
+
+.dt-button.buttons-excel {
+    background-color: #007b34;
+	color: #dfdfdf;
+	font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-style: normal;
+	font-size: 15px;
+	border-radius: 5px;
+	border-style: solid;
+	border-color: #007030;
+	transition: background-color 1s , border-color 1s;
+}
+
+.dt-button.buttons-excel:hover{
+    cursor: pointer;
+    background-color: #499b6c;
+    transition-duration: 1s;
+}
+
 
 .show_hide{
     cursor: pointer;
@@ -42,6 +70,7 @@ div.dataTables_filter {
     text-align: center;
     height: 25px;
     margin-bottom: 30px;
+    width: 250px;
 }
 
 .boton_ocultar_div {
