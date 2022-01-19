@@ -99,11 +99,11 @@
     </td>
 
     <td style="display: none;">
-        {{item.fecha_nvv}}\,{{item.cliente}}\,{{item.rut}}\,{{item.condicion_pago}}\,{% if item.comprobante_pago == "None" %}
+        {{item.fecha_nvv}}\,\,{{item.cliente}}\,\,{{item.rut}}\,\,{{item.condicion_pago}}\,\,{% if item.comprobante_pago == "None" %}
         No hay
     {% else %}
         <a href="{{ item.comprobante_pago.url }}" target="_blank">Link</a>
-    {% endif %}\,{{item.observacion}}\,{{item.numero_guia}}\,{{item.nombre_vendedor}}\,{{item.nombre_asistente}}\,{{item.listo}}
+    {% endif %}\,\,{{item.observacion}}\,\,{{item.numero_guia}}\,\,{{item.nombre_vendedor}}\,\,{{item.nombre_asistente}}\,\,{{item.listo}}\,\,{{item.valor_neto_documento}}
     </td>
     <td style="display: none;" id="estado_string{{ item.nvv }}" >{{item.estado}}</td>
     

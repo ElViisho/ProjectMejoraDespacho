@@ -32,5 +32,7 @@ class Ordenes(models.Model):
 
     listo = models.IntegerField(default=0, choices=((0, "No"),(1, "Si")))
 
+    valor_neto_documento = models.IntegerField(default=0)
+
     def __str__(self):
         return self.nvv

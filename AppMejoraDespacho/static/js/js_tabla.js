@@ -83,7 +83,7 @@ $(document).ready(function() {
     $('#listado tbody').on('click', 'td.show_hide', function () {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
-        var data = row.data()[11].split("\\,")
+        var data = row.data()[11].split("\\,\\,")
  
         if ( row.child.isShown() ) {
             // This row is already open - close it
@@ -166,6 +166,11 @@ function format (d) {
         '<tr>' +
             '<td>Comprobante de pago:</td>' +
             '<td>' + d[4] + '</td>' +
+        '</tr>' +
+        '<tr>'+
+        '<tr>' +
+            '<td>Valor neto:</td>' +
+            '<td>$' + Number(d[10]).toLocaleString() + '</td>' +
         '</tr>' +
         '<tr>'+
             '<td>Obervaciones:</td>'+
