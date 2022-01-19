@@ -4,8 +4,8 @@
 {% load tabla_tags %}
 
 <tr class="text-center" id="{{ item.nvv }}">
-    <td class="dt-control"></td>
-    <td>{{ item.nvv }}</td>
+    <td class="dt-control show_hide"></td>
+    <td class="show_hide">{{ item.nvv }}</td>
     <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td>
     <td>{{ regiones|get_region:item.region }}</td>
     <td>{{ comunas|get_comunas_por_region:item.region|get_comuna:item.comuna }}</td>

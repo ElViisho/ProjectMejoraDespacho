@@ -9,8 +9,6 @@
 <link rel="stylesheet" href="{% static 'css/tabla.css' %}">
 <link rel="stylesheet" href="{% static 'css/apprest_delete_form.css' %}">
 <script src="{% static 'js/js_choices.js' %}"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
 <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
@@ -20,7 +18,7 @@
 {% block content %}
 {% language 'es' %}
 <div class="table-responsive table-l">
-    <table class="table table-hover table-striped table-image" id="listado">
+    <table class="table table-hover table-image " id="listado">
         <thead>
             <tr class="text-center display nowrap">
                 <th></th>
@@ -50,6 +48,22 @@
                 {% endif %}
             {% endfor %}
             </tbody>
+        <tfoot>
+            <tr class="text-center display nowrap">
+                <th></th>
+                <th>NVV</th>
+                <th>Fecha solicitud</th>
+                <th>Región</th>
+                <th>Comuna</th>
+                <th>Dirección</th>
+                <th>Nombre contacto</th>
+                <th>Teléfono contacto</th>
+                <th>Estado</th>
+                <th>Fecha despacho</th>
+                <th>Hora despacho</th>
+                <th style="display: none;">Datos extra</th>
+            </tr>
+        </tfoot>
     </table>
 </div>
 

@@ -33,7 +33,8 @@ $('.Estado').change(function () {
 let nvv = "";
 
 $(document).ready(function() { 
-    var table = $('#listado').DataTable({  
+    var table = $('#listado').DataTable({ 
+        "dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',
         "columns": [
             { "searchable": false, orderable: false },
             null,
@@ -57,10 +58,18 @@ $(document).ready(function() {
         "scrollX": true,
         "scrollY": "70vh",
         "scrollCollapse": true,
+        "lengthMenu": [10, 25, 50],
         order: [ 2, 'asc' ],
+        scrollToTop: true,
+        buttons: [
+            {
+                extend: 'excel',
+                text: 'Save current page',
+            }
+        ],
     });    
 
-    $('#listado tbody').on('click', 'td.dt-control', function () {
+    $('#listado tbody').on('click', 'td.show_hide', function () {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
         var data = row.data()[11].split("\\,")
@@ -71,10 +80,14 @@ $(document).ready(function() {
             tr.removeClass('shown');
         }
         else {
-            // Open this row and close others
-            if ( table.row( '.shown' ).length ) {
-                $('.dt-control', table.row( '.shown' ).node()).click();
-            }
+            // Close others
+            table.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+                if (this.child.isShown()) {
+                  this.child.hide();
+                  $(this.node()).removeClass('shown');
+                }
+            });
+            // Open this row
             nvv = row.data()[1];
             row.child( format(data) ).show();
             tr.addClass('shown');
@@ -98,7 +111,7 @@ function format (d) {
     if (d[9] == 1) boton_guia_despacho = "Borrar número de guía";
     else boton_guia_despacho = "Marcar como despachado";
 
-    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+    return '<table class="child_table" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>' +
             '<td>Nombre vendedor:</td>' +
             '<td>' + d[7] + '</td>' +
@@ -136,8 +149,7 @@ function format (d) {
             '<td>' + d[6] + '</td>' +
         '</tr>'+
         '<tr>'+
-        `<td><input class="btn btn-default boton-sumbit" onclick="prompt_confirm(${listo})" id="boton" value="${boton_guia_despacho}" readonly></td>` +
-            '<td></td>' +
+        `<td colspan='2' style='text-align: center'><input class="btn btn-default boton-sumbit" onclick="prompt_confirm(${listo})" id="boton" value="${boton_guia_despacho}" readonly></td>` +
         '</tr>'+
     '</table>';
 }

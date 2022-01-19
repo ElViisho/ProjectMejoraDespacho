@@ -1,15 +1,13 @@
-
-.dataTables_paginate, .dataTables_info {
-    margin-right: 20px;
-    margin-left: 20px;
-    margin-bottom: 20px;
-    margin-top: 10px;
+div.dataTables_length {
+    padding-left: 2em;
+}
+div.dataTables_length,
+div.dataTables_filter {
+    padding-top: 0.55em;
 }
 
-.dataTables_length, .dataTables_filter {
-    margin-right: 20px;
-    margin-left: 20px;
-    margin-bottom: 10px;
+.show_hide{
+    cursor: pointer;
 }
 
 #listado, .dataTable {
@@ -19,13 +17,12 @@
     transition: background-color 1s , border-color 1s;
     background-color: #f42414;
     color: #dfdfdf;
-    font-size: 20px;
+    font-size: 16px;
     border-radius: 5px;
     border-style: solid;
     border-color: #cc542c;
     text-align: center;
-    height: 50px;
-    width: 300px;
+    width: 250px;
 }
 
 #boton:hover, .boton_ocultar:hover{
