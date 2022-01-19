@@ -175,7 +175,9 @@ def tabla_modificable(request, con_guia):
 			nvv = data['nvv']
 			listo = 1-int(data['listo'])
 			Ordenes.objects.filter(nvv=nvv).update(listo=listo)
-			change_numero_guia(nvv, listo)
+			bool_n_guia = change_numero_guia(nvv, listo)
+			if (not bool_n_guia):
+				return 'error'
 	
 	grupos = list(request.user.groups.values_list('name', flat= True))
 	permisos = 'Básico'
@@ -195,6 +197,10 @@ def change_numero_guia(nvv, listo):
 		if datos:
 			n_guia = datos[0]['TIDO']+' Número '+ datos[0]['NUDO']
 			Ordenes.objects.filter(nvv=nvv).update(numero_guia=n_guia)
+			return True
+		else:
+			Ordenes.objects.filter(nvv=nvv).update(listo=0)
+			return False
 
 def load_comunas(request):
     region = request.GET.get('region')

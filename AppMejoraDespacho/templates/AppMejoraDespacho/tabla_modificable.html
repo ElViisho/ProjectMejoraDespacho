@@ -20,6 +20,15 @@
 
 {% block content %}
 {% language 'es' %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <div class="table-responsive table-l">
     <table class="table table-hover table-image " id="listado">
         <thead>
@@ -84,6 +93,7 @@
 <div id="confirm_prompt" class="confirm_prompt" style="display: none;">
 <div id="confirm_texto" class="confirm_texto"></div>
 <input class="btn" onclick="confirmar()" id="boton_confirm" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
+
 
 {% endlanguage %}
 <script>var permisos = "{{ permisos }}";</script>

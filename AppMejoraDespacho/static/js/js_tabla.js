@@ -209,9 +209,22 @@ function confirmar() {
     });
 
     $.ajax({
+        type: 'post',
+        url: url,
+        beforeSend: function () {
+            $('#confirm_texto').html('Cargando...');
+            $('#boton_confirm').prop('disabled', true);
+            $('#boton_cancel').prop('disabled', true);
+        },
+        data: {"type": "numero_guia", "nvv": nvv, "listo": listo},
         success: function () {
-            $.post(url, {"type": "numero_guia", "nvv": nvv, "listo": listo}, window.location.reload());
-        }
+            window.location.reload();
+        },
+        error: function () {
+            $('#confirm_texto').html('Error. Orden no tiene documento asociado. La página se recargará en breve.');
+            setTimeout('window.location.reload()', 2000);
+        },
+        timeout: 5000 
     })
 
 }
