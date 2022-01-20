@@ -66,5 +66,5 @@ Otros:
 
 
 ## Créditos
-Desarrollado por Vicente Videla [<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" style="height: 16px;">](https://github.com/ElViisho).  
+Desarrollado por Vicente Videla [GutHub <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" style="height: 16px;">](https://github.com/ElViisho).  
 Toda la propiedad de este proyecto pertenece a DIMACO SAC.
