@@ -1,10 +1,12 @@
 {% extends "AppMejoraDespacho/base.html" %}
 {% load static %}
 
+<!-- Deletes anything loaded into cache, because if user is here it means everything is already submitted -->
 {% block header %}
-<link rel="stylesheet" href="{% static 'css/apprest.css' %}">
-<script src="{% static 'js/js_choices.js' %}"></script>
+<script src="{% static 'js/js_storage_clear.js' %}"></script>
 {% endblock header%}
+
+<!-- Template to show success on deleting order and has a button to go back to main -->
 
 {% block content %}
 <div class="titulo_pagina">Nota eliminada con éxito</div>

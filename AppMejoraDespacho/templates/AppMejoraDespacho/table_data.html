@@ -3,15 +3,31 @@
 {% load i18n %}
 {% load tabla_tags %}
 
+<!-- This has the necessary data to show on the table, for each item on the database.
+    It's separate because sometimes it needs to be loaded and sometimes not, and it was more
+    concise and easier to read to put it like this and just reference it from table.html
+-->
+
 <tr class="text-center" id="{{ item.nvv }}">
-    <td class="dt-control show_hide"></td>
-    <td class="show_hide">{{ item.nvv }}</td>
-    <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td>
-    <td>{{ regiones|get_region:item.region }}</td>
-    <td>{{ comunas|get_comunas_por_region:item.region|get_comuna:item.comuna }}</td>
-    <td>{{ item.direccion }}</td>
-    <td>{{ item.nombre_contacto }}</td>
-    <td>{{ item.telefono_contacto }}</td>
+    <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
+    <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
+    <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td> <!-- Date when NVV was submitted to the table -->
+    <td>{{ regiones|get_region:item.region }}</td> <!-- Region selector, with "get_region" filter loaded from "form_template_extras" to show only the name to the user -->
+    <td>{{ comunas|get_comunas_por_region:item.region|get_comuna:item.comuna }}</td> <!-- Commune selector, with "get_comuna" and "get region" filters loaded 
+                                                                                        from "form_template_extras" to show only the communes from the selected region -->
+    <td>{{ item.direccion }}</td> <!-- Dispatch address -->
+    <td>{{ item.nombre_contacto }}</td> <!-- Name of the person to contact for the dispatch -->
+    <td>{{ item.telefono_contacto }}</td> <!-- Phone of the person to contact for the dispatch -->
+    <!-- The state selector, which is dependant of many things. Couldn't figure out how to make
+        it prettier with javaScript, so it's full of ifs. If there's a better implementation, 
+        do it.
+        The logic is basically:
+        - If it is ready, set the value to 5 = Delivered and disable it.
+        - If it's not, see which is the current state and mark that as selected. 
+          Inside of this there are two more cases:
+          - If user has permission to edit, display the other selections as well
+          - If they don't, just put the one option that is already selected and disable it.
+     -->
     <td>
         {% if item.listo == 1 %}
             <select class='Estado_listo' id='{{ item.nvv }}' disabled>
@@ -89,8 +105,8 @@
             {% endif %}
         {% endif %}
     </td>
-    <td>{{ item.fecha_despacho|date:"d F Y" }}</td>
-    <td>
+    <td>{{ item.fecha_despacho|date:"d F Y" }}</td> <!-- The agreed date of dispatch -->
+    <td> <!-- The agreed time range of dispatch. If it has two ranges, display both. Otherwise, display only the one that exists -->
         {% if item.hora_despacho_extra_inicio|date:"G" == "0" %}
             {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}
         {% else %}
@@ -98,6 +114,9 @@
         {% endif %}
     </td>
 
+    <!-- Column that has all the other important data that is shown as a child when a row is clicked. This is not displayed, but it is necessary for it to be here
+        because it is what the DataTables plugin uses to extract its data from to display    
+    -->
     <td style="display: none;">
         {{item.fecha_nvv}}\,\,{{item.cliente}}\,\,{{item.rut}}\,\,{{item.condicion_pago}}\,\,{% if item.comprobante_pago == "None" %}
         No hay
@@ -105,6 +124,9 @@
         <a href="{{ item.comprobante_pago.url }}" target="_blank">Link</a>
     {% endif %}\,\,{{item.observacion}}\,\,{{item.numero_guia}}\,\,{{item.nombre_vendedor}}\,\,{{item.nombre_asistente}}\,\,{{item.listo}}\,\,{{item.valor_neto_documento}}
     </td>
+    <!-- This is for the "export to excel" button. At first it always exported all the values from the state selector regardless of the selection. This updates to always
+        have only the selected value, and it is what its used to export.
+    -->
     <td style="display: none;" id="estado_string{{ item.nvv }}" >
         {% if item.listo == 1 %}
             5

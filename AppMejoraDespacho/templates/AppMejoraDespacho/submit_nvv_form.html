@@ -2,23 +2,25 @@
 {% load static %}
 {% load i18n %}
 
+<!-- It loads the form stylesheet,
+	files for the select2 plugin
+	and files for the telephone input plugin
+-->
 {% block header %}
-<link rel="stylesheet" href="{% static 'css/apprest.css' %}">
-<link rel="stylesheet" href="{% static 'css/apprest_form.css' %}">
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<link
-     rel="stylesheet"
-     href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
-   />
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 {% endblock header%}
 
 {% block content %}
 
 {% language 'es' %}
 
+<!-- Title of the page -->
 <div class="titulo_pagina d-flex justify-content-center">Ingresa una nota de venta</div>
+<!-- Display the form validation errors in case there are -->
 <div class="mensajeAlerta">
 	{% if formulario.errors %}
 		{% for field in formulario %}
@@ -30,10 +32,14 @@
 		{% endfor %}
 	{% endif %}
 </div>
+
+<!-- Display the submition form -->
 <form class="form" action="" method="POST" enctype="multipart/form-data"id ="formulario">
 {% csrf_token %}
 
+<!-- Go through each field on the form -->
 {% for field in formulario %}
+	<!-- If it's field to submit a file, display the custom button done for it -->
 	{% if field.name == "comprobante_pago" %}
 	<div class="form-group block-form">
 	<nobr>
@@ -43,6 +49,7 @@
 		{{ field }}
 	</nobr>
 	</div>
+	<!-- If it is the first parameter of the hour field, create the blocks for rendering them correctly -->
 	{% elif field.name == "hora_despacho_inicio" %}
 	<div class="form-group block-form">
 		<label>{{ field.label }}</label>
@@ -69,7 +76,9 @@
 			</tbody>
 		</table>
 	</div>
+	<!-- if it's any other hour field, don't display anything  -->
 	{% elif field.name == "hora_despacho_fin" or field.name == "hora_despacho_extra_inicio" or field.name == "hora_despacho_extra_fin" %}
+	<!-- If it's no special case, just display the label with the field -->
 	{% else %}
 	<div class="form-group block-form">
 		<label>{{ field.label }}</label><br>
@@ -77,9 +86,11 @@
 	</div>
 	{% endif %}
 {% endfor %}
+<!-- Button for submitting the form -->
 <input class="btn btn-default" class="boton-sumbit" id="boton" type="submit" value="Subir" readonly>
 </form>
 
+<!-- Load the javascript of this template -->
 <script src="{% static 'js/js_form.js' %}"></script>
 
 {% endlanguage %}
