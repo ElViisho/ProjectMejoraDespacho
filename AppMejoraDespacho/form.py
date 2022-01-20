@@ -8,7 +8,7 @@ from django.forms.widgets import NumberInput
 
 from django.db import connections
 import datetime 
-from .choices import choices_estados, regiones, comunas, horas
+from .choices import comunas_santa_elena, horas
 from .queries import query_get_relevant_NVVs
 
 from file_resubmit.admin import AdminResubmitFileWidget
@@ -64,8 +64,8 @@ def now_plus_n(n):
 # Form for submitting a new order to the database
 class ingresoForm(forms.Form):
     nvv = forms.ChoiceField(label='NVV', choices=get_nvvs, initial=1, required=True)
-    region = forms.ChoiceField(label = 'Región de despacho', choices=regiones, initial=7, required=True)
-    comuna = forms.ChoiceField(label='Comuna de despacho', choices=comunas[6], initial=1, required=True)
+    tipo_despacho = forms.ChoiceField(label = 'Tipo de despacho', choices=choices_dispatch_way, initial=0, required=True)
+    comuna = forms.ChoiceField(label='Comuna de despacho', choices=comunas_santa_elena, initial=0, required=True)
     direccion = forms.CharField(label='Dirección de despacho', max_length=250, required=True)
     cont_nombre = forms.CharField(label='Nombre contacto de despacho', max_length=200, required=True)
     cont_telefono = PhoneNumberField(label='Teléfono contacto de despacho', required=True, error_messages={'invalid':'Error en el campo Teléfono: ingrese un valor válido (ej.: 987654321 o +56987654321)'})

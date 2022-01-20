@@ -1,5 +1,5 @@
 from django.db import models
-from .choices import choices_estados, regiones
+from .choices import choices_estados, comunas_santa_elena, choices_dispatch_way
 from phonenumber_field.modelfields import PhoneNumberField
 
 # Base model where all orders are stored with all of its data
@@ -10,9 +10,9 @@ class Ordenes(models.Model):
     fecha_solicitud = models.DateTimeField(auto_now_add=True, db_index=True)
     rut = models.CharField(max_length=13, db_index=True)
     cliente = models.CharField(max_length=200, db_index=True)
+    tipo_despacho = models.IntegerField(default=0, choices=choices_dispatch_way)
+    comuna = models.IntegerField(choices=comunas_santa_elena, db_index=True)
     direccion = models.CharField(max_length=250)
-    region = models.IntegerField(choices=regiones, db_index=True)
-    comuna = models.CharField(max_length=50, db_index=True)
     nombre_contacto = models.CharField(max_length=200)
     telefono_contacto = PhoneNumberField(null=False, blank=False)
     condicion_pago = models.CharField(max_length=100)

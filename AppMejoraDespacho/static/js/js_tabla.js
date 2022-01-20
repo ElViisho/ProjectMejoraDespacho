@@ -30,7 +30,6 @@ $(document).ready(function() {
             null,
             null,
             null,
-            null,
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
@@ -89,7 +88,7 @@ $(document).ready(function() {
     $('#listado tbody').on('click', 'td.show_hide', function () {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
-        var data = row.data()[11].split("\\,\\,")
+        var data = row.data()[10].split("\\,\\,")
  
         if ( row.child.isShown() ) {
             // This row is already open - close it
@@ -138,7 +137,6 @@ var listo = 0;
 
 // For showing the child data
 function format (d) {
-
     // Choses which button to show depending on if order is ready or not
     listo = d[9];
     if (d[9] == 1) boton_guia_despacho = "Borrar número de guía";

@@ -12,9 +12,7 @@
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
     <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
     <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td> <!-- Date when NVV was submitted to the table -->
-    <td>{{ regiones|get_region:item.region }}</td> <!-- Region selector, with "get_region" filter loaded from "form_template_extras" to show only the name to the user -->
-    <td>{{ comunas|get_comunas_por_region:item.region|get_comuna:item.comuna }}</td> <!-- Commune selector, with "get_comuna" and "get region" filters loaded 
-                                                                                        from "form_template_extras" to show only the communes from the selected region -->
+    <td>{{ comunas|get_comuna:item.comuna }}</td> <!-- Commune selector, with "get_comuna" filters loaded to show the name and not the number -->
     <td>{{ item.direccion }}</td> <!-- Dispatch address -->
     <td>{{ item.nombre_contacto }}</td> <!-- Name of the person to contact for the dispatch -->
     <td>{{ item.telefono_contacto }}</td> <!-- Phone of the person to contact for the dispatch -->

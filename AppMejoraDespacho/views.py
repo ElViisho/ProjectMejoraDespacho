@@ -1,20 +1,15 @@
 
-from django.shortcuts import render, redirect, HttpResponse
-from django.http import HttpResponseRedirect
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-from django.contrib import messages
 from AppMejoraDespacho.models import *
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.db import connections
 
 from AppMejoraDespacho.form import ingresoForm, deleteForm
 import datetime
 from django.db import connections
 
-from .choices import regiones, comunas
+from .choices import comunas_santa_elena
 from .queries import *
 
 
@@ -112,8 +107,8 @@ def submit_nvv_form(request):
 				nombre_vendedor = datos_tabfu[0]["NOKOFU"],
 				rut = datos_maeedo[0]["ENDO"],
 				cliente = datos_maeen[0]["NOKOEN"],
-				region = cleaned_data['region'],
 				comuna = cleaned_data['comuna'],
+				tipo_despacho = cleaned_data['tipo_despacho'],
 				direccion = cleaned_data['direccion'],
 				nombre_contacto = cleaned_data['cont_nombre'],
 				telefono_contacto = cleaned_data['cont_telefono'],
@@ -220,7 +215,7 @@ def table(request, con_guia):
 	# TEMPORAY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
 	if request.user.is_superuser:
 		permissions = 'Despacho'
-	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "regiones": regiones, "comunas": comunas, "con_guia": con_guia,})
+	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
 
 def change_numero_guia(nvv, listo):
 	'''
@@ -244,16 +239,6 @@ def change_numero_guia(nvv, listo):
 			# If there isn't, change to not ready on this database and return False so it knows it wasn't succesful
 			Ordenes.objects.filter(nvv=nvv).update(listo=0)
 			return False
-
-def load_comunas(request):
-	'''
-	Method for loading the corresponding communes depending on the region selected
-	on the form
-	'''
-	region = request.GET.get('region')
-	com = comunas[int(region)-1]
-	return render(request, 'AppMejoraDespacho/comuna_dropdown_list_options.html', {'comunas': com})
-
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
