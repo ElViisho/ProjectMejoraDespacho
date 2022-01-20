@@ -82,9 +82,9 @@
 
 <div class="boton_ocultar_div">
     {% if con_guia == 'True'%}
-        <input class="boton_ocultar" onclick="window.location='tabla_modificable'" id="boton_ocultar" value="Mostrar NVVs sin número de guía" readonly>
+        <input class="boton_ocultar" onclick="window.location='table'" id="boton_ocultar" value="Mostrar NVVs sin número de guía" readonly>
     {% else %} 
-        <input class="boton_ocultar" onclick="window.location='tabla_modificable_con_guia'" id="boton_ocultar" value="Mostrar NVVs con número de guía" readonly>
+        <input class="boton_ocultar" onclick="window.location='table_with_guide'" id="boton_ocultar" value="Mostrar NVVs con número de guía" readonly>
     {% endif %}
 
 </div>
@@ -96,7 +96,7 @@
 
 
 {% endlanguage %}
-<script>var permisos = "{{ permisos }}";</script>
+<script>var permissions = "{{ permissions }}";</script>
 <script src="{% static 'js/js_tabla.js' %}"></script>
 
 

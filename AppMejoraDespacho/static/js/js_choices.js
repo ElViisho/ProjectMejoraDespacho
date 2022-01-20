@@ -1,4 +1,6 @@
-
+/* 
+Choices for regions and comunes in a javacripts format, for the pages to use
+*/
 var regiones = [
     "Arica y Parinacota",
     "Tarapacá",

@@ -1,8 +1,10 @@
+/*  Div that contains button for aligning it correctly */
 .form-signin{
     text-align: center;
     margin-top: 5%;
 }
 
+/*  Button for logging in */
 .button_iniciar_sesion{
     font-size: 30px;
     background-color: #007b34;
@@ -14,7 +16,7 @@
 	border-color: #007030;
 	transition: background-color 1s , border-color 1s;
 }
-
+/*  Button for logging in when cursor hovers over it */
 .button_iniciar_sesion:hover{
     cursor: pointer;
     background-color: #499b6c;

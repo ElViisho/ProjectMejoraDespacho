@@ -1,15 +1,9 @@
-/* stylelint-disable selector-list-comma-newline-after */
-.title{
-    color:black;
-    font-family: Brush Script MT;
-    font-size: 100px;
-    font-weight: normal;
-}
-
+/*  For tables have fixed columns widths */
 .tabla{
 	table-layout: fixed;
 }
 
+/*  For the logo at the top header of all pages */
 .titlep{
     color:whitesmoke;
     font-family: Brush Script MT;
@@ -19,6 +13,7 @@
     text-align: center;
 }
 
+/*  Base format for majority of buttons */
 .button{
     background-color: #f42414;
 	color: #dfdfdf;
@@ -40,7 +35,13 @@
 	margin-bottom: 20px;
 	display: flex;	
 }
-
+/*  Base format for majority of buttons when cursor hovers over them */
+.button:hover{
+    cursor: pointer;
+    background-color: #ff948c;
+    transition-duration: 1s;
+}
+/*  Button for going back to first page that appears at the top of all pages */
 .button_inicio{
     background-color: #007b34;
 	color: #dfdfdf;
@@ -56,19 +57,14 @@
 	margin-left: 10px;
 	margin-bottom: 20px;
 }
-
-.button:hover{
-    cursor: pointer;
-    background-color: #ff948c;
-    transition-duration: 1s;
-}
-
+/*  Button for going back to first page when cursor hovers over it */
 .button_inicio:hover{
     cursor: pointer;
     background-color: #499b6c;
     transition-duration: 1s;
 }
 
+/*  Logout text link */
 .logout{
 	text-align: right;
 	vertical-align: super;

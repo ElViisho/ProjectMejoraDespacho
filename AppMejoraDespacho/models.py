@@ -2,6 +2,8 @@ from django.db import models
 from .choices import choices_estados, regiones
 from phonenumber_field.modelfields import PhoneNumberField
 
+# Base model where all orders are stored with all of its data
+# Only one was made because all ids have exactly one value for everything (for now, it may or may not change in the future)
 class Ordenes(models.Model):
     nvv = models.CharField(max_length = 20, primary_key=True)
     fecha_nvv = models.DateField(db_index=True)

@@ -18,7 +18,7 @@
                 <option selected value=5>Despachado</option>
             </select>
         {% elif item.estado == 4 %}
-            {% if permisos == "Despacho" %}
+            {% if permissions == "Despacho" %}
                 <select class='Estado' id='{{ item.nvv }}'>  
                     <option value=0>En preparación</option>
                     <option value=1>Preparado</option>
@@ -32,7 +32,7 @@
                 </select>
             {% endif %}
         {% elif item.estado == 3 %}   
-            {% if permisos == "Despacho" %}
+            {% if permissions == "Despacho" %}
                 <select class='Estado' id='{{ item.nvv }}'>  
                     <option value=0>En preparación</option>
                     <option value=1>Preparado</option>
@@ -46,7 +46,7 @@
                 </select>
             {% endif %}
         {% elif item.estado == 2 %}   
-            {% if permisos == "Despacho" %}
+            {% if permissions == "Despacho" %}
                 <select class='Estado' id='{{ item.nvv }}'>  
                     <option value=0>En preparación</option>
                     <option value=1>Preparado</option>
@@ -60,7 +60,7 @@
                 </select>
             {% endif %}
         {% elif item.estado == 1 %}
-            {% if permisos == "Despacho" %}
+            {% if permissions == "Despacho" %}
                 <select class='Estado' id='{{ item.nvv }}'>  
                     <option value=0>En preparación</option>
                     <option selected value=1>Preparado</option>
@@ -74,7 +74,7 @@
                 </select>
             {% endif %}
         {% else %}
-            {% if permisos == "Despacho" %}
+            {% if permissions == "Despacho" %}
                 <select class='Estado' id='{{ item.nvv }}'>  
                     <option selected value=0>En preparación</option>
                     <option value=1>Preparado</option>
@@ -105,6 +105,12 @@
         <a href="{{ item.comprobante_pago.url }}" target="_blank">Link</a>
     {% endif %}\,\,{{item.observacion}}\,\,{{item.numero_guia}}\,\,{{item.nombre_vendedor}}\,\,{{item.nombre_asistente}}\,\,{{item.listo}}\,\,{{item.valor_neto_documento}}
     </td>
-    <td style="display: none;" id="estado_string{{ item.nvv }}" >{{item.estado}}</td>
+    <td style="display: none;" id="estado_string{{ item.nvv }}" >
+        {% if item.listo == 1 %}
+            5
+        {% else %}
+            {{item.estado}}
+        {% endif %}
+    </td>
     
 </tr>

@@ -1,3 +1,9 @@
+"""
+The different choices arrays that are used by django models
+and forms throughout the app.
+"""
+
+# The choices for the states of an order
 choices_estados = (
         (0, 'En Preparación'),
         (1, 'Preparado'),
@@ -6,6 +12,7 @@ choices_estados = (
         (4, 'Rollos')
 )
 
+# Regions of Chile for dispatch
 regiones = (
     ("1", "Arica y Parinacota"),
     ("2", "Tarapacá"),
@@ -24,6 +31,8 @@ regiones = (
     ("15", "Aysén del General Carlos Ibáñez del Campo"),
     ("16", "Magallanes y la Antártica Chilena")
 )
+
+# Communes per region
 comunas_arica_y_parinacota = (
         ("1", "Arica"),
         ("2", "Camarones"),
@@ -402,10 +411,11 @@ comunas_magallanes = (
         ("10", "Timaukel"),
         ("11", "Torres del Paine"),
 )
+# All the communes arraya in one array, in the same order as the regions array
 comunas = [comunas_arica_y_parinacota, comunas_tarapaca, comunas_antofagasta, comunas_atacama, comunas_coquimbo, comunas_valparaiso, comunas_metropolitana, comunas_ohiggins,
         comunas_maule, comunas_nuble, comunas_biobio, comunas_araucania, comunas_los_rios, comunas_los_lagos, comunas_aysen, comunas_magallanes]
 
-
+# The hours for dispatch
 horas = (
 	("8", "08:00"),
 	("9", "09:00"),

@@ -1,3 +1,6 @@
+/*  The background that appears to cover all the page when the
+    confirmation prompt appers, so all the other things can't 
+    be interacted with*/
 .confirm_prompt_background {
 	position: fixed;
 	width: 100%;
@@ -8,6 +11,7 @@
 	opacity: 50%;
 }
 
+/*  The rectangle that appears as the background of the confirmation prompt */
 .confirm_prompt {
 	position: fixed;
 	width: 50%;
@@ -20,6 +24,7 @@
 	text-align:center;
 }
 
+/*  The text of the confirmation prompt */
 .confirm_texto {
 	font-size: 25px;
     color: #444444;
@@ -27,6 +32,7 @@
     margin-top: 25px;
 }
 
+/*  The two buttons that appear for the confirmation prompt */
 #boton_confirm, #boton_cancel {
 	font-size: 20px;
     font-family: "Playfair Display", Georgia, "Times New Roman", serif;
@@ -45,6 +51,8 @@
     height: 50px;
 }
 
+/*  The two buttons that appear for the confirmation prompt,
+    when the cursor hovers over them */
 #boton_confirm:hover, #boton_cancel:hover{
     cursor: pointer;
     background-color: #ff948c;

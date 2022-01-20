@@ -1,3 +1,4 @@
+// Get cookies for form submition
 function getCookie(c_name)
 {
     if (document.cookie.length > 0)
@@ -14,14 +15,17 @@ function getCookie(c_name)
     return "";
 }
 
+// Array with the name of months for display
 const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
+// Initialize variable as nothing
 let nvv = "";
 
 $(document).ready(function() { 
+    // Add plugin of DataTable to table of data
     var table = $('#listado').DataTable({ 
-        "dom": '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>',
-        "columns": [
+        "dom": '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>',    // Display order of objects of table
+        "columns": [        // Define properties for the columns of the table 
             { "searchable": false, orderable: false },
             null,
             null,
@@ -50,20 +54,21 @@ $(document).ready(function() {
                 return x;
             }
             }
-        ],    
-        "search": {
+        ],
+        "search": {     // Searches for the whole match and not each word individually
             "smart": false
         },
-        language: {
+        language: {     // In spanish
             url: 'https://cdn.datatables.net/plug-ins/1.11.3/i18n/es-cl.json'
         },
+        // Scrolling options
         "scrollX": true,
         "scrollY": "70vh",
         "scrollCollapse": true,
-        "lengthMenu": [10, 25, 50],
-        order: [ 2, 'asc' ],
-        scrollToTop: true,
-        buttons: [
+        "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
+        order: [ 2, 'asc' ],            // Default order by date
+        scrollToTop: true,              // When changing page it goes back to top of table
+        buttons: [                      // Export to Excel button
             {
                 extend: 'excel',
                 classname: 'excel',
@@ -80,6 +85,7 @@ $(document).ready(function() {
         ]
     });    
 
+    // When + symbol or NVV value is clicked, it shows all the relevant info
     $('#listado tbody').on('click', 'td.show_hide', function () {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
@@ -105,7 +111,8 @@ $(document).ready(function() {
         }
     } );
 
-    if (permisos == 'Despacho') {
+    // If user has permissions
+    if (permissions == 'Despacho') {
         $('.Estado').on('change', function () {
             var url = window.location.href;
             var option = $(this).val();
@@ -117,6 +124,7 @@ $(document).ready(function() {
 
             $.ajax({
                 success: function () {
+                    // Post to change the state of the order
                     $.post(url, {"type": "estado", "nvv": nvv, "option": option,}),
                     table.cell('#estado_string' + nvv).data(option)
                 }
@@ -125,19 +133,25 @@ $(document).ready(function() {
     }
 });
 
+// Initialize variable as 0 (falsey)
 var listo = 0;
 
+// For showing the child data
 function format (d) {
+
+    // Choses which button to show depending on if order is ready or not
     listo = d[9];
     if (d[9] == 1) boton_guia_despacho = "Borrar número de guía";
     else boton_guia_despacho = "Marcar como despachado";
 
+    // If user doesn't have permission, don't show button
     var boton_despacho = '';
-    if (permisos == 'Despacho') {
+    if (permissions == 'Despacho') {
     boton_despacho = '<tr>'+
     `<td colspan='2' style='text-align: center'><input class="btn btn-default boton-sumbit" onclick="prompt_confirm(${listo})" id="boton" value="${boton_guia_despacho}" readonly></td>` +
     '</tr>';}   
-
+    
+    // Child table for extra data
     return '<table class="child_table" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>' +
             '<td>Nombre vendedor:</td>' +
@@ -184,6 +198,7 @@ function format (d) {
     '</table>';
 }
 
+// The prompt for confirmation of changes on table
 function prompt_confirm(listo) {
     if (listo) {
         $('#confirm_texto').html(`¿Confirmas que quieres borrar la guía de despacho de la orden ${nvv}? (Dejará de estar marcada como despachada)<br>`);
@@ -198,6 +213,7 @@ function prompt_confirm(listo) {
     $('#boton_cancel').show();
 }
 
+// To cancel the prompt
 function cancelar() {
     $('#confirm_prompt_background').hide();
     $('#confirm_prompt').hide();
@@ -206,6 +222,7 @@ function cancelar() {
     $('#boton_cancel').hide();
 }
 
+// Confirm the prompt and send the post request to retrieve the guide number
 function confirmar() {
     var url = window.location.href;
 
@@ -217,15 +234,18 @@ function confirmar() {
         type: 'post',
         url: url,
         beforeSend: function () {
+            // While waiting for response
             $('#confirm_texto').html('Cargando...');
             $('#boton_confirm').prop('disabled', true);
             $('#boton_cancel').prop('disabled', true);
         },
         data: {"type": "numero_guia", "nvv": nvv, "listo": listo},
         success: function () {
+            // Reload table with new data
             window.location.reload();
         },
         error: function () {
+            // Prompt the user there was no guide number and after 2 secondes reload table
             $('#confirm_texto').html('Error. Orden no tiene documento asociado. La página se recargará en breve.');
             setTimeout('window.location.reload()', 2000);
         },
