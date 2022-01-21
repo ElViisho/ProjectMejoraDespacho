@@ -1,0 +1,22 @@
+{% extends "AppMejoraDespacho/base.html" %}
+{% load static %}
+{% load socialaccount %}
+
+<!-- Deletes anything loaded into cache, because if user is here it means everything is already submitted -->
+{% block header %}
+<script src="{% static 'js/js_storage_clear.js' %}"></script>
+{% endblock header%}
+
+<!-- Main page.
+    It welcomes the user and gives the option to submit an order to the database,
+    see the current objects of the database
+    and, if it has the privilege, delete an order from the datbase 
+ -->
+{% block content %}
+<div class="titulo_pagina">¡Bienvenid@ {{ user.first_name }}!</div>
+<button type="button" class="button" onclick="window.location='submit_nvv_form'">Nueva orden de despacho</button>
+<button type="button" class="button" onclick="window.location='table'">Revisar estado de despacho</button>
+{% if permissions == "Eliminar" %}
+    <button type="button" class="button" onclick="window.location='delete_nvv'">Eliminar orden de despacho</button>
+{% endif %}
+{% endblock content %}

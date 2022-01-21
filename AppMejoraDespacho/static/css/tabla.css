@@ -1,0 +1,80 @@
+/*  For datatables plugin elements */
+.dataTables_length {
+    padding-left: 2em;
+}
+.dataTables_length,
+.dataTables_filter {
+    padding-top: 0.55em;
+    padding-right: 1em;
+}
+.dataTables_info {
+    padding-left: 1em;
+}
+.dt-buttons {
+    padding-left: 1em;
+}
+/*  Button to export to excel */
+.dt-button.buttons-excel {
+    background-color: #007b34;
+	color: #dfdfdf;
+	font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-style: normal;
+	font-size: 15px;
+	border-radius: 5px;
+	border-style: solid;
+	border-color: #007030;
+	transition: background-color 1s , border-color 1s;
+}
+/*  Excel button when cursor hovers over it */
+.dt-button.buttons-excel:hover{
+    cursor: pointer;
+    background-color: #499b6c;
+    transition-duration: 1s;
+}
+
+/*  Make cursor pointer when over the show and hide childs buttons on the table */
+.show_hide{
+    cursor: pointer;
+}
+
+/*  Make the table use all the width of the page since for default it didn't and looked weird */
+#listado, .dataTable {
+    width: 100% !important;
+}
+
+/*  Div container to center the button  */
+.boton_ocultar_div {
+    text-align: center;
+}
+/*  Button for showing and hiding orders with guide */
+.boton_ocultar{
+    transition: background-color 1s , border-color 1s;
+    background-color: #f42414;
+    color: #dfdfdf;
+    font-size: 15px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #cc542c;
+    text-align: center;
+    height: 25px;
+    margin-bottom: 30px;
+    width: 250px;
+}
+/*  Button for showing and hiding orders with guide when cursor hovers over it*/
+.boton_ocultar:hover, #boton:hover{
+    cursor: pointer;
+    background-color: #ff948c;
+    transition-duration: 1s;
+}
+
+#boton{
+    transition: background-color 1s , border-color 1s;
+    background-color: #f42414;
+    color: #dfdfdf;
+    font-size: 16px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #cc542c;
+    text-align: center;
+    width: 250px;
+}

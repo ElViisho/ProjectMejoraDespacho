@@ -1,0 +1,126 @@
+/*  Base margins and style for the form, for all elements to look the same */
+.form{
+    margin-left: 25%;
+    margin-right: 25%;
+    padding-top: 10px;
+    border-radius: 10px;
+}
+
+/* Weird fixes for the radio selectors */
+#id_tipo_despacho_0, #id_tipo_despacho_1{
+    display: inherit;
+    width: auto;
+    appearance: auto;
+}
+#id_tipo_despacho{
+    background-color: transparent;
+    border-color: transparent;
+    margin-top: -20px;
+    margin-bottom: -20px;
+}
+label[for^="id_tipo_despacho"]{
+    font-size: large;
+    font-weight: normal;
+}
+
+/* Label for the external dispatch provider */
+#id_despacho_externo{
+    margin-top: 20px;
+    margin-bottom: -20px;
+}
+
+/*  The labels for each of the form fields */
+label{
+    font-size: 25px;
+    color: #444444;
+    font-weight: bold;
+}
+
+/*  To add style to form elements */
+.block-form{
+    margin-top: 15px;
+    margin-bottom: 25px;
+    margin-left: 50px;
+    margin-right: 50px;
+    display: grid;
+    padding: 5px;
+}
+
+/*  Creates a custom upload button for submitting files */
+.custom-file-upload {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #007b3457;
+    text-align: center;
+    font-size: 20px;
+}
+
+/*  For not showing base input file so only custom one is visible */
+input#id_comprobante_pago {
+    display: none;
+}
+/*  For showing the name of the uploaded file */
+#file_name {
+    font-size: 20px;
+    color: #444444;
+    font-weight: bold;
+}
+
+/*  Style for all the inputs that have text */
+input#id_nvv, input#id_direccion, input#id_cont_nombre, input#id_cont_telefono, input#id_observaciones, textarea{
+    font-size: large;
+    border-radius: 5px;
+    background-color: white;
+    color: #5b3924;
+}
+
+/*  Styles the submit button */
+#boton{
+    font-size: 20px;
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-style: normal;
+    transition: background-color 1s , border-color 1s;
+    background-color: #f42414;
+    color: #dfdfdf;
+    font-size: 20px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #cc542c;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 35%;
+    text-align: center;
+    width: 25%;
+    height: 50px;
+}
+/*  The submit button when the cursor hovers over it */
+#boton:hover{
+    cursor: pointer;
+    background-color: #ff948c;
+    transition-duration: 1s;
+}
+
+/*  Div container of all the hour selectors */
+.selector_hora{
+    text-align: center;
+    display: flex;
+}
+/*  Each of the hour selectors */
+#id_hora_despacho_inicio, #id_hora_despacho_fin, #id_hora_despacho_extra_inicio, #id_hora_despacho_extra_fin{
+    width: 100%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 10px;
+}
+/*  Sublabel under hour label, and any other labels that may or may not be added in the future */
+.sublabel {
+    font-size: 14px;
+}
+
+/*  For the first column of the hour selector table to not use too much space */
+td:first-child {
+    width: 15%;
+}
