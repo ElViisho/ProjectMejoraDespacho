@@ -30,6 +30,7 @@ $(document).ready(function() {
             null,
             null,
             null,
+            null,
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
@@ -74,10 +75,10 @@ $(document).ready(function() {
                 text: 'Exportar tabla a excel',
                 filename: function() {
                     d = new Date()
-                    return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear();
+                    return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
                 },
                 exportOptions: {
-                    columns: [ 1, 2, 3, 4, 5, 7, 9, 10, 12]
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 12]
                 },
                 title: "Ordenes de despacho",
             }
@@ -88,7 +89,7 @@ $(document).ready(function() {
     $('#listado tbody').on('click', 'td.show_hide', function () {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
-        var data = row.data()[10].split("\\,\\,")
+        var data = row.data()[11].split("\\,\\,")
  
         if ( row.child.isShown() ) {
             // This row is already open - close it

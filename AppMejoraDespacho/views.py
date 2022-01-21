@@ -84,11 +84,11 @@ def submit_nvv_form(request):
 			nvv = cleaned_data['nvv']
 
 			if cleaned_data['tipo_despacho'] == "1":
-				comuna = cleaned_data['despacho_externo']
-				direccion = cleaned_data['direccion'] + ', ' + comunas_todas[int(cleaned_data['region'])][int(cleaned_data['comuna'])-1][1] + ', ' + regiones[int(cleaned_data['region'])-1][1] 
+				tipo_despacho = cleaned_data['despacho_externo']
+				comuna = comunas_todas[int(cleaned_data['region'])][int(cleaned_data['comuna'])-1][1] + ', ' + regiones[int(cleaned_data['region'])-1][1] 
 			else:
+				tipo_despacho = 'DIMACO'
 				comuna = comunas_santa_elena[int(cleaned_data['comuna'])-1][1]
-				direccion = cleaned_data['direccion']
 
 			if cleaned_data['comprobante_pago'] is None:
 				cleaned_data['comprobante_pago'] = "None"
@@ -112,11 +112,11 @@ def submit_nvv_form(request):
 				nvv = nvv,
 				fecha_nvv = datos_maeedo[0]["FEEMDO"],
 				nombre_vendedor = datos_tabfu[0]["NOKOFU"],
+				tipo_despacho = tipo_despacho,
 				rut = datos_maeedo[0]["ENDO"],
 				cliente = datos_maeen[0]["NOKOEN"],
 				comuna = comuna,
-				tipo_despacho = cleaned_data['tipo_despacho'],
-				direccion = direccion,
+				direccion = cleaned_data['direccion'],
 				nombre_contacto = cleaned_data['cont_nombre'],
 				telefono_contacto = cleaned_data['cont_telefono'],
 				condicion_pago = datos_maeedoob[0]["CPDO"],

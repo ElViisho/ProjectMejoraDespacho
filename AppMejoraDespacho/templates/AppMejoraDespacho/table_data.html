@@ -12,13 +12,14 @@
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
     <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
     <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td> <!-- Date when NVV was submitted to the table -->
-    <td> <!-- Commune address. If it's external dispatch, put the name of the one that is dispatching -->
-        {% if item.tipo_despacho == 1 %}
-            Despacho externo con: <br>{{ item.comuna }}
+    <td> <!-- Way of dispatch. If it's internal, just show DIMACO. Else, show that it's external and show the name of the dispatcher -->
+        {% if item.tipo_despacho == "DIMACO" %}
+            {{ item.tipo_despacho }}
         {% else %}
-            {{ item.comuna }}
+            Externo con: <i>{{ item.tipo_despacho }}</i>
         {% endif %}
-    </td> 
+    </td>
+    <td>{{ item.comuna }}</td>  <!-- Commune address -->
     <td>{{ item.direccion }}</td> <!-- Dispatch address -->
     <td>{{ item.nombre_contacto }}</td> <!-- Name of the person to contact for the dispatch -->
     <td>{{ item.telefono_contacto }}</td> <!-- Phone of the person to contact for the dispatch -->

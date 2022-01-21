@@ -5,7 +5,7 @@ from django.forms.widgets import NumberInput
 
 from django.db import connections
 import datetime 
-from .choices import comunas_longest, horas, regiones
+from .choices import comunas_longest, horas, regiones, choices_dispatch_way
 from .queries import query_get_relevant_NVVs
 
 from file_resubmit.admin import AdminResubmitFileWidget
