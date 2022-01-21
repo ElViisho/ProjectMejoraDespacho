@@ -1,5 +1,4 @@
 {% load static %}
-{% load form_template_extras %}
 {% load i18n %}
 {% load tabla_tags %}
 
@@ -115,7 +114,7 @@
         {% if item.hora_despacho_extra_inicio|date:"G" == "0" %}
             {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}
         {% else %}
-            {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }},<br>{{ item.hora_despacho_extra_inicio }} - {{ item.hora_despacho_extra_fin }}
+            {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}, <br>{{ item.hora_despacho_extra_inicio }} - {{ item.hora_despacho_extra_fin }}
         {% endif %}
     </td>
 

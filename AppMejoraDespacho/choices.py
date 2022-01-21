@@ -15,15 +15,15 @@ choices_estados = (
 # Ways to dispatch
 choices_dispatch_way = (
         ((0, "DIMACO"),
-        (1, "Externo"))
+        (1, "EXTERNO"))
 )
 
 # Communes that the Santa Elena office dispatches
 comunas_santa_elena = (
         (1, 'Alhué'),
-        (2, 'Buin'),
+        (2, 'Buín'),
         (3, 'Calera de Tango'),
-        (4, 'Cerrillo'),
+        (4, 'Cerrillos'),
         (5, 'Cerro Navia'),
         (6, 'Curacaví'),
         (7, 'El Bosque'),

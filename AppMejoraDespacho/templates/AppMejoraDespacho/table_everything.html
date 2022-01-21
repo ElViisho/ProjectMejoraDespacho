@@ -1,0 +1,56 @@
+<thead>
+    <tr>
+        <th>NVV</th>
+        <th>Fecha solicitud</th>
+        <th>Tipo despacho</th>
+        <th>Comuna</th>
+        <th>Dirección</th>
+        <th>Nombre contacto</th>
+        <th>Teléfono contacto</th>
+        <th>Fecha despacho</th>
+        <th>Hora despacho</th>
+        <th>Estado despacho</th>
+        <th>Valor neto</th>
+    </tr>
+</thead>
+<tbody>
+    {% for item in queryset %}
+    <tr>
+        <td>{{item.nvv}}</td>
+        <td>{{item.fecha_solicitud}}</td>
+        <td>{{item.tipo_despacho}}</td>
+        <td>{{item.comuna}}</td>
+        <td>{{item.direccion}}</td>
+        <td>{{item.nombre_contacto}}</td>
+        <td>{{item.telefono_contacto}}</td>
+        <td>{{item.fecha_despacho}}</td>
+        <td>
+            {% if item.hora_despacho_extra_inicio|date:"G" == "0" %}
+                {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}
+            {% else %}
+                {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}, <br>{{ item.hora_despacho_extra_inicio }} - {{ item.hora_despacho_extra_fin }}
+            {% endif %}
+        </td>
+        <td>
+            {% if item.listo == 1 %}
+                Despachado
+            {% else %}
+                <div class="div_estado">{{ item.estado }}</div>
+            {% endif %}
+        </td>
+        <td>{{item.valor_neto_documento}}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+<script>
+    estados = [
+        'En Preparación',
+        'Preparado',
+        'Tubos',
+        'Cañería',
+        'Rollos'
+    ];
+
+    $('#div_estado').html(estados[$('#div_estado').html()]);
+</script>

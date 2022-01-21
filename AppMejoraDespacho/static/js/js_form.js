@@ -96,6 +96,5 @@ function change_comunas(cambiar) {
     });
 }
 
-
 // When value of region changes, change the available communes
 $("#id_region").change(change_comunas)

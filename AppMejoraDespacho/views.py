@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from AppMejoraDespacho.models import *
@@ -263,3 +262,9 @@ def load_comunas(request):
 	region = request.GET.get('region')
 	com = comunas_todas[int(region)]
 	return render(request, 'AppMejoraDespacho/comuna_dropdown_list_options.html', {'comunas': com})
+
+
+def export_ordenes_xls(request):
+	queryset = Ordenes.objects.all()
+
+	return render(request, 'AppMejoraDespacho/table_everything.html', {'queryset': queryset})

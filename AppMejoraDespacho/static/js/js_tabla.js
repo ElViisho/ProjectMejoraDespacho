@@ -18,13 +18,18 @@ function getCookie(c_name)
 // Array with the name of months for display
 const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
+function domDataTable() {
+    if (permissions=='Despacho') return '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>'
+    return '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>'
+}
+
 // Initialize variable as nothing
 let nvv = "";
 
 $(document).ready(function() { 
     // Add plugin of DataTable to table of data
     var table = $('#listado').DataTable({ 
-        "dom": '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>',    // Display order of objects of table
+        "dom": domDataTable(),    // Display order of objects of table
         "columns": [        // Define properties for the columns of the table 
             { "searchable": false, orderable: false },
             null,
@@ -69,34 +74,40 @@ $(document).ready(function() {
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
         order: [ 2, 'asc' ],            // Default order by date
         scrollToTop: true,              // When changing page it goes back to top of table
-        buttons: [                      // Export to Excel button
-            {
-                extend: 'excel',
-                classname: 'excel',
-                text: 'Exportar tabla a excel',
-                filename: function() {
-                    d = new Date()
-                    return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
-                },
-                exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13]
-                },
-                title: "Ordenes de despacho",
-                customize: function( xlsx) {
-                    var styleSheet = xlsx.xl['styles.xml'];
-                    var lastXfIndex = $('cellXfs xf', styleSheet).length - 1;
-                    var n1 = '<numFmt formatCode="$ #,##0" numFmtId="300"/>';
-                    var s1 = '<xf numFmtId="300" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
-                    styleSheet.childNodes[0].childNodes[0].innerHTML += n1;
-                    styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
+        buttons:[                      
+                {
+                    extend: 'excel',
+                    classname: 'excel',
+                    text: 'Exportar tabla a excel',
+                    filename: function() {
+                        d = new Date()
+                        return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + ".." + d.getMinutes();
+                    },
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13]
+                    },
+                    title: "Ordenes de despacho",
+                    customize: function( xlsx) {
+                        var passedHeader = false;
+                        if (passedHeader){
+                            var styleSheet = xlsx.xl['styles.xml'];
+                            var lastXfIndex = $('cellXfs xf', styleSheet).length - 1;
+                            var n1 = '<numFmt formatCode="$ #,##0" numFmtId="300"/>';
+                            var s1 = '<xf numFmtId="300" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
+                            styleSheet.childNodes[0].childNodes[0].innerHTML += n1;
+                            styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
 
-                    var fourDecPlaces = lastXfIndex + 1;
+                            var fourDecPlaces = lastXfIndex + 1;
 
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('row c[r^="L"]', sheet).attr( 's', fourDecPlaces ); 
+                            var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                            $('row c[r^="L"]', sheet).attr( 's', fourDecPlaces );
+                        }
+                        else {
+                            passedHeader = true;
+                        }
+                    }
                 }
-            }
-        ]
+            ]
     });    
 
     // When + symbol or NVV value is clicked, it shows all the relevant info
@@ -265,5 +276,28 @@ function confirmar() {
         },
         timeout: 5000 
     })
+
+}
+
+
+function toExcelHistoric(){
+    var url = "ajax/export_ordenes_xls/";
+
+    d = new Date();
+    date = "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + ".." + d.getMinutes() + ".xls";
+
+    $.ajax({
+        url: url,
+        data: {
+            'queryset': queryset
+        },
+        success: function (data) {
+            $('#table_everything').html(data);
+            $("#table_everything").table2excel({
+                filename: date,
+                fileext: ".xls"
+            });
+        }
+    });
 
 }
