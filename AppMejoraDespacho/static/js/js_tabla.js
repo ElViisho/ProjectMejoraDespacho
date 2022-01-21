@@ -53,7 +53,8 @@ $(document).ready(function() {
                 }
                 return x;
             }
-            }
+            },
+            { "searchable": false, orderable: false },
         ],
         "search": {     // Searches for the whole match and not each word individually
             "smart": false
@@ -78,9 +79,22 @@ $(document).ready(function() {
                     return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
                 },
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 12]
+                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13]
                 },
                 title: "Ordenes de despacho",
+                customize: function( xlsx) {
+                    var styleSheet = xlsx.xl['styles.xml'];
+                    var lastXfIndex = $('cellXfs xf', styleSheet).length - 1;
+                    var n1 = '<numFmt formatCode="$ #,##0" numFmtId="300"/>';
+                    var s1 = '<xf numFmtId="300" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
+                    styleSheet.childNodes[0].childNodes[0].innerHTML += n1;
+                    styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
+
+                    var fourDecPlaces = lastXfIndex + 1;
+
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    $('row c[r^="L"]', sheet).attr( 's', fourDecPlaces ); 
+                }
             }
         ]
     });    
@@ -90,6 +104,7 @@ $(document).ready(function() {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
         var data = row.data()[11].split("\\,\\,")
+        data.push(row.data()[13])
  
         if ( row.child.isShown() ) {
             // This row is already open - close it
