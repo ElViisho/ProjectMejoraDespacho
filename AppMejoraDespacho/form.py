@@ -1,14 +1,11 @@
 from django import forms
-from django.forms import ModelForm
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from AppMejoraDespacho.models import *
-import re, magic
+import magic
 from django.forms.widgets import NumberInput
 
 from django.db import connections
 import datetime 
-from .choices import comunas_santa_elena, horas
+from .choices import comunas_longest, horas, regiones
 from .queries import query_get_relevant_NVVs
 
 from file_resubmit.admin import AdminResubmitFileWidget
@@ -64,9 +61,11 @@ def now_plus_n(n):
 # Form for submitting a new order to the database
 class ingresoForm(forms.Form):
     nvv = forms.ChoiceField(label='NVV', choices=get_nvvs, initial=1, required=True)
-    tipo_despacho = forms.ChoiceField(label = 'Tipo de despacho', choices=choices_dispatch_way, initial=0, required=True)
-    comuna = forms.ChoiceField(label='Comuna de despacho', choices=comunas_santa_elena, initial=0, required=True)
-    direccion = forms.CharField(label='Dirección de despacho', max_length=250, required=True)
+    tipo_despacho = forms.ChoiceField(label = 'Tipo de despacho', choices=choices_dispatch_way, initial=0, required=False, widget=forms.RadioSelect)
+    despacho_externo = forms.CharField(max_length=150, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre empresa despacho'}))
+    region = forms.ChoiceField(label='Región de despacho', choices=regiones, initial=0, required=False)
+    comuna = forms.ChoiceField(label='Comuna de despacho', choices=comunas_longest, initial=0, required=False)
+    direccion = forms.CharField(label='Dirección de despacho', max_length=250, required=True, widget=forms.TextInput(attrs={'placeholder': 'Santa Elena 1596'}))
     cont_nombre = forms.CharField(label='Nombre contacto de despacho', max_length=200, required=True)
     cont_telefono = PhoneNumberField(label='Teléfono contacto de despacho', required=True, error_messages={'invalid':'Error en el campo Teléfono: ingrese un valor válido (ej.: 987654321 o +56987654321)'})
     comprobante_pago = forms.FileField(label='Comprobante de pago (opcional)', required=False, validators=[validate_file], widget=AdminResubmitFileWidget(attrs={"accept":"image/png, image/jpg, image/jpeg, application/pdf"}))

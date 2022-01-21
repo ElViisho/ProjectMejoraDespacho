@@ -6,6 +6,29 @@
     border-radius: 10px;
 }
 
+/* Weird fixes for the radio selectors */
+#id_tipo_despacho_0, #id_tipo_despacho_1{
+    display: inherit;
+    width: auto;
+    appearance: auto;
+}
+#id_tipo_despacho{
+    background-color: transparent;
+    border-color: transparent;
+    margin-top: -20px;
+    margin-bottom: -20px;
+}
+label[for^="id_tipo_despacho"]{
+    font-size: large;
+    font-weight: normal;
+}
+
+/* Label for the external dispatch provider */
+#id_despacho_externo{
+    margin-top: 20px;
+    margin-bottom: -20px;
+}
+
 /*  The labels for each of the form fields */
 label{
     font-size: 25px;

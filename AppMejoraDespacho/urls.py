@@ -15,6 +15,8 @@ urlpatterns = [
     path('table', views.table_no_guide, name='table'),
     path('table_with_guide', views.table_with_guide, name='tabla_modificable_mostrar'),
 
+    path('ajax/load-comunas/', views.load_comunas, name='ajax_load_comunas'),
+
     path('login', views.loginPage, name='login'),
     path('logout', views.logoutUser, name='logout'),
 ]

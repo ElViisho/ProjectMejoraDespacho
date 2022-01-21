@@ -39,8 +39,20 @@
 
 <!-- Go through each field on the form -->
 {% for field in formulario %}
+	<!-- If it's field to select dispatch type, put a label below the external dispatch option in case this one is selected -->
+	{% if field.name == "tipo_despacho" %}
+	<div class="form-group block-form">
+		<label>{{ field.label }}</label><br>
+		{{ field }}
+		{{ formulario.despacho_externo }}
+	</div>
+	{% elif field.name == "region" %}
+	<div id = "region_div" class="form-group block-form">
+		<label>{{ field.label }}</label><br>
+		{{ field }}
+	</div>
 	<!-- If it's field to submit a file, display the custom button done for it -->
-	{% if field.name == "comprobante_pago" %}
+	{% elif field.name == "comprobante_pago" %}
 	<div class="form-group block-form">
 	<nobr>
 		<label>{{ field.label }}</label>
@@ -76,8 +88,8 @@
 			</tbody>
 		</table>
 	</div>
-	<!-- if it's any other hour field, don't display anything  -->
-	{% elif field.name == "hora_despacho_fin" or field.name == "hora_despacho_extra_inicio" or field.name == "hora_despacho_extra_fin" %}
+	<!-- if it's any of this fields, don't display anything  -->
+	{% elif field.name == "hora_despacho_fin" or field.name == "hora_despacho_extra_inicio" or field.name == "hora_despacho_extra_fin" or field.name == "despacho_externo" %}
 	<!-- If it's no special case, just display the label with the field -->
 	{% else %}
 	<div class="form-group block-form">

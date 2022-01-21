@@ -9,7 +9,7 @@ from AppMejoraDespacho.form import ingresoForm, deleteForm
 import datetime
 from django.db import connections
 
-from .choices import comunas_santa_elena
+from .choices import comunas_santa_elena, comunas_todas, regiones
 from .queries import *
 
 
@@ -83,6 +83,13 @@ def submit_nvv_form(request):
 			cleaned_data = data_obtenida.cleaned_data
 			nvv = cleaned_data['nvv']
 
+			if cleaned_data['tipo_despacho'] == "1":
+				comuna = cleaned_data['despacho_externo']
+				direccion = cleaned_data['direccion'] + ', ' + comunas_todas[int(cleaned_data['region'])][int(cleaned_data['comuna'])-1][1] + ', ' + regiones[int(cleaned_data['region'])-1][1] 
+			else:
+				comuna = comunas_santa_elena[int(cleaned_data['comuna'])-1][1]
+				direccion = cleaned_data['direccion']
+
 			if cleaned_data['comprobante_pago'] is None:
 				cleaned_data['comprobante_pago'] = "None"
 
@@ -107,9 +114,9 @@ def submit_nvv_form(request):
 				nombre_vendedor = datos_tabfu[0]["NOKOFU"],
 				rut = datos_maeedo[0]["ENDO"],
 				cliente = datos_maeen[0]["NOKOEN"],
-				comuna = cleaned_data['comuna'],
+				comuna = comuna,
 				tipo_despacho = cleaned_data['tipo_despacho'],
-				direccion = cleaned_data['direccion'],
+				direccion = direccion,
 				nombre_contacto = cleaned_data['cont_nombre'],
 				telefono_contacto = cleaned_data['cont_telefono'],
 				condicion_pago = datos_maeedoob[0]["CPDO"],
@@ -247,3 +254,12 @@ def dictfetchall(cursor):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ]
+
+def load_comunas(request):
+	'''
+	Method for loading the corresponding communes depending on the region selected
+	on the form
+	'''
+	region = request.GET.get('region')
+	com = comunas_todas[int(region)]
+	return render(request, 'AppMejoraDespacho/comuna_dropdown_list_options.html', {'comunas': com})
