@@ -1,5 +1,6 @@
 {% extends 'AppMejoraDespacho/base.html' %}
 {% load static %}
+{% load form_template_extras %}
 {% load i18n %}
 {% load tabla_tags %}
 
@@ -16,10 +17,6 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.2.1/b-colvis-2.2.1/b-html5-2.2.1/r-2.2.9/datatables.min.js"></script>
 
 <script src="https://cdn.datatables.net/plug-ins/preview/scrollToTop/dataTables.scrollToTop.min.js"></script>
-
-<script src=
-"//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js">
-</script>
 {% endblock header%}
 
 
@@ -94,10 +91,6 @@
     {% endif %}
 </div>
 
-<table id="table_everything" style="display: none;"></table>
-
-<input class="btn btn-excel" onclick="toExcelHistoric()" id="boton_toExcelHistoric" value="Exportar a excel histórico" readonly>
-
 <!-- The confirmation prompt for when user wants to mark order as ready -->
 <div id ="confirm_prompt_background" class="confirm_prompt_background" style="display: none;"></div>
 <div id="confirm_prompt" class="confirm_prompt" style="display: none;">
@@ -105,13 +98,8 @@
 <input class="btn" onclick="confirmar()" id="boton_confirm" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
 
 
-
 {% endlanguage %}
-<!-- Have to be defined here, otherwise it wouldn't work, but it is needed in the javaScript below -->
-<script>
-    let permissions = "{{ permissions }}";
-    let queryset = "{{ queryset }}"
-</script> 
+<script>var permissions = "{{ permissions }}";</script> <!-- Has to define here, otherwise it wouldn't work, but it is needed in the javaScript below -->
 <script src="{% static 'js/js_tabla.js' %}"></script>
 
 

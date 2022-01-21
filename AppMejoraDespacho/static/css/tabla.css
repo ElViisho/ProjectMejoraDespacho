@@ -14,7 +14,7 @@
     padding-left: 1em;
 }
 /*  Button to export to excel */
-.dt-button.buttons-excel, .btn-excel {
+.dt-button.buttons-excel {
     background-color: #007b34;
 	color: #dfdfdf;
 	font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
@@ -26,14 +26,10 @@
 	transition: background-color 1s , border-color 1s;
 }
 /*  Excel button when cursor hovers over it */
-.dt-button.buttons-excel:hover, .btn-excel:hover{
+.dt-button.buttons-excel:hover{
     cursor: pointer;
     background-color: #499b6c;
     transition-duration: 1s;
-}
-
-.btn-excel {
-    margin-left: 15px;
 }
 
 /*  Make cursor pointer when over the show and hide childs buttons on the table */

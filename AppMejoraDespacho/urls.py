@@ -16,7 +16,6 @@ urlpatterns = [
     path('table_with_guide', views.table_with_guide, name='tabla_modificable_mostrar'),
 
     path('ajax/load-comunas/', views.load_comunas, name='ajax_load_comunas'),
-    path('ajax/export_ordenes_xls/', views.export_ordenes_xls, name='export_ordenes_xls'),
 
     path('login', views.loginPage, name='login'),
     path('logout', views.logoutUser, name='logout'),
