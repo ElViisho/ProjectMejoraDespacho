@@ -7,3 +7,6 @@ django-file-resubmit
 git+https://github.com/julian-r/python-magic.git
 django-phonenumber-field[phonenumbers]
 django-allauth
+uvicorn
+gunicorn
+django-heroku
