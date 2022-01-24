@@ -59,7 +59,7 @@ def main(request):
 	permissions = 'Básico'
 	if (len(groups) > 0):
 		permissions = groups[0]
-	# TEMPORAY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
+	# TEMPORARY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
 	if request.user.is_superuser:
 		permissions = 'Eliminar'
 	return render(request, "AppMejoraDespacho/main.html", {"permissions": permissions})
@@ -172,58 +172,40 @@ def confirm_delete_nvv(request):
 	'''
 	return render(request, "AppMejoraDespacho/confirm_delete_nvv.html")
 
-@login_required(login_url='login')
-def table_with_guide(request):
-	'''
-	Method that calls another method that renders the table with 
-	the data, passing it the argument to tell it to show only the
-	orders that have a dispatch order
-	Page: tabla_modificable_mostrar
-	'''
-	con_guia = "True"
-	return mutable_table(request, con_guia)
-
-@login_required(login_url='login')
-def table_no_guide(request):
-	'''
-	Method that calls another method that renders the table with 
-	the data, passing it the argument to tell it to show only the
-	orders that don't have a dispatch order
-	Page: table
-	'''
-	con_guia = "False"
-	return mutable_table(request, con_guia)
-
-def table(request, con_guia):
+def table(request):
 	'''
 	Renders the table with all the current data present in the database
 	'''
 	queryset = Ordenes.objects.all() # Get the data from the database
 	
-	# If there's a POST request, it means user is trying to submit data into the database from the table
-	if request.method == "POST":
-		data = request.POST
-		# POST request for changing the state of an order from the selection list on the table
-		if (data['type'] == 'estado'):
-			Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
-		# POST request for submitting the order as dispatched and retrieving its guide number from Random ERP database
-		elif (data['type'] == 'numero_guia'):
-			nvv = data['nvv']
-			listo = 1-int(data['listo'])
-			Ordenes.objects.filter(nvv=nvv).update(listo=listo)
-			bool_n_guia = change_numero_guia(nvv, listo)
-			# If there's no guide number, return garbage so it detects an error and prompts the user about it
-			if (not bool_n_guia):
-				return 'error'
-	
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
 	permissions = 'Básico'
 	if (len(groups) > 0):
 		permissions = groups[0]
-	# TEMPORAY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
+	# TEMPORARY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
 	if request.user.is_superuser:
 		permissions = 'Despacho'
-	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
+	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": "False",})
+
+@login_required(login_url='login')
+def mutable_table_with_guide(request):
+	'''
+	Method that calls another method that renders the table with the data, passing it the argument 
+	to tell it to show only the	orders that have a dispatch order
+	Page: mutable_table_show
+	'''
+	con_guia = "True"
+	return mutable_table(request, con_guia)
+
+@login_required(login_url='login')
+def mutable_table_no_guide(request):
+	'''
+	Method that calls another method that renders the table with the data, passing it the argument 
+	to tell it to show only the	orders that don't have a dispatch order
+	Page: mutable_table_not_show
+	'''
+	con_guia = "False"
+	return mutable_table(request, con_guia)
 
 def mutable_table(request, con_guia):
 	'''
@@ -260,7 +242,7 @@ def mutable_table(request, con_guia):
 	permissions = 'Básico'
 	if (len(groups) > 0):
 		permissions = groups[0]
-	# TEMPORAY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
+	# TEMPORARY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
 	if request.user.is_superuser:
 		permissions = 'Despacho'
 	return render(request, "AppMejoraDespacho/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})

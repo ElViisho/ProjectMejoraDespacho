@@ -12,8 +12,9 @@ urlpatterns = [
     path('confirm_nvv', views.confirm_nvv, name='confirm_nvv'),
     path('delete_nvv', views.delete_nvv, name='delete_nvv'),
     path('confirm_delete_nvv', views.confirm_delete_nvv, name='confirm_delete_nvv'),
-    path('table', views.table_no_guide, name='table'),
-    path('table_with_guide', views.table_with_guide, name='tabla_modificable_mostrar'),
+    path('table', views.table, name='table'),
+    path('mutable_table', views.mutable_table_no_guide, name='mutable_table'),
+    path('mutable_table_with_guide', views.mutable_table_with_guide, name='mutable_tabla_modificable_with_guide'),
 
     path('ajax/load-comunas/', views.load_comunas, name='ajax_load_comunas'),
 
