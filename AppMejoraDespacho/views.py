@@ -123,6 +123,7 @@ def submit_nvv_form(request):
 				comprobante_pago = cleaned_data['comprobante_pago'],
 				observacion = cleaned_data['observaciones'],
 				fecha_despacho = cleaned_data['fecha_despacho'],
+				fecha_despacho_final = cleaned_data['fecha_despacho'],
 				hora_de_despacho_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_inicio'])),
 				hora_de_despacho_fin = datetime.time(hour=int(cleaned_data['hora_despacho_fin'])),
 				hora_despacho_extra_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_extra_inicio'])),
@@ -180,7 +181,7 @@ def table_with_guide(request):
 	Page: tabla_modificable_mostrar
 	'''
 	con_guia = "True"
-	return table(request, con_guia)
+	return mutable_table(request, con_guia)
 
 @login_required(login_url='login')
 def table_no_guide(request):
@@ -191,7 +192,7 @@ def table_no_guide(request):
 	Page: table
 	'''
 	con_guia = "False"
-	return table(request, con_guia)
+	return mutable_table(request, con_guia)
 
 def table(request, con_guia):
 	'''
@@ -223,6 +224,46 @@ def table(request, con_guia):
 	if request.user.is_superuser:
 		permissions = 'Despacho'
 	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
+
+def mutable_table(request, con_guia):
+	'''
+	Renders the table with all the current data present in the database
+	'''
+	
+	# If there's a POST request, it means user is trying to submit data into the database from the table
+	if request.method == "POST":
+		data = request.POST
+		# POST request for changing the state of an order from the selection list on the table
+		if (data['type'] == 'estado'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
+		# POST request for submitting the order as dispatched and retrieving its guide number from Random ERP database
+		elif (data['type'] == 'numero_guia'):
+			nvv = data['nvv']
+			listo = 1-int(data['listo'])
+			Ordenes.objects.filter(nvv=nvv).update(listo=listo)
+			bool_n_guia = change_numero_guia(nvv, listo)
+			# If there's no guide number, return garbage so it detects an error and prompts the user about it
+			if (not bool_n_guia):
+				return 'error'
+		elif (data['type'] == 'rango_horario'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(rango_horario_final=data['option'])
+		elif (data['type'] == 'estado_pedido_para_vendedor'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(estado_pedido_para_vendedor=data['option'])
+		elif (data['type'] == 'fecha_despacho'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(fecha_despacho_final=data['date'])
+		elif (data['type'] == 'observaciones_pedido'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(observacion_despacho=data['observaciones'])
+	
+	queryset = Ordenes.objects.all() # Get the data from the database
+	
+	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
+	permissions = 'Básico'
+	if (len(groups) > 0):
+		permissions = groups[0]
+	# TEMPORAY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
+	if request.user.is_superuser:
+		permissions = 'Despacho'
+	return render(request, "AppMejoraDespacho/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
 
 def change_numero_guia(nvv, listo):
 	'''

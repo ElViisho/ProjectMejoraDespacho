@@ -12,6 +12,20 @@ choices_estados = (
         (4, 'Rollos')
 )
 
+choices_estados_pedido_para_vendedor= (
+        (0, 'En Preparación'),
+        (1, 'Sin pago adjunto'),
+        (2, 'Sin material'),
+        (3, 'Preparado incompleto'),
+        (4, 'Preparado completo')
+)
+
+choices_am_pm = (
+        (0, ''),
+        (1, 'AM'),
+        (2, 'PM')
+)
+
 # Ways to dispatch
 choices_dispatch_way = (
         ((0, "DIMACO"),

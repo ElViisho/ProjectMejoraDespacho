@@ -32,6 +32,10 @@
     transition-duration: 1s;
 }
 
+.child_table{
+    background-color: #f1f1f1 !important;
+}
+
 /*  Make cursor pointer when over the show and hide childs buttons on the table */
 .show_hide{
     cursor: pointer;
