@@ -70,11 +70,15 @@ input#id_comprobante_pago {
 }
 
 /*  Style for all the inputs that have text */
-input#id_nvv, input#id_direccion, input#id_cont_nombre, input#id_cont_telefono, input#id_observaciones, textarea{
+input#id_nvv, input#id_direccion, input#id_cont_nombre, input#id_cont_telefono, input#id_observaciones, input#id_despacho_externo{
     font-size: large;
     border-radius: 5px;
     background-color: white;
     color: #5b3924;
+}
+
+input#id_direccion::placeholder, input#id_cont_nombre::placeholder, input#id_cont_telefono::placeholder, input#id_observaciones::placeholder, input#id_despacho_externo::placeholder{
+    color: #b7aea9;
 }
 
 /*  Styles the submit button */

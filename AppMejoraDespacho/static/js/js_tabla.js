@@ -18,13 +18,19 @@ function getCookie(c_name)
 // Array with the name of months for display
 const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
+// Display order of objects of table. It checks for permissions to know if it is downloadble to excel or not
+function domDataTable() {
+    if (permissions=='Despacho') return '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>'
+    return '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>'
+}
+
 // Initialize variable as nothing
 let nvv = "";
 
 $(document).ready(function() { 
     // Add plugin of DataTable to table of data
     var table = $('#listado').DataTable({ 
-        "dom": '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>',    // Display order of objects of table
+        "dom": domDataTable(),    // Display order of objects of table
         "columns": [        // Define properties for the columns of the table 
             { "searchable": false, orderable: false },
             null,
@@ -82,18 +88,24 @@ $(document).ready(function() {
                     columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13]
                 },
                 title: "Ordenes de despacho",
-                customize: function( xlsx) {
-                    var styleSheet = xlsx.xl['styles.xml'];
-                    var lastXfIndex = $('cellXfs xf', styleSheet).length - 1;
-                    var n1 = '<numFmt formatCode="$ #,##0" numFmtId="300"/>';
-                    var s1 = '<xf numFmtId="300" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
-                    styleSheet.childNodes[0].childNodes[0].innerHTML += n1;
-                    styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
+                customize: function(xlsx) {
+                    var passedHeader = false;
+                    if (passedHeader){
+                        var styleSheet = xlsx.xl['styles.xml'];
+                        var lastXfIndex = $('cellXfs xf', styleSheet).length - 1;
+                        var n1 = '<numFmt formatCode="$ #,##0" numFmtId="300"/>';
+                        var s1 = '<xf numFmtId="300" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
+                        styleSheet.childNodes[0].childNodes[0].innerHTML += n1;
+                        styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
 
-                    var fourDecPlaces = lastXfIndex + 1;
+                        var fourDecPlaces = lastXfIndex + 1;
 
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('row c[r^="L"]', sheet).attr( 's', fourDecPlaces ); 
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        $('row c[r^="L"]', sheet).attr( 's', fourDecPlaces );
+                    }
+                    else {
+                        passedHeader = true;
+                    } 
                 }
             }
         ]
@@ -153,17 +165,25 @@ var listo = 0;
 
 // For showing the child data
 function format (d) {
-    // Choses which button to show depending on if order is ready or not
+    var n_guia = '';
+    // Choses which button to show depending on if order is ready or not, and also if it must show the guide number or not
     listo = d[9];
-    if (d[9] == 1) boton_guia_despacho = "Borrar número de guía";
+    if (d[9] == 1) {
+        n_guia = '<tr>'+
+            '<td>Número de guía:</td>'+
+            '<td>' + d[6] + '</td>' +
+        '</tr>'
+        boton_guia_despacho = "Borrar número de guía";
+    }
     else boton_guia_despacho = "Marcar como despachado";
 
     // If user doesn't have permission, don't show button
     var boton_despacho = '';
     if (permissions == 'Despacho') {
-    boton_despacho = '<tr>'+
-    `<td colspan='2' style='text-align: center'><input class="btn btn-default boton-sumbit" onclick="prompt_confirm(${listo})" id="boton" value="${boton_guia_despacho}" readonly></td>` +
-    '</tr>';}   
+        boton_despacho = '<tr>'+
+            `<td colspan='2' style='text-align: center'><input class="btn btn-default boton-sumbit" onclick="prompt_confirm(${listo})" id="boton" value="${boton_guia_despacho}" readonly></td>` +
+        '</tr>';
+    }   
     
     // Child table for extra data
     return '<table class="child_table" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
@@ -187,6 +207,10 @@ function format (d) {
             '<td>RUT Cliente:</td>'+
             '<td>' + d[2] + '</td>'+
         '</tr>'+
+        '<tr>' +
+            '<td>Valor neto:</td>' +
+            '<td>$' + Number(d[10]).toLocaleString() + '</td>' +
+        '</tr>' +
         '<tr>'+
             '<td>Condición de pago:</td>'+
             '<td>' + d[3] + '</td>'+
@@ -196,18 +220,11 @@ function format (d) {
             '<td>' + d[4] + '</td>' +
         '</tr>' +
         '<tr>'+
-        '<tr>' +
-            '<td>Valor neto:</td>' +
-            '<td>$' + Number(d[10]).toLocaleString() + '</td>' +
-        '</tr>' +
         '<tr>'+
             '<td>Obervaciones:</td>'+
             '<td>' + d[5] + '</td>'+
         '</tr>'+
-        '<tr>'+
-            '<td>Número de guía:</td>'+
-            '<td>' + d[6] + '</td>' +
-        '</tr>'+
+        n_guia +
         boton_despacho +
     '</table>';
 }

@@ -66,8 +66,8 @@ class ingresoForm(forms.Form):
     region = forms.ChoiceField(label='Región de despacho', choices=regiones, initial=0, required=False)
     comuna = forms.ChoiceField(label='Comuna de despacho', choices=comunas_longest, initial=0, required=False)
     direccion = forms.CharField(label='Dirección de despacho', max_length=250, required=True, widget=forms.TextInput(attrs={'placeholder': 'Santa Elena 1596'}))
-    cont_nombre = forms.CharField(label='Nombre contacto de despacho', max_length=200, required=True)
-    cont_telefono = PhoneNumberField(label='Teléfono contacto de despacho', required=True, error_messages={'invalid':'Error en el campo Teléfono: ingrese un valor válido (ej.: 987654321 o +56987654321)'})
+    cont_nombre = forms.CharField(label='Nombre contacto de despacho', max_length=200, required=True, widget=forms.TextInput(attrs={'placeholder': 'José González'}))
+    cont_telefono = PhoneNumberField(label='Teléfono contacto de despacho', required=True, error_messages={'invalid':'Error en el campo Teléfono: ingrese un valor válido (ej.: 987654321 o +56987654321 en caso de ser chileno)'}, widget=forms.TextInput(attrs={'placeholder': '987654321'}))
     comprobante_pago = forms.FileField(label='Comprobante de pago (opcional)', required=False, validators=[validate_file], widget=AdminResubmitFileWidget(attrs={"accept":"image/png, image/jpg, image/jpeg, application/pdf"}))
     now = datetime.datetime.now() # Get now time
     n=2 # Add two days from now to dispatch date
