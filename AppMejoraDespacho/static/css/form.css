@@ -79,6 +79,7 @@ input#id_nvv, input#id_direccion, input#id_cont_nombre, input#id_cont_telefono, 
 
 input#id_direccion::placeholder, input#id_cont_nombre::placeholder, input#id_cont_telefono::placeholder, input#id_observaciones::placeholder, input#id_despacho_externo::placeholder{
     color: #b7aea9;
+    opacity: 1;
 }
 
 /*  Styles the submit button */

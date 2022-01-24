@@ -4,6 +4,6 @@ pytz
 sqlparse
 mssql-django
 django-file-resubmit
-python-magic-bin
+git+https://github.com/julian-r/python-magic.git
 django-phonenumber-field[phonenumbers]
 django-allauth
