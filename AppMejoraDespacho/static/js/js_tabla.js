@@ -26,10 +26,11 @@ function domDataTable() {
 
 // Initialize variable as nothing
 let nvv = "";
+let table = "";
 
 $(document).ready(function() { 
     // Add plugin of DataTable to table of data
-    var table = $('#listado').DataTable({ 
+    table = $('#listado').DataTable({ 
         "dom": domDataTable(),    // Display order of objects of table
         "columns": [        // Define properties for the columns of the table 
             { "searchable": false, orderable: false },
@@ -60,6 +61,7 @@ $(document).ready(function() {
                 return x;
             }
             },
+            { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
         ],
         "search": {     // Searches for the whole match and not each word individually
@@ -117,6 +119,8 @@ $(document).ready(function() {
         var row = table.row(tr);
         var data = row.data()[11].split("\\,\\,")
         data.push(row.data()[13])
+        data.push(row.data()[14])
+        data.unshift(row.data()[1])
  
         if ( row.child.isShown() ) {
             // This row is already open - close it
@@ -136,29 +140,28 @@ $(document).ready(function() {
             row.child( format(data) ).show();
             tr.addClass('shown');
         }
-    } );
-
-    // If user has permissions
-    if (permissions == 'Despacho') {
-        $('.Estado').on('change', function () {
-            var url = window.location.href;
-            var option = $(this).val();
-            var nvv = this.id;
-
-            $.ajaxSetup({
-                headers: { "X-CSRFToken": getCookie("csrftoken") }
-            });
-
-            $.ajax({
-                success: function () {
-                    // Post to change the state of the order
-                    $.post(url, {"type": "estado", "nvv": nvv, "option": option,}),
-                    table.cell('#estado_string' + nvv).data(option)
-                }
-            })
-        })
-    }
+    });
+    
 });
+
+function textAreaChange() {
+    var url = window.location.href;
+    var textArea = document.getElementsByClassName('observaciones')[0];
+    var nvv = textArea.id;
+    var observaciones = textArea.value;
+    
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": getCookie("csrftoken") }
+    });
+
+    $.ajax({
+        success: function () {
+            // Post to change the observations of the order
+            $.post(url, {"type": "observaciones", "nvv": nvv, "observacion": observaciones,})
+            table.cell('#observacion' + nvv).data(observaciones)
+        }
+    })
+}
 
 // Initialize variable as 0 (falsey)
 var listo = 0;
@@ -168,75 +171,61 @@ function format (d) {
     var n_guia = '';
     // Choses which button to show depending on if order is ready or not, and also if it must show the guide number or not
     listo = d[9];
-    if (d[9] == 1) {
-        n_guia = '<tr>'+
+    rowspan = 2;
+    if (d[10] == 1) {
+        n_guia = '<tr class="child_table">'+
             '<td>Número de guía:</td>'+
             '<td>' + d[6] + '</td>' +
         '</tr>'
-        boton_guia_despacho = "Borrar número de guía";
+        rowspan = 3;
     }
-    else boton_guia_despacho = "Marcar como despachado";
-
-    // If user doesn't have permission, don't show button
-    var boton_despacho = '';
-    if (permissions == 'Despacho') {
-        boton_despacho = '<tr>'+
-            `<td colspan='2' style='text-align: center'><input class="btn btn-default boton-sumbit" onclick="prompt_confirm(${listo})" id="boton" value="${boton_guia_despacho}" readonly></td>` +
-        '</tr>';
-    }   
     
     // Child table for extra data
-    return '<table class="child_table" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-        '<tr>' +
-            '<td>Nombre vendedor:</td>' +
-            '<td>' + d[7] + '</td>' +
-        '</tr>' +
-        '<tr>' +
-            '<td>Solicitado por:</td>' +
-            '<td>' + d[8] + '</td>' +
-        '</tr>' +
-        '<tr>'+
-            '<td>Fecha emisión NVV:</td>'+
-            '<td>'+d[0]+'</td>'+
-        '</tr>'+
-        '<tr>'+
-            '<td>Cliente:</td>'+
-            '<td>'+d[1]+'</td>'+
-        '</tr>'+
-        '<tr>'+
-            '<td>RUT Cliente:</td>'+
-            '<td>' + d[2] + '</td>'+
-        '</tr>'+
-        '<tr>' +
-            '<td>Valor neto:</td>' +
-            '<td>$' + Number(d[10]).toLocaleString() + '</td>' +
-        '</tr>' +
-        '<tr>'+
-            '<td>Condición de pago:</td>'+
-            '<td>' + d[3] + '</td>'+
-        '</tr>'+
-        '<tr>' +
-            '<td>Comprobante de pago:</td>' +
-            '<td>' + d[4] + '</td>' +
-        '</tr>' +
-        '<tr>'+
-        '<tr>'+
-            '<td>Obervaciones:</td>'+
-            '<td>' + d[5] + '</td>'+
-        '</tr>'+
-        n_guia +
-        boton_despacho +
-    '</table>';
+    return '<td class="child_table">' + 
+        '<table cellpadding="5" cellspacing="0" border="0">'+
+            '<tr class="child_table">' +
+                '<td>Solicitado por:</td>' +
+                '<td>' + d[8] + '</td>' +
+                '<td>Valor neto:</td>' +
+                '<td>$' + Number(d[11]).toLocaleString() + '</td>' +
+            '</tr>' +
+            '<tr class="child_table">' +
+                '<td>Nombre vendedor:</td>' +
+                '<td>' + d[7] + '</td>' +
+                '<td>Condición de pago:</td>'+
+                '<td>' + d[4] + '</td>'+
+            '</tr>' +
+            '<tr class="child_table">'+
+                '<td>Fecha emisión NVV:</td>'+
+                '<td>'+d[1]+'</td>'+
+                '<td>Comprobante de pago:</td>' +
+                '<td>' + d[5] + '</td>' +
+            '</tr>'+
+            '<tr class="child_table">'+
+                '<td>Cliente:</td>'+
+                '<td>'+d[2]+'</td>'+
+                '<td rowspan="' + (rowspan+3) + '" style="vertical-align: top;">Obervaciones del pedido:</td>'+
+                '<td rowspan="' + (rowspan+3) + '" style="vertical-align: top;">' + d[10] + '</td>'+
+            '</tr>'+
+            '<tr class="child_table">'+
+                '<td>RUT Cliente:</td>'+
+                '<td>' + d[3] + '</td>'+
+            '</tr>'+
+            '<tr class="child_table">' +
+                '<td rowspan="' + rowspan + '" style="vertical-align: top;">Obervaciones solicitud:</td>'+
+                '<td rowspan="' + rowspan + '" style="vertical-align: top;">' + '<textarea onchange="textAreaChange()" class="observaciones" id="'+ d[0] +
+                '" style="resize:none" rows=2 cols=50 placeholder="Ingrese alguna observación en caso de ser pertinente">' + d[12] + '</textarea></td>'+
+            '</tr>' +
+            '<tr class="child_table"></tr>' +
+            '<tr class="child_table"></tr>' +
+            n_guia +
+        '</table>'+
+    '</td>';
 }
 
 // The prompt for confirmation of changes on table
 function prompt_confirm(listo) {
-    if (listo) {
-        $('#confirm_texto').html(`¿Confirmas que quieres borrar la guía de despacho de la orden ${nvv}? (Dejará de estar marcada como despachada)<br>`);
-    }
-    else {
-        $('#confirm_texto').html(`¿Confirmas que quieres marcar la orden ${nvv} como despachada? (Esto la hará invisible en la tabla)<br>`);
-    }
+    $('#confirm_texto').html(`¿Confirmas que quieres subir un nuevo comprobante de venta ${nvv}? (Borrará el antiguo en caso de existir)<br>`);
     $('#confirm_prompt_background').show();
     $('#confirm_prompt').show();
     $('#confirm_texto').show();

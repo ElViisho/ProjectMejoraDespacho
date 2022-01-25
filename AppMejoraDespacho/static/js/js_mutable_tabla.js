@@ -287,9 +287,8 @@ function format (d) {
             '<tr class="child_table">'+
                 '<td>Cliente:</td>'+
                 '<td>'+d[2]+'</td>'+
-                '<td rowspan="9" style="vertical-align: top;">Observaciones del pedido:</td>' +
-                '<td rowspan="9" style="vertical-align: top;"><textarea onchange="textAreaChange()" class="observaciones_pedido" id="'+ d[0] +
-                    '" style="resize:none" rows=8 cols=50 placeholder="Ingrese alguna observación en caso de ser pertinente">' + d[13] + '</textarea>' +
+                '<td rowspan="2" style="vertical-align: top;">Obervaciones solicitud:</td>'+
+                '<td rowspan="2" style="vertical-align: top;">' + d[6] + '</td>'+
             '</tr>'+
             '<tr class="child_table">'+
                 '<td>RUT Cliente:</td>'+
@@ -298,14 +297,13 @@ function format (d) {
             '<tr class="child_table">'+
                 '<td>Nombre Contacto:</td>'+
                 '<td>' + d[11] + '</td>'+
+                '<td rowspan="7" style="vertical-align: top;">Observaciones del pedido:</td>' +
+                '<td rowspan="7" style="vertical-align: top;"><textarea onchange="textAreaChange()" class="observaciones_pedido" id="'+ d[0] +
+                    '" style="resize:none" rows=3 cols=50 placeholder="Ingrese alguna observación en caso de ser pertinente">' + d[13] + '</textarea></td>' +
             '</tr>'+
             '<tr class="child_table">'+
                 '<td>Teléfono Contacto:</td>'+
                 '<td>' + d[12] + '</td>'+
-            '</tr>'+
-            '<tr class="child_table">'+
-                '<td>Obervaciones solicitud:</td>'+
-                '<td>' + d[6] + '</td>'+
             '</tr>'+
             n_guia +
             boton_despacho +
