@@ -35,19 +35,30 @@ $(document).ready(function() {
     let phoneInput = window.intlTelInput(phoneInputField, {
         initialCountry: "cl",
         preferredCountries: ["cl", "ar", "pe", "bo"],
-        utilsScript:
-            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
         separateDialCode: true,
         formatOnDisplay: true,
         nationalMode: true,
-    });
+    })
 
     function cambiarTelefono(){
-        var phoneNumber = phoneInput.getNumber();
-        $("#id_cont_telefono").val(phoneNumber);
+        var dialCode = phoneInput.getSelectedCountryData()["dialCode"];
+        var number = $("#id_cont_telefono").val();
+        number = number.replace(/ /g,'')
+        pattern = /^(\+(\d{1,3}))(\d{4,11})$/i
+        if (pattern.test(number)){
+            return;
+        }
+        pattern = /^(\d{4,11})$/i
+        if (pattern.test(number)){
+            $("#id_cont_telefono").val('+' + dialCode + number);
+            return;
+        }
+        
     }
     phoneInputField.addEventListener('change', cambiarTelefono);
     phoneInputField.addEventListener('keyup', cambiarTelefono);
+
+    cambiarTelefono();
 });
 
 

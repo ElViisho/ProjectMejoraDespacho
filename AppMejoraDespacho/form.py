@@ -1,6 +1,5 @@
 from django import forms
 from AppMejoraDespacho.models import *
-import magic
 from django.forms.widgets import NumberInput
 
 from django.db import connections
