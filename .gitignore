@@ -131,3 +131,4 @@ dmypy.json
 # files
 AppMejoraDespacho/static/comprobantes_de_pago/
 AppMejoraDespacho/static/documentos_de_salida/
+tmp/

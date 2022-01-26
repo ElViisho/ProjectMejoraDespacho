@@ -38,7 +38,7 @@
                 <th>Teléfono contacto</th>
                 <th>Estado pedido</th>
                 <th>Fecha despacho</th>
-                <th>Hora despacho</th>
+                <th>Horario despacho asignado</th>
                 <th style="display: none;">Datos extra</th> <!-- These two aren't displayed but are necessary -->
                 <th style="display: none;">Estado</th>      <!-- because here is where all the extra data is, -->
                 <th style="display: none;">Valor neto</th>  <!-- for the child rows and the export to excel -->
@@ -90,13 +90,6 @@
         <input class="boton_ocultar" onclick="window.location='table_with_guide'" id="boton_ocultar" value="Mostrar NVVs con número de guía" readonly>
     {% endif %}
 </div>
-
-<!-- The confirmation prompt for when user wants to mark order as ready -->
-<div id ="confirm_prompt_background" class="confirm_prompt_background" style="display: none;"></div>
-<div id="confirm_prompt" class="confirm_prompt" style="display: none;">
-<div id="confirm_texto" class="confirm_texto"></div>
-<input class="btn" onclick="confirmar()" id="boton_confirm" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
-
 
 {% endlanguage %}
 <script>var permissions = "{{ permissions }}";</script> <!-- Has to define here, otherwise it wouldn't work, but it is needed in the javaScript below -->

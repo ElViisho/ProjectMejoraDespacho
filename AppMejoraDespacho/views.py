@@ -193,14 +193,7 @@ def table_no_guide(request):
 def table(request, con_guia):
 	'''
 	Renders the table with all the current data present in the database
-	'''
-	# If there's a POST request, it means user is trying to submit data into the database from the table
-	if request.method == "POST":
-		data = request.POST
-		# POST request for changing the state of an order from the selection list on the table
-		if (data['type'] == 'observaciones'):
-			Ordenes.objects.filter(nvv=data['nvv']).update(observacion=data['observacion'])
-	
+	'''	
 	queryset = Ordenes.objects.all() # Get the data from the database
 	
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show

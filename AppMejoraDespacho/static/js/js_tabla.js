@@ -144,25 +144,6 @@ $(document).ready(function() {
     
 });
 
-function textAreaChange() {
-    var url = window.location.href;
-    var textArea = document.getElementsByClassName('observaciones')[0];
-    var nvv = textArea.id;
-    var observaciones = textArea.value;
-    
-    $.ajaxSetup({
-        headers: { "X-CSRFToken": getCookie("csrftoken") }
-    });
-
-    $.ajax({
-        success: function () {
-            // Post to change the observations of the order
-            $.post(url, {"type": "observaciones", "nvv": nvv, "observacion": observaciones,})
-            table.cell('#observacion' + nvv).data(observaciones)
-        }
-    })
-}
-
 // Initialize variable as 0 (falsey)
 var listo = 0;
 
@@ -213,63 +194,11 @@ function format (d) {
             '</tr>'+
             '<tr class="child_table">' +
                 '<td rowspan="' + rowspan + '" style="vertical-align: top;">Obervaciones solicitud:</td>'+
-                '<td rowspan="' + rowspan + '" style="vertical-align: top;">' + '<textarea onchange="textAreaChange()" class="observaciones" id="'+ d[0] +
-                '" style="resize:none" rows=2 cols=40 placeholder="Ingrese alguna observación en caso de ser pertinente">' + d[12] + '</textarea></td>'+
+                '<td rowspan="' + rowspan + '" style="vertical-align: top;">' + d[12] + '</td>'+
             '</tr>' +
             '<tr class="child_table"></tr>' +
             '<tr class="child_table"></tr>' +
             n_guia +
         '</table>'+
     '</td>';
-}
-
-// The prompt for confirmation of changes on table
-function prompt_confirm(listo) {
-    $('#confirm_texto').html(`¿Confirmas que quieres subir un nuevo comprobante de venta ${nvv}? (Borrará el antiguo en caso de existir)<br>`);
-    $('#confirm_prompt_background').show();
-    $('#confirm_prompt').show();
-    $('#confirm_texto').show();
-    $('#boton_confirm').show();
-    $('#boton_cancel').show();
-}
-
-// To cancel the prompt
-function cancelar() {
-    $('#confirm_prompt_background').hide();
-    $('#confirm_prompt').hide();
-    $('#confirm_texto').hide();
-    $('#boton_confirm').hide();
-    $('#boton_cancel').hide();
-}
-
-// Confirm the prompt and send the post request to retrieve the guide number
-function confirmar() {
-    var url = window.location.href;
-
-    $.ajaxSetup({
-        headers: { "X-CSRFToken": getCookie("csrftoken") }
-    });
-
-    $.ajax({
-        type: 'post',
-        url: url,
-        beforeSend: function () {
-            // While waiting for response
-            $('#confirm_texto').html('Cargando...');
-            $('#boton_confirm').prop('disabled', true);
-            $('#boton_cancel').prop('disabled', true);
-        },
-        data: {"type": "numero_guia", "nvv": nvv, "listo": listo},
-        success: function () {
-            // Reload table with new data
-            window.location.reload();
-        },
-        error: function () {
-            // Prompt the user there was no guide number and after 2 secondes reload table
-            $('#confirm_texto').html('Error. Orden no tiene documento asociado. La página se recargará en breve.');
-            setTimeout('window.location.reload()', 2000);
-        },
-        timeout: 5000 
-    })
-
 }
