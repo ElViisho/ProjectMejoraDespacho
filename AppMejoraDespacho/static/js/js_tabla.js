@@ -214,7 +214,7 @@ function format (d) {
             '<tr class="child_table">' +
                 '<td rowspan="' + rowspan + '" style="vertical-align: top;">Obervaciones solicitud:</td>'+
                 '<td rowspan="' + rowspan + '" style="vertical-align: top;">' + '<textarea onchange="textAreaChange()" class="observaciones" id="'+ d[0] +
-                '" style="resize:none" rows=2 cols=50 placeholder="Ingrese alguna observación en caso de ser pertinente">' + d[12] + '</textarea></td>'+
+                '" style="resize:none" rows=2 cols=40 placeholder="Ingrese alguna observación en caso de ser pertinente">' + d[12] + '</textarea></td>'+
             '</tr>' +
             '<tr class="child_table"></tr>' +
             '<tr class="child_table"></tr>' +

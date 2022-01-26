@@ -82,3 +82,20 @@
     text-align: center;
     width: 250px;
 }
+
+
+/*  Creates a custom upload button for submitting files */
+.custom-file-upload {
+    border-radius: 5px;
+    padding: 3px 4px;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 50px;
+}
+/*  For not showing base input file so only custom one is visible */
+input#comprobante_pago {
+    display: none;
+}
+.image_upload{
+    max-height: 16px;
+}
