@@ -1,6 +1,5 @@
 from django import forms
 from AppMejoraDespacho.models import *
-import magic
 from django.forms.widgets import NumberInput
 
 from django.db import connections
@@ -16,12 +15,6 @@ def validate_file(file):
     Function for validating the size and extension of the submitted file.
     If the conditions are not met, it raises a ValidationError.
     '''
-
-    valid_mime_types = ['application/pdf', 'image/png', 'image/jpeg'] # Valid file types, image and pdf
-    file_mime_type = magic.from_buffer(file.read(1024), mime=True)
-    # Validate the file type even if it is the right extension
-    if file_mime_type not in valid_mime_types:
-        raise forms.ValidationError("Error en el campo de comprobante de pago: tipo de file no valido (tiene que ser png, jpeg, jpg o pdf)")
     valid_extension = ["png", "jpg", "pdf", "jpeg", "pjp", "pjpeg", "jfif"]
     size = file.size
     name = file.name.split(".")
@@ -116,33 +109,32 @@ class ingresoForm(forms.Form):
             raise forms.ValidationError("Error en el campo Fecha de despacho: No se puede despachar los fin de semana")
         return d
 
-    def clean_hora_despacho_fin(self):
+    def clean_hora_despacho_extra_fin(self):
         '''
-        Method for validating the first hour ranges (the ones that are required)
+        Method for validating the hour ranges
         '''
         inicio = self.cleaned_data['hora_despacho_inicio']
         fin = self.cleaned_data['hora_despacho_fin']
-        # Checks that the end hour of the range is at least one hour greater that the start hour
-        if(int(fin) - int(inicio) < 1):
+        if (int(fin) - int(inicio) < 1):
             raise forms.ValidationError("Error en el campo Hora de despacho: ingrese un rango horario válido")
-        return fin
+        inicio_extra = self.cleaned_data['hora_despacho_extra_inicio']
+        fin_extra = self.cleaned_data['hora_despacho_extra_fin']
+        # Checks that the end hour of the range is at least one hour greater that the start hour
+        # and that the second range is after the first
+        if((int(inicio_extra) != 0) and (int(fin_extra) != 0) and ((int(fin_extra) - int(inicio_extra) < 1) or ((int(inicio_extra) - int(fin) < 1)))):
+            raise forms.ValidationError("Error en el campo Hora de despacho: ingrese un rango horario válido")
+        if(((int(inicio_extra) == 0) and (int(fin_extra) != 0)) or (int(inicio_extra) != 0) and (int(fin_extra) == 0)):
+            raise forms.ValidationError("Error en el campo Hora de despacho: ingrese un rango horario válido")
+        return fin_extra
 
-    def clean_hora_despacho_extra_fin(self):
-        '''
-        Method for validating the second hour ranges (the ones that are optional)
-        '''
-        # It's a try because sometimes the hours are not valid, in that case it means that the values are not relevant and are just returned
-        try:
-            fin = self.cleaned_data['hora_despacho_fin']
-            inicio_extra = self.cleaned_data['hora_despacho_extra_inicio']
-            fin_extra = self.cleaned_data['hora_despacho_extra_fin']
-            # Checks that the end hour of the range is at least one hour greater that the start hour
-            # and that the second range is after the first
-            if((int(fin_extra) - int(inicio_extra) < 1) or ((int(inicio_extra) - int(fin) < 1))):
-                raise forms.ValidationError("Error en el campo Hora de despacho: ingrese un rango horario válido")
-            return fin_extra
-        except:
-            return self.cleaned_data['hora_despacho_extra_fin']
+class editFileForm(forms.Form):
+    nuevo_comprobante_pago = forms.FileField(required=True, validators=[validate_file],)
+    nvv_for_submit = forms.CharField(max_length=200, required=True, widget=forms.TextInput(attrs={'style': 'display: none;'}))
+
+    # Add new init method to add the attrs to the field
+    def __init__(self, *args, **kwargs):
+        super(editFileForm, self).__init__(*args, **kwargs)
+        self.fields['nuevo_comprobante_pago'].widget.attrs.update({"accept":"image/png, image/jpg, image/jpeg, application/pdf", "onchange":"enable_button()"})
 
 # Form for deleting an order from the database
 class deleteForm(forms.Form):

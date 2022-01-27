@@ -10,7 +10,7 @@
 <tr class="text-center" id="{{ item.nvv }}">
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
     <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
-    <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td> <!-- Date when NVV was submitted to the table -->
+    <td>{{ item.fecha_solicitud|date:"d F Y" }}<br>{{ item.fecha_solicitud|date:"H:i" }}</td> <!-- Date when NVV was submitted to the table -->
     <td> <!-- Way of dispatch. If it's internal, just show DIMACO. Else, show that it's external and show the name of the dispatcher -->
         {% if item.tipo_despacho == "DIMACO" %}
             {{ item.tipo_despacho }}
@@ -22,99 +22,19 @@
     <td>{{ item.direccion }}</td> <!-- Dispatch address -->
     <td>{{ item.nombre_contacto }}</td> <!-- Name of the person to contact for the dispatch -->
     <td>{{ item.telefono_contacto }}</td> <!-- Phone of the person to contact for the dispatch -->
-    <!-- The state selector, which is dependant of many things. Couldn't figure out how to make
-        it prettier with javaScript, so it's full of ifs. If there's a better implementation, 
-        do it.
-        The logic is basically:
-        - If it is ready, set the value to 5 = Delivered and disable it.
-        - If it's not, see which is the current state and mark that as selected. 
-          Inside of this there are two more cases:
-          - If user has permission to edit, display the other selections as well
-          - If they don't, just put the one option that is already selected and disable it.
-     -->
-    <td>
+    <td> <!-- The state of the order -->
         {% if item.listo == 1 %}
-            <select class='Estado_listo' id='{{ item.nvv }}' disabled>
-                <option selected value=5>Despachado</option>
-            </select>
-        {% elif item.estado == 4 %}
-            {% if permissions == "Despacho" %}
-                <select class='Estado' id='{{ item.nvv }}'>  
-                    <option value=0>En preparación</option>
-                    <option value=1>Preparado</option>
-                    <option value=2>Tubos</option>
-                    <option value=3>Cañería</option>
-                    <option selected value=4>Rollos</option>
-                </select>
-            {% else %}
-                <select disabled class='Estado' id='{{ item.nvv }}'>
-                    <option selected value=4>Rollos</option>
-                </select>
-            {% endif %}
-        {% elif item.estado == 3 %}   
-            {% if permissions == "Despacho" %}
-                <select class='Estado' id='{{ item.nvv }}'>  
-                    <option value=0>En preparación</option>
-                    <option value=1>Preparado</option>
-                    <option value=2>Tubos</option>
-                    <option selected value=3>Cañería</option>
-                    <option value=4>Rollos</option>
-                </select>
-            {% else %}
-                <select disabled class='Estado' id='{{ item.nvv }}'>
-                    <option selected value=3>Cañería</option>
-                </select>
-            {% endif %}
-        {% elif item.estado == 2 %}   
-            {% if permissions == "Despacho" %}
-                <select class='Estado' id='{{ item.nvv }}'>  
-                    <option value=0>En preparación</option>
-                    <option value=1>Preparado</option>
-                    <option selected value=2>Tubos</option>
-                    <option value=3>Cañería</option>
-                    <option value=4>Rollos</option>
-                </select>
-            {% else %}
-                <select disabled class='Estado' id='{{ item.nvv }}'>
-                    <option selected value=2>Tubos</option>
-                </select>
-            {% endif %}
-        {% elif item.estado == 1 %}
-            {% if permissions == "Despacho" %}
-                <select class='Estado' id='{{ item.nvv }}'>  
-                    <option value=0>En preparación</option>
-                    <option selected value=1>Preparado</option>
-                    <option value=2>Tubos</option>
-                    <option value=3>Cañería</option>
-                    <option value=4>Rollos</option>
-                </select>
-            {% else %}
-                <select disabled class='Estado' id='{{ item.nvv }}'>
-                    <option selected value=1>Preparado</option>
-                </select>
-            {% endif %}
+            Despachado
         {% else %}
-            {% if permissions == "Despacho" %}
-                <select class='Estado' id='{{ item.nvv }}'>  
-                    <option selected value=0>En preparación</option>
-                    <option value=1>Preparado</option>
-                    <option value=2>Tubos</option>
-                    <option value=3>Cañería</option>
-                    <option value=4>Rollos</option>
-                </select>
-            {% else %}
-                <select disabled class='Estado' id='{{ item.nvv }}'>
-                    <option selected value=0>En preparación</option>
-                </select>
-            {% endif %}
+            {{ item.get_estado_pedido_para_vendedor_display }}
         {% endif %}
     </td>
-    <td>{{ item.fecha_despacho|date:"d F Y" }}</td> <!-- The agreed date of dispatch -->
+    <td>{{ item.fecha_despacho_final|date:"d F Y" }}</td> <!-- The agreed date of dispatch -->
     <td> <!-- The agreed time range of dispatch. If it has two ranges, display both. Otherwise, display only the one that exists -->
-        {% if item.hora_despacho_extra_inicio|date:"G" == "0" %}
-            {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}
+        {% if item.rango_horario_final == 0 %}
+            No asignado
         {% else %}
-            {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }},<br>{{ item.hora_despacho_extra_inicio }} - {{ item.hora_despacho_extra_fin }}
+            {{ item.get_rango_horario_final_display }}
         {% endif %}
     </td>
 
@@ -126,7 +46,7 @@
         No hay
     {% else %}
         <a href="{{ item.comprobante_pago.url }}" target="_blank">Link</a>
-    {% endif %}\,\,{{item.observacion}}\,\,{{item.numero_guia}}\,\,{{item.nombre_vendedor}}\,\,{{item.nombre_asistente}}\,\,{{item.listo}}
+    {% endif %}\,\,{{item.numero_guia}}\,\,{{item.nombre_vendedor}}\,\,{{item.nombre_asistente}}\,\,{{item.listo}}\,\,{{ item.observacion_despacho }}
     </td>
     <!-- This is for the "export to excel" button. At first it always exported all the values from the state selector regardless of the selection. This updates to always
         have only the selected value, and it is what its used to export.
@@ -140,6 +60,22 @@
     </td>
     <td style="display: none;" id="estado_string{{ item.nvv }}" >
         {{item.valor_neto_documento}}
+    </td>
+    <td style="display: none;" id="observacion{{ item.nvv}}">
+        {{ item.observacion }}
+    </td>
+    <td style="display: none;">
+        {{ item.fecha_despacho }}
+    </td>
+    <td style="display: none;">
+        {{ item.condicion_pago }}
+    </td>
+    <td style="display: none;">
+        {% if item.comprobante_pago == "None" %}
+        No
+    {% else %}
+        Si
+    {% endif %}
     </td>
     
 </tr>

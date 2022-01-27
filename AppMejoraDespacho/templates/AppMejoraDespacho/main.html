@@ -5,6 +5,7 @@
 <!-- Deletes anything loaded into cache, because if user is here it means everything is already submitted -->
 {% block header %}
 <script src="{% static 'js/js_storage_clear.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
 {% endblock header%}
 
 <!-- Main page.
@@ -14,9 +15,21 @@
  -->
 {% block content %}
 <div class="titulo_pagina">¡Bienvenid@ {{ user.first_name }}!</div>
-<button type="button" class="button" onclick="window.location='submit_nvv_form'">Nueva orden de despacho</button>
-<button type="button" class="button" onclick="window.location='table'">Revisar estado de despacho</button>
-{% if permissions == "Eliminar" %}
+{% if user.is_superuser %}
+    <button type="button" class="button" onclick="window.location='submit_nvv_form'">Nueva orden de despacho</button>
+    <button type="button" class="button" onclick="window.location='table'">Revisar estado de despacho</button>
+    <button type="button" class="button" onclick="window.location='mutable_table'">Modificar estado de despacho</button>
     <button type="button" class="button" onclick="window.location='delete_nvv'">Eliminar orden de despacho</button>
+{% else %}
+    {% if permissions == "Despacho" %}
+        <button type="button" class="button" onclick="window.location='mutable_table'">Modificar estado de despacho</button>
+    {% else %}
+    <button type="button" class="button" onclick="window.location='submit_nvv_form'">Nueva orden de despacho</button>
+    <button type="button" class="button" onclick="window.location='table'">Revisar estado de despacho</button>
+        {% if permissions == "Eliminar" %}
+            <button type="button" class="button" onclick="window.location='delete_nvv'">Eliminar orden de despacho</button>
+        {% endif %}
+    {% endif %}
 {% endif %}
+
 {% endblock content %}

@@ -24,31 +24,48 @@ $(document).ready(function() {
         if([6,0].includes(day)){
             e.preventDefault();
             this.value=initialDate;
-            alert('fecha inválida');
+            alert('Fecha inválida');
         } 
     });
 
     change_dispath();
+
+    // Set the phone input field to use the plugin for country code and validation of valid phone number format
+    let phoneInputField = document.getElementById("id_cont_telefono");
+    let phoneInput = window.intlTelInput(phoneInputField, {
+        initialCountry: "cl",
+        preferredCountries: ["cl", "ar", "pe", "bo"],
+        separateDialCode: true,
+        formatOnDisplay: true,
+        nationalMode: true,
+    })
+
+    function cambiarTelefono(){
+        var dialCode = phoneInput.getSelectedCountryData()["dialCode"];
+        var number = $("#id_cont_telefono").val();
+        number = number.replace(/ /g,'')
+        pattern = /^(\+(\d{1,3}))(\d{4,11})$/i
+        if (pattern.test(number)){
+            return;
+        }
+        pattern = /^(\d{4,11})$/i
+        if (pattern.test(number)){
+            $("#id_cont_telefono").val('+' + dialCode + number);
+            return;
+        }
+        
+    }
+    phoneInputField.addEventListener('change', cambiarTelefono);
+    phoneInputField.addEventListener('keyup', cambiarTelefono);
+
+    cambiarTelefono();
 });
 
 
-// Set the phone input field to use the plugin for country code and validation of valid phone number format
-var phoneInputField = document.getElementById("id_cont_telefono");
-var phoneInput = window.intlTelInput(phoneInputField, {
-    initialCountry: "cl",
-    preferredCountries: ["cl", "ar", "pe", "bo"],
-    utilsScript:
-       "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-    autoPlaceholder: "off",
-    separateDialCode: "true"
-});
 
-// If the phone input changes, update the form field to for submition
-$('#id_cont_telefono').change(function () {
-    var phoneNumber = phoneInput.getNumber(intlTelInputUtils.numberFormat.E164);
-    $("#id_cont_telefono").val(phoneNumber);
-    $('#formulario').set('cont_telefono', phoneNumber);
-})
+window.onbeforeunload = function() {
+    sessionStorage.setItem('telefono', phoneInput.getNumber())
+}
 
 // If file is uploaded, show its name
 $("#id_comprobante_pago").change(function () {

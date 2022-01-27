@@ -22,20 +22,6 @@
 
 {% block content %}
 {% language 'es' %}
-
-<div class="mensajeAlerta">
-	{% if formulario.errors %}
-		{% for field in formulario %}
-			{% for error in field.errors %}
-				<div class="alert alert-danger" role="alert" style="text-align: center; margin-left: 15%; margin-right: 15%;">
-					{{ error|escape }}
-				</div>
-			{% endfor %}
-		{% endfor %}
-	{% endif %}
-</div>
-
-
 <!-- Start Table -->
 <div class="table-responsive table-l">
     <table class="table table-hover table-image" id="listado">
@@ -48,18 +34,18 @@
                 <th>Tipo despacho</th>
                 <th>Comuna</th>
                 <th>Dirección</th>
-                <th>Nombre contacto</th>
-                <th>Teléfono contacto</th>
+                <th>Estado despacho</th>
+                <th>Fecha despacho</th>
+                <th>Hora despacho solicitada</th>
+                <th>Rango horario</th>
                 <th>Estado pedido</th>
-                <th>Fecha despacho asignada</th>
-                <th>Horario despacho asignado</th>
-                <th style="display: none;">Datos extra</th> <!-- These two aren't displayed but are necessary -->
-                <th style="display: none;">Estado</th>      <!-- because here is where all the extra data is, -->
-                <th style="display: none;">Valor neto</th>  <!-- for the child rows and the export to excel -->
-                <th style="display: none;">Observación</th>  <!--  -->
-                <th style="display: none;">Fecha despacho solicitada</th>  <!-- -->
-                <th style="display: none;">Condición de pago</th>  <!--  -->
-                <th style="display: none;">Comprobante de pago asociado</th>  <!--  -->
+                <th style="display: none;">Datos extra</th>             <!--  -->
+                <th style="display: none;">Estado</th>                  <!-- These aren't displayed but are necessary-->
+                <th style="display: none;">Valor neto</th>              <!-- because here is where all the extra data -->
+                <th style="display: none;">Rango horario</th>           <!-- is, for the child rows and the export to excel -->
+                <th style="display: none;">Estado pedido</th>           <!--  -->
+                <th style="display: none;">Observación despacho</th>    <!--  -->
+                <th style="display: none;">Fecha despacho</th>    <!--  -->
             </tr>
         </thead>
         <tbody>
@@ -69,11 +55,11 @@
             {% for item in queryset %}
                 {% if con_guia == 'True' %}
                     {% if item.listo == 1 %}
-                        {% include 'AppMejoraDespacho/table_data.html' %}
+                        {% include 'AppMejoraDespacho/mutable_table_data.html' %}
                     {% endif %}
                 {% else %}
                     {% if item.listo == 0 %}
-                        {% include 'AppMejoraDespacho/table_data.html' %}
+                        {% include 'AppMejoraDespacho/mutable_table_data.html' %}
                     {% endif %}
                 {% endif %}
             {% endfor %}
@@ -87,11 +73,11 @@
                 <th>Tipo despacho</th>
                 <th>Comuna</th>
                 <th>Dirección</th>
-                <th>Nombre contacto</th>
-                <th>Teléfono contacto</th>
-                <th>Estado pedido</th>
+                <th>Estado despacho</th>
                 <th>Fecha despacho</th>
-                <th>Hora despacho</th>
+                <th>Hora despacho solicitada</th>
+                <th>Rango horario</th>
+                <th>Estado pedido</th>
             </tr>
         </tfoot>
     </table>
@@ -99,28 +85,21 @@
 
 <!-- The button to show the ones with or without guide number, based on what it is showing right now -->
 {% if con_guia == 'True'%}
-    <input class="boton_ocultar" onclick="window.location='table'" id="boton_ocultar" value="Mostrar ordenes sin despachar" readonly>
+    <input class="boton_ocultar" onclick="window.location='mutable_table'" id="boton_ocultar" value="Mostrar ordenes sin despachar" readonly>
 {% else %} 
-    <input class="boton_ocultar" onclick="window.location='table_with_guide'" id="boton_ocultar" value="Mostrar ordenes despachadas" readonly>
+    <input class="boton_ocultar" onclick="window.location='mutable_table_with_guide'" id="boton_ocultar" value="Mostrar ordenes despachadas" readonly>
 {% endif %}
 
+<!-- The confirmation prompt for when user wants to mark order as ready -->
+<div id ="confirm_prompt_background" class="confirm_prompt_background" style="display: none;"></div>
+<div id="confirm_prompt" class="confirm_prompt" style="display: none;">
+<div id="confirm_texto" class="confirm_texto"></div>
+<input class="btn" onclick="confirmar()" id="boton_confirm" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
 
-<div id="form_div" style="display: none;">
-    <form class="form" action="" method="POST" enctype="multipart/form-data" id ="formulario">
-        {% csrf_token %}
-        <nobr>
-            <label for="id_nuevo_comprobante_pago" class="custom-file-upload"><i class="fa fa-cloud-upload"></i> Elegir nuevo comprobante de pago</label> 
-            <div id="file_name"></div>
-            {{ formulario.nuevo_comprobante_pago }}
-            {{ formulario.nvv_for_submit }}
-            <input type="submit" class="nuevo_comprobante_submit" value="Subir" name="submit" style="display: none;" disabled readonly>
-        </nobr>
-    </form>
-</div>
 
 {% endlanguage %}
-<script>var permissions = '{{ permissions }}';</script>
-<script src="{% static 'js/js_tabla.js' %}"></script>
+<script>var permissions = "{{ permissions }}";</script> <!-- Has to define here, otherwise it wouldn't work, but it is needed in the javaScript below -->
+<script src="{% static 'js/js_mutable_tabla.js' %}"></script>
 
 
 {% endblock content %}

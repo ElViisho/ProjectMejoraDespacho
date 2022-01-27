@@ -5,12 +5,15 @@ from AppMejoraDespacho.models import *
 from django.contrib.auth.decorators import login_required
 from django.db import connections
 
-from AppMejoraDespacho.form import ingresoForm, deleteForm
+from AppMejoraDespacho.form import ingresoForm, deleteForm, editFileForm
 import datetime
 from django.db import connections
 
+from ProjectMejoraDespacho.settings import MEDIA_ROOT
+
 from .choices import comunas_santa_elena, comunas_todas, regiones
 from .queries import *
+from django.core.files.storage import FileSystemStorage
 
 
 def loginPage(request):
@@ -59,9 +62,6 @@ def main(request):
 	permissions = 'Básico'
 	if (len(groups) > 0):
 		permissions = groups[0]
-	# TEMPORAY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
-	if request.user.is_superuser:
-		permissions = 'Eliminar'
 	return render(request, "AppMejoraDespacho/main.html", {"permissions": permissions})
 
 @login_required(login_url='login')
@@ -70,6 +70,9 @@ def submit_nvv_form(request):
 	Renders the form for submitting a new order
 	Page: submit_nvv_form
 	'''
+	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] == 'Despacho'):
+		return redirect('main')
+
 	if request.method == 'GET':
 		# Get form withut data and pass it to the renderer
 		formulario = ingresoForm()
@@ -123,6 +126,7 @@ def submit_nvv_form(request):
 				comprobante_pago = cleaned_data['comprobante_pago'],
 				observacion = cleaned_data['observaciones'],
 				fecha_despacho = cleaned_data['fecha_despacho'],
+				fecha_despacho_final = cleaned_data['fecha_despacho'],
 				hora_de_despacho_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_inicio'])),
 				hora_de_despacho_fin = datetime.time(hour=int(cleaned_data['hora_despacho_fin'])),
 				hora_despacho_extra_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_extra_inicio'])),
@@ -174,31 +178,77 @@ def confirm_delete_nvv(request):
 @login_required(login_url='login')
 def table_with_guide(request):
 	'''
-	Method that calls another method that renders the table with 
-	the data, passing it the argument to tell it to show only the
-	orders that have a dispatch order
-	Page: tabla_modificable_mostrar
+	Method that calls another method that renders the table with the data, passing it the argument 
+	to tell it to show only the	orders that have a dispatch order
+	Page: table_show
 	'''
 	con_guia = "True"
 	return table(request, con_guia)
-
 @login_required(login_url='login')
 def table_no_guide(request):
 	'''
-	Method that calls another method that renders the table with 
-	the data, passing it the argument to tell it to show only the
-	orders that don't have a dispatch order
-	Page: table
+	Method that calls another method that renders the table with the data, passing it the argument 
+	to tell it to show only the	orders that don't have a dispatch order
+	Page: table_not_show
 	'''
 	con_guia = "False"
 	return table(request, con_guia)
-
 def table(request, con_guia):
 	'''
 	Renders the table with all the current data present in the database
-	'''
+	'''	
+	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] == 'Despacho'):
+		return redirect('main')
+	data_obtenida = editFileForm()
+	
+	if (request.method == "POST"):
+		data_obtenida = editFileForm(request.POST or None, request.FILES or None)
+		if data_obtenida.is_valid():
+			cleaned_data = data_obtenida.cleaned_data
+			nvv = cleaned_data["nvv_for_submit"]
+			file = cleaned_data["nuevo_comprobante_pago"]
+			now = datetime.datetime.now()
+			fs = FileSystemStorage(MEDIA_ROOT + '/comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/"))
+			filename = fs.save(file.name, file)
+			Ordenes.objects.filter(nvv=nvv).update(comprobante_pago='comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/") + filename)
+
 	queryset = Ordenes.objects.all() # Get the data from the database
 	
+	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
+	permissions = 'Básico'
+	if (len(groups) > 0):
+		permissions = groups[0]
+	if (request.user.is_superuser):
+		permissions = "Eliminar"
+	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia, "formulario": data_obtenida,})
+
+
+
+@login_required(login_url='login')
+def mutable_table_with_guide(request):
+	'''
+	Method that calls another method that renders the table with the data, passing it the argument 
+	to tell it to show only the	orders that have a dispatch order
+	Page: mutable_table_show
+	'''
+	con_guia = "True"
+	return mutable_table(request, con_guia)
+@login_required(login_url='login')
+def mutable_table_no_guide(request):
+	'''
+	Method that calls another method that renders the table with the data, passing it the argument 
+	to tell it to show only the	orders that don't have a dispatch order
+	Page: mutable_table_not_show
+	'''
+	con_guia = "False"
+	return mutable_table(request, con_guia)
+def mutable_table(request, con_guia):
+	'''
+	Renders the table with all the current data present in the database,
+	whose some data may be changed
+	'''
+	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] != 'Despacho'):
+		return redirect('main')
 	# If there's a POST request, it means user is trying to submit data into the database from the table
 	if request.method == "POST":
 		data = request.POST
@@ -214,15 +264,28 @@ def table(request, con_guia):
 			# If there's no guide number, return garbage so it detects an error and prompts the user about it
 			if (not bool_n_guia):
 				return 'error'
+		# POST request for submitting a new hour range for dispatch of the order
+		elif (data['type'] == 'rango_horario'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(rango_horario_final=data['option'])
+		# POST request for changing the state of the order for the seller (different list than the other)
+		elif (data['type'] == 'estado_pedido_para_vendedor'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(estado_pedido_para_vendedor=data['option'])
+		# POST request for submitting a new dispatch date
+		elif (data['type'] == 'fecha_despacho'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(fecha_despacho_final=data['date'])
+		# POST request for submitting new observations that may be pertinent
+		elif (data['type'] == 'observaciones_pedido'):
+			Ordenes.objects.filter(nvv=data['nvv']).update(observacion_despacho=data['observaciones'])
+	
+	queryset = Ordenes.objects.all() # Get the data from the database
 	
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
 	permissions = 'Básico'
 	if (len(groups) > 0):
 		permissions = groups[0]
-	# TEMPORAY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
-	if request.user.is_superuser:
-		permissions = 'Despacho'
-	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
+	if (request.user.is_superuser):
+		permissions = "Despacho"
+	return render(request, "AppMejoraDespacho/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
 
 def change_numero_guia(nvv, listo):
 	'''
