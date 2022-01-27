@@ -18,12 +18,6 @@ function getCookie(c_name)
 // Array with the name of months for display
 const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
-// Display order of objects of table. It checks for permissions to know if it is downloadble to excel or not
-function domDataTable() {
-    if (permissions=='Despacho') return '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>'
-    return '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>'
-}
-
 // Initialize variable as nothing
 let nvv = "";
 let table = "";
@@ -31,7 +25,7 @@ let table = "";
 $(document).ready(function() { 
     // Add plugin of DataTable to table of data
     table = $('#listado').DataTable({ 
-        "dom": domDataTable(),    // Display order of objects of table
+        "dom": '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>',    // Display order of objects of table
         "columns": [        // Define properties for the columns of the table 
             { "searchable": false, orderable: false },
             null,
@@ -236,6 +230,18 @@ function textAreaChange() {
             table.cell('#observacion_despacho' + nvv).data(observaciones)
         }
     })
+}
+
+function dateChange(picker) {
+    // Add listener to date picker to check if day selected is not weekend
+    // and alert user if that's the case
+    const initialDate = picker.defaultValue;
+    const min = picker.min;
+    var day = new Date(picker.value).getUTCDay();
+    if([6,0].includes(day) || picker.value<min){
+        picker.value=initialDate;
+        alert('Fecha inválida');
+    }
 }
 
 // Initialize variable as 0 (falsey)

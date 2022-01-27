@@ -22,6 +22,20 @@
 
 {% block content %}
 {% language 'es' %}
+
+<div class="mensajeAlerta">
+	{% if formulario.errors %}
+		{% for field in formulario %}
+			{% for error in field.errors %}
+				<div class="alert alert-danger" role="alert" style="text-align: center; margin-left: 15%; margin-right: 15%;">
+					{{ error|escape }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+	{% endif %}
+</div>
+
+
 <!-- Start Table -->
 <div class="table-responsive table-l">
     <table class="table table-hover table-image" id="listado">
@@ -83,16 +97,27 @@
 </div>
 
 <!-- The button to show the ones with or without guide number, based on what it is showing right now -->
-<div class="boton_ocultar_div">
-    {% if con_guia == 'True'%}
-        <input class="boton_ocultar" onclick="window.location='table'" id="boton_ocultar" value="Mostrar NVVs sin número de guía" readonly>
-    {% else %} 
-        <input class="boton_ocultar" onclick="window.location='table_with_guide'" id="boton_ocultar" value="Mostrar NVVs con número de guía" readonly>
-    {% endif %}
+{% if con_guia == 'True'%}
+    <input class="boton_ocultar" onclick="window.location='table'" id="boton_ocultar" value="Mostrar ordenes sin despachar" readonly>
+{% else %} 
+    <input class="boton_ocultar" onclick="window.location='table_with_guide'" id="boton_ocultar" value="Mostrar ordenes despachadas" readonly>
+{% endif %}
+
+
+<div id="form_div" style="display: none;">
+    <form class="form" action="" method="POST" enctype="multipart/form-data" id ="formulario">
+        {% csrf_token %}
+        <nobr>
+            <label for="id_nuevo_comprobante_pago" class="custom-file-upload"><i class="fa fa-cloud-upload"></i> Elegir nuevo comprobante de pago</label> 
+            <div id="file_name"></div>
+            {{ formulario.nuevo_comprobante_pago }}
+            {{ formulario.nvv_for_submit }}
+            <input type="submit" class="nuevo_comprobante_submit" value="Subir" name="submit" style="display: none;" disabled readonly>
+        </nobr>
+    </form>
 </div>
 
 {% endlanguage %}
-<script>var permissions = "{{ permissions }}";</script> <!-- Has to define here, otherwise it wouldn't work, but it is needed in the javaScript below -->
 <script src="{% static 'js/js_tabla.js' %}"></script>
 
 

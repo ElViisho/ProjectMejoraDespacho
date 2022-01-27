@@ -10,7 +10,7 @@
 <tr class="text-center" id="{{ item.nvv }}">
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
     <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
-    <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td> <!-- Date when NVV was submitted to the table -->
+    <td>{{ item.fecha_solicitud|date:"d F Y" }}<br>{{ item.fecha_solicitud|date:"H:i" }}</td> <!-- Date when NVV was submitted to the table -->
     <td> <!-- Way of dispatch. If it's internal, just show DIMACO. Else, show that it's external and show the name of the dispatcher -->
         {% if item.tipo_despacho == "DIMACO" %}
             {{ item.tipo_despacho }}

@@ -5,12 +5,15 @@ from AppMejoraDespacho.models import *
 from django.contrib.auth.decorators import login_required
 from django.db import connections
 
-from AppMejoraDespacho.form import ingresoForm, deleteForm
+from AppMejoraDespacho.form import ingresoForm, deleteForm, editFileForm
 import datetime
 from django.db import connections
 
+from ProjectMejoraDespacho.settings import MEDIA_ROOT
+
 from .choices import comunas_santa_elena, comunas_todas, regiones
 from .queries import *
+from django.core.files.storage import FileSystemStorage
 
 
 def loginPage(request):
@@ -194,6 +197,19 @@ def table(request, con_guia):
 	'''
 	Renders the table with all the current data present in the database
 	'''	
+	data_obtenida = editFileForm()
+	
+	if (request.method == "POST"):
+		data_obtenida = editFileForm(request.POST or None, request.FILES or None)
+		if data_obtenida.is_valid():
+			cleaned_data = data_obtenida.cleaned_data
+			nvv = cleaned_data["nvv_for_submit"]
+			file = cleaned_data["nuevo_comprobante_pago"]
+			now = datetime.datetime.now()
+			fs = FileSystemStorage(MEDIA_ROOT + '/comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/"))
+			filename = fs.save(file.name, file)
+			Ordenes.objects.filter(nvv=nvv).update(comprobante_pago='comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/") + filename)
+
 	queryset = Ordenes.objects.all() # Get the data from the database
 	
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
@@ -203,7 +219,7 @@ def table(request, con_guia):
 	# TEMPORARY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
 	if request.user.is_superuser:
 		permissions = 'Despacho'
-	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
+	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia, "formulario": data_obtenida,})
 
 
 

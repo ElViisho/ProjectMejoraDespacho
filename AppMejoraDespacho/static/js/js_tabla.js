@@ -18,12 +18,6 @@ function getCookie(c_name)
 // Array with the name of months for display
 const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
 
-// Display order of objects of table. It checks for permissions to know if it is downloadble to excel or not
-function domDataTable() {
-    if (permissions=='Despacho') return '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>'
-    return '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>'
-}
-
 // Initialize variable as nothing
 let nvv = "";
 let table = "";
@@ -31,7 +25,7 @@ let table = "";
 $(document).ready(function() { 
     // Add plugin of DataTable to table of data
     table = $('#listado').DataTable({ 
-        "dom": domDataTable(),    // Display order of objects of table
+        "dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',    // Display order of objects of table
         "columns": [        // Define properties for the columns of the table 
             { "searchable": false, orderable: false },
             null,
@@ -41,26 +35,11 @@ $(document).ready(function() {
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
-            { "searchable": false, orderable: false },
             null,
             null,
+            null,
             { "searchable": false, orderable: false },
-            { "searchable": false, orderable: false, render: function (data, type, row) {
-                x = []
-                for (i in data){
-                    switch(data[i]){
-                        case "0": x.push("En preparación"); break;
-                        case "1": x.push("Preparado"); break;
-                        case "2": x.push("Tubos"); break;
-                        case "3": x.push("Cañería"); break;
-                        case "4": x.push("Rollos"); break;
-                        case "5": x.push("Despachado"); break;
-                        default: x.push(""); break;
-                    }
-                }
-                return x;
-            }
-            },
+            { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
         ],
@@ -77,40 +56,6 @@ $(document).ready(function() {
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
         order: [ 2, 'asc' ],            // Default order by date
         scrollToTop: true,              // When changing page it goes back to top of table
-        buttons: [                      // Export to Excel button
-            {
-                extend: 'excel',
-                classname: 'excel',
-                text: 'Exportar tabla a excel',
-                filename: function() {
-                    d = new Date()
-                    return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
-                },
-                exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13]
-                },
-                title: "Ordenes de despacho",
-                customize: function(xlsx) {
-                    var passedHeader = false;
-                    if (passedHeader){
-                        var styleSheet = xlsx.xl['styles.xml'];
-                        var lastXfIndex = $('cellXfs xf', styleSheet).length - 1;
-                        var n1 = '<numFmt formatCode="$ #,##0" numFmtId="300"/>';
-                        var s1 = '<xf numFmtId="300" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
-                        styleSheet.childNodes[0].childNodes[0].innerHTML += n1;
-                        styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
-
-                        var fourDecPlaces = lastXfIndex + 1;
-
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                        $('row c[r^="L"]', sheet).attr( 's', fourDecPlaces );
-                    }
-                    else {
-                        passedHeader = true;
-                    } 
-                }
-            }
-        ]
     });    
 
     // When + symbol or NVV value is clicked, it shows all the relevant info
@@ -126,6 +71,8 @@ $(document).ready(function() {
             // This row is already open - close it
             row.child.hide();
             tr.removeClass('shown');
+            $('.nuevo_comprobante_submit').prop('disabled', true);
+            $('.nuevo_comprobante_submit').hide();
         }
         else {
             // Close others
@@ -136,29 +83,40 @@ $(document).ready(function() {
                 }
             });
             // Open this row
-            nvv = row.data()[1];
             row.child( format(data) ).show();
             tr.addClass('shown');
+            $('#id_nvv_for_submit').val(row.data()[1]);
         }
     });
     
 });
 
-// Initialize variable as 0 (falsey)
-var listo = 0;
+// If file is uploaded, show its name and enable button
+function enable_button(){
+    $('.nuevo_comprobante_submit').prop('disabled', false);
+    $('.nuevo_comprobante_submit').show();
+
+    let file = $('#id_nuevo_comprobante_pago').val();
+    let name = file.split("\\");
+    let nombre = name[name.length-1];
+    if (file != null) {
+        $('#file_name').html(nombre);
+    }
+}
 
 // For showing the child data
 function format (d) {
     var n_guia = '';
+    var comprobante = '<td>' + $('#form_div').html() +'</td>';;
     // Choses which button to show depending on if order is ready or not, and also if it must show the guide number or not
-    listo = d[9];
     rowspan = 2;
-    if (d[10] == 1) {
+    if (d[9] == 1) {
         n_guia = '<tr class="child_table">'+
             '<td>Número de guía:</td>'+
             '<td>' + d[6] + '</td>' +
         '</tr>'
         rowspan = 3;
+        comprobante = '';
     }
     
     // Child table for extra data
@@ -180,17 +138,21 @@ function format (d) {
                 '<td>Fecha emisión NVV:</td>'+
                 '<td>'+d[1]+'</td>'+
                 '<td>Comprobante de pago:</td>' +
-                '<td>' + d[5] + '</td>' +
+                '<td>' + 
+                    d[5] + 
+                '</td>' +
             '</tr>'+
             '<tr class="child_table">'+
                 '<td>Cliente:</td>'+
                 '<td>'+d[2]+'</td>'+
-                '<td rowspan="' + (rowspan+3) + '" style="vertical-align: top;">Obervaciones del pedido:</td>'+
-                '<td rowspan="' + (rowspan+3) + '" style="vertical-align: top;">' + d[10] + '</td>'+
+                '<td></td>'+
+                comprobante +
             '</tr>'+
             '<tr class="child_table">'+
                 '<td>RUT Cliente:</td>'+
                 '<td>' + d[3] + '</td>'+
+                '<td rowspan="' + (rowspan+2) + '" style="vertical-align: top;">Obervaciones del pedido:</td>'+
+                '<td rowspan="' + (rowspan+2) + '" style="vertical-align: top;">' + d[10] + '</td>'+
             '</tr>'+
             '<tr class="child_table">' +
                 '<td rowspan="' + rowspan + '" style="vertical-align: top;">Obervaciones solicitud:</td>'+

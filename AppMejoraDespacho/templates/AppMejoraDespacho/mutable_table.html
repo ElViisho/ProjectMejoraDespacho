@@ -83,13 +83,11 @@
 </div>
 
 <!-- The button to show the ones with or without guide number, based on what it is showing right now -->
-<div class="boton_ocultar_div">
-    {% if con_guia == 'True'%}
-        <input class="boton_ocultar" onclick="window.location='mutable_table'" id="boton_ocultar" value="Mostrar NVVs sin número de guía" readonly>
-    {% else %} 
-        <input class="boton_ocultar" onclick="window.location='mutable_table_with_guide'" id="boton_ocultar" value="Mostrar NVVs con número de guía" readonly>
-    {% endif %}
-</div>
+{% if con_guia == 'True'%}
+    <input class="boton_ocultar" onclick="window.location='mutable_table'" id="boton_ocultar" value="Mostrar ordenes sin despachar" readonly>
+{% else %} 
+    <input class="boton_ocultar" onclick="window.location='mutable_table_with_guide'" id="boton_ocultar" value="Mostrar ordenes despachadas" readonly>
+{% endif %}
 
 <!-- The confirmation prompt for when user wants to mark order as ready -->
 <div id ="confirm_prompt_background" class="confirm_prompt_background" style="display: none;"></div>

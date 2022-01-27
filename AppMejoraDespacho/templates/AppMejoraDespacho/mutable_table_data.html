@@ -10,7 +10,7 @@
 <tr class="text-center" id="{{ item.nvv }}">
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
     <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
-    <td>{{ item.fecha_solicitud|date:"d F Y H:i" }}</td> <!-- Date when NVV was submitted to the table -->
+    <td>{{ item.fecha_solicitud|date:"d F Y" }}<br>{{ item.fecha_solicitud|date:"H:i" }}</td> <!-- Date when NVV was submitted to the table -->
     <td> <!-- Way of dispatch. If it's internal, just show DIMACO. Else, show that it's external and show the name of the dispatcher -->
         {% if item.tipo_despacho == "DIMACO" %}
             {{ item.tipo_despacho }}
@@ -71,7 +71,7 @@
         {% endif %}
         </select>
     </td>
-    <td><input class='fecha_despacho' id='{{ item.nvv }}' type='date' value='{{ item.fecha_despacho_final|date:"Y-m-d" }}'></td> <!-- The agreed date of dispatch -->
+    <td><input class='fecha_despacho' id='{{ item.nvv }}' type='date' min = '{{ item.fecha_despacho|date:"Y-m-d" }}' value='{{ item.fecha_despacho_final|date:"Y-m-d" }}' onchange="dateChange(this)"></td> <!-- The agreed date of dispatch -->
     <td> <!-- The agreed time range of dispatch. If it has two ranges, display both. Otherwise, display only the one that exists -->
         {% if item.hora_despacho_extra_inicio|date:"G" == "0" %}
             {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}

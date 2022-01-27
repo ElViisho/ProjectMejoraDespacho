@@ -24,7 +24,7 @@ $(document).ready(function() {
         if([6,0].includes(day)){
             e.preventDefault();
             this.value=initialDate;
-            alert('fecha inválida');
+            alert('Fecha inválida');
         } 
     });
 

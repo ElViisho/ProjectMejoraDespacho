@@ -127,6 +127,15 @@ class ingresoForm(forms.Form):
             raise forms.ValidationError("Error en el campo Hora de despacho: ingrese un rango horario válido")
         return fin_extra
 
+class editFileForm(forms.Form):
+    nuevo_comprobante_pago = forms.FileField(required=True, validators=[validate_file],)
+    nvv_for_submit = forms.CharField(max_length=200, required=True, widget=forms.TextInput(attrs={'style': 'display: none;'}))
+
+    # Add new init method to add the attrs to the field
+    def __init__(self, *args, **kwargs):
+        super(editFileForm, self).__init__(*args, **kwargs)
+        self.fields['nuevo_comprobante_pago'].widget.attrs.update({"accept":"image/png, image/jpg, image/jpeg, application/pdf", "onchange":"enable_button()"})
+
 # Form for deleting an order from the database
 class deleteForm(forms.Form):
     nvv = forms.ChoiceField(label='Eliga una NVV para eliminar', choices=(), required=True)
