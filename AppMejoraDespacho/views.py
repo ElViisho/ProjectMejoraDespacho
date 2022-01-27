@@ -62,9 +62,6 @@ def main(request):
 	permissions = 'Básico'
 	if (len(groups) > 0):
 		permissions = groups[0]
-	# TEMPORARY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
-	if request.user.is_superuser:
-		permissions = 'Eliminar'
 	return render(request, "AppMejoraDespacho/main.html", {"permissions": permissions})
 
 @login_required(login_url='login')
@@ -73,6 +70,9 @@ def submit_nvv_form(request):
 	Renders the form for submitting a new order
 	Page: submit_nvv_form
 	'''
+	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] == 'Despacho'):
+		return redirect('main')
+
 	if request.method == 'GET':
 		# Get form withut data and pass it to the renderer
 		formulario = ingresoForm()
@@ -197,6 +197,8 @@ def table(request, con_guia):
 	'''
 	Renders the table with all the current data present in the database
 	'''	
+	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] == 'Despacho'):
+		return redirect('main')
 	data_obtenida = editFileForm()
 	
 	if (request.method == "POST"):
@@ -216,9 +218,8 @@ def table(request, con_guia):
 	permissions = 'Básico'
 	if (len(groups) > 0):
 		permissions = groups[0]
-	# TEMPORARY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
-	if request.user.is_superuser:
-		permissions = 'Despacho'
+	if (request.user.is_superuser):
+		permissions = "Eliminar"
 	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia, "formulario": data_obtenida,})
 
 
@@ -246,6 +247,8 @@ def mutable_table(request, con_guia):
 	Renders the table with all the current data present in the database,
 	whose some data may be changed
 	'''
+	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] != 'Despacho'):
+		return redirect('main')
 	# If there's a POST request, it means user is trying to submit data into the database from the table
 	if request.method == "POST":
 		data = request.POST
@@ -280,9 +283,8 @@ def mutable_table(request, con_guia):
 	permissions = 'Básico'
 	if (len(groups) > 0):
 		permissions = groups[0]
-	# TEMPORARY, JUST FOR DEBUGGING WHEN SUPERUSER IS LOGGED IN TO HAVE ALL PERMISSIONS
-	if request.user.is_superuser:
-		permissions = 'Despacho'
+	if (request.user.is_superuser):
+		permissions = "Despacho"
 	return render(request, "AppMejoraDespacho/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
 
 def change_numero_guia(nvv, listo):

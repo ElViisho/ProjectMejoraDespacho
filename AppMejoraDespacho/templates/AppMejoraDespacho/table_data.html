@@ -64,5 +64,18 @@
     <td style="display: none;" id="observacion{{ item.nvv}}">
         {{ item.observacion }}
     </td>
+    <td style="display: none;">
+        {{ item.fecha_despacho }}
+    </td>
+    <td style="display: none;">
+        {{ item.condicion_pago }}
+    </td>
+    <td style="display: none;">
+        {% if item.comprobante_pago == "None" %}
+        No
+    {% else %}
+        Si
+    {% endif %}
+    </td>
     
 </tr>

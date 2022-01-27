@@ -9,10 +9,16 @@ function getCookie(c_name)
             c_start = c_start + c_name.length + 1;
             c_end = document.cookie.indexOf(";", c_start);
             if (c_end == -1) c_end = document.cookie.length;
-            return unescape(document.cookie.substring(c_start,c_end));
+            return decodeURI(document.cookie.substring(c_start,c_end));
         }
     }
     return "";
+}
+
+
+function domDataTable() {
+    if (permissions=='Eliminar') return '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>'
+    return '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>'
 }
 
 // Array with the name of months for display
@@ -25,7 +31,7 @@ let table = "";
 $(document).ready(function() { 
     // Add plugin of DataTable to table of data
     table = $('#listado').DataTable({ 
-        "dom": '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>',    // Display order of objects of table
+        "dom": domDataTable(),    // Display order of objects of table
         "columns": [        // Define properties for the columns of the table 
             { "searchable": false, orderable: false },
             null,
@@ -38,6 +44,9 @@ $(document).ready(function() {
             null,
             null,
             null,
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
@@ -56,6 +65,34 @@ $(document).ready(function() {
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
         order: [ 2, 'asc' ],            // Default order by date
         scrollToTop: true,              // When changing page it goes back to top of table
+        buttons: [                      // Export to Excel button
+            {
+                extend: 'excel',
+                classname: 'excel',
+                text: 'Exportar tabla a excel',
+                filename: function() {
+                    d = new Date()
+                    return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
+                },
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3, 4, 5, 8, 15, 9, 13, 16, 17]
+                },
+                title: "Ordenes de despacho",
+                customize: function(xlsx) {
+                    var styleSheet = xlsx.xl['styles.xml'];
+                    var lastXfIndex = $('cellXfs xf', styleSheet).length - 1;
+                    var n1 = '<numFmt formatCode="$ #,##0" numFmtId="300"/>';
+                    var s1 = '<xf numFmtId="300" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
+                    styleSheet.childNodes[0].childNodes[0].innerHTML += n1;
+                    styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
+
+                    var currencyFormat = lastXfIndex + 1;
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    $('row c[r^="J"]', sheet).attr( 's', currencyFormat );
+                    $('row c[r="J2"]', sheet).attr( 's', '2' );
+                }
+            }
+        ]
     });    
 
     // When + symbol or NVV value is clicked, it shows all the relevant info

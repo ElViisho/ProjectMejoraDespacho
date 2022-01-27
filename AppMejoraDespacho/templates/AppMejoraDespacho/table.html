@@ -51,12 +51,15 @@
                 <th>Nombre contacto</th>
                 <th>Teléfono contacto</th>
                 <th>Estado pedido</th>
-                <th>Fecha despacho</th>
+                <th>Fecha despacho asignada</th>
                 <th>Horario despacho asignado</th>
                 <th style="display: none;">Datos extra</th> <!-- These two aren't displayed but are necessary -->
                 <th style="display: none;">Estado</th>      <!-- because here is where all the extra data is, -->
                 <th style="display: none;">Valor neto</th>  <!-- for the child rows and the export to excel -->
                 <th style="display: none;">Observación</th>  <!--  -->
+                <th style="display: none;">Fecha despacho solicitada</th>  <!-- -->
+                <th style="display: none;">Condición de pago</th>  <!--  -->
+                <th style="display: none;">Comprobante de pago asociado</th>  <!--  -->
             </tr>
         </thead>
         <tbody>
@@ -89,8 +92,6 @@
                 <th>Estado pedido</th>
                 <th>Fecha despacho</th>
                 <th>Hora despacho</th>
-                <th style="display: none;">Datos extra</th>
-                <th style="display: none;">Estado</th>
             </tr>
         </tfoot>
     </table>
@@ -118,6 +119,7 @@
 </div>
 
 {% endlanguage %}
+<script>var permissions = '{{ permissions }}';</script>
 <script src="{% static 'js/js_tabla.js' %}"></script>
 
 
