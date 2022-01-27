@@ -56,7 +56,33 @@ $(document).ready(function() {
                 }
             },
             { "searchable": false, orderable: false },
-            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false, render: function (data, type, row) {
+                x = []
+                for (i in data){
+                    switch(data[i]){
+                        case "0": x.push("No asignado"); break;
+                        case "1": x.push("AM"); break;
+                        case "2": x.push("PM"); break;
+                        default: x.push(""); break;
+                    }
+                }
+                return x;
+                }
+            },
+            { "searchable": false, orderable: false, render: function (data, type, row) {
+                x = []
+                for (i in data){
+                    switch(data[i]){
+                        case "0": x.push("En preparación"); break;
+                        case "1": x.push("Sin pago adjunto"); break;
+                        case "2": x.push("Sin material"); break;
+                        case "3": x.push("Preaparado incompleto"); break;
+                        case "4": x.push("Preaparado completo"); break;
+                        default: x.push(""); break;
+                    }
+                }
+                return x;
+                } },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
         ],
@@ -83,27 +109,21 @@ $(document).ready(function() {
                     return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
                 },
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13]
+                    columns: [ 0, 1, 2, 3, 4, 5, 17, 8, 12, 13, 14, 15, 16]
                 },
                 title: "Ordenes de despacho",
                 customize: function(xlsx) {
-                    var passedHeader = false;
-                    if (passedHeader){
-                        var styleSheet = xlsx.xl['styles.xml'];
-                        var lastXfIndex = $('cellXfs xf', styleSheet).length - 1;
-                        var n1 = '<numFmt formatCode="$ #,##0" numFmtId="300"/>';
-                        var s1 = '<xf numFmtId="300" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
-                        styleSheet.childNodes[0].childNodes[0].innerHTML += n1;
-                        styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
+                    var styleSheet = xlsx.xl['styles.xml'];
+                    var lastXfIndex = $('cellXfs xf', styleSheet).length - 1;
+                    var n1 = '<numFmt formatCode="$ #,##0" numFmtId="300"/>';
+                    var s1 = '<xf numFmtId="300" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
+                    styleSheet.childNodes[0].childNodes[0].innerHTML += n1;
+                    styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
 
-                        var fourDecPlaces = lastXfIndex + 1;
-
-                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                        $('row c[r^="L"]', sheet).attr( 's', fourDecPlaces );
-                    }
-                    else {
-                        passedHeader = true;
-                    } 
+                    var currencyFormat = lastXfIndex + 1;
+                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                    $('row c[r^="J"]', sheet).attr( 's', currencyFormat );
+                    $('row c[r="J2"]', sheet).attr( 's', '2' );
                 }
             }
         ]
@@ -207,6 +227,7 @@ $(document).ready(function() {
             $.ajax({
                 success: function () {
                     $.post(url, {"type": "fecha_despacho", "nvv": nvv, "date": date,})
+                    table.cell('#fecha_despacho_final' + nvv).data(date)
                 }
             })
         })
