@@ -9,4 +9,3 @@ django-phonenumber-field[phonenumbers]
 django-allauth
 uvicorn
 gunicorn
-django-heroku

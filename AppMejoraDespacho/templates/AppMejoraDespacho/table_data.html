@@ -29,7 +29,13 @@
             {{ item.get_estado_pedido_para_vendedor_display }}
         {% endif %}
     </td>
-    <td>{{ item.fecha_despacho_final|date:"d F Y" }}</td> <!-- The agreed date of dispatch -->
+    <td> <!-- The agreed date of dispatch -->
+        {% if item.rango_horario_final == 0 %}
+            No asignada
+        {% else %}
+            {{ item.fecha_despacho_final|date:"d F Y" }}
+        {% endif %}
+    </td> 
     <td> <!-- The agreed time range of dispatch. If it has two ranges, display both. Otherwise, display only the one that exists -->
         {% if item.rango_horario_final == 0 %}
             No asignado

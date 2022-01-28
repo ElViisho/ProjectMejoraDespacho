@@ -29,7 +29,7 @@ def validate_file(file):
 # Return all rows from a cursor as a dict
 def dictfetchall(cursor):
     d = cursor.fetchall()
-    nvvs = []
+    nvvs = [('0', '-------------')]
     for i in range(len(d)):
         nvvs.append((str(i+1), d[i][0]))
     return tuple(nvvs)
@@ -53,7 +53,7 @@ def now_plus_n(n):
 
 # Form for submitting a new order to the database
 class ingresoForm(forms.Form):
-    nvv = forms.ChoiceField(label='NVV', choices=get_nvvs, initial=1, required=True)
+    nvv = forms.ChoiceField(label='NVV', choices=get_nvvs, initial=0, required=True)
     tipo_despacho = forms.ChoiceField(label = 'Tipo de despacho', choices=choices_dispatch_way, initial=0, required=False, widget=forms.RadioSelect)
     despacho_externo = forms.CharField(max_length=150, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre empresa despacho'}))
     region = forms.ChoiceField(label='Región de despacho', choices=regiones, initial=0, required=False)
@@ -98,7 +98,7 @@ class ingresoForm(forms.Form):
         # Since it is a selection, it returns an index, so here it gets the value of that index
         i = self.cleaned_data['nvv']
         nvv_choices = self.nvv
-        return nvv_choices[int(i)-1][1]
+        return nvv_choices[int(i)][1]
 
     def clean_fecha_despacho(self):
         '''

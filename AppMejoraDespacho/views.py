@@ -70,7 +70,8 @@ def submit_nvv_form(request):
 	Renders the form for submitting a new order
 	Page: submit_nvv_form
 	'''
-	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] == 'Despacho'):
+	groups = list(request.user.groups.values_list('name', flat= True))
+	if (not request.user.is_superuser and len(groups)>0 and groups[0] == 'Despacho'):
 		return redirect('main')
 
 	if request.method == 'GET':
@@ -152,7 +153,8 @@ def delete_nvv(request):
 	Renders the form for deleting an order from the database
 	Page: delete_nvv
 	'''
-	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] != 'Eliminar'):
+	groups = list(request.user.groups.values_list('name', flat= True))
+	if (not request.user.is_superuser and ((len(groups)>0 and groups[0] != 'Eliminar') or len(groups)==0) ):
 		return redirect('main')
 	if request.method == 'GET':
 		formulario = deleteForm()
@@ -197,7 +199,8 @@ def table(request, con_guia):
 	'''
 	Renders the table with all the current data present in the database
 	'''	
-	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] == 'Despacho'):
+	groups = list(request.user.groups.values_list('name', flat= True))
+	if (not request.user.is_superuser and len(groups)>0 and groups[0] == 'Despacho'):
 		return redirect('main')
 	data_obtenida = editFileForm()
 	
@@ -247,7 +250,8 @@ def mutable_table(request, con_guia):
 	Renders the table with all the current data present in the database,
 	whose some data may be changed
 	'''
-	if (not request.user.is_superuser and list(request.user.groups.values_list('name', flat= True))[0] != 'Despacho'):
+	groups = list(request.user.groups.values_list('name', flat= True))
+	if (not request.user.is_superuser and len(groups)>0 and groups[0] != 'Despacho'):
 		return redirect('main')
 	# If there's a POST request, it means user is trying to submit data into the database from the table
 	if request.method == "POST":

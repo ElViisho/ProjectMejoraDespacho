@@ -67,6 +67,16 @@ window.onbeforeunload = function() {
     sessionStorage.setItem('telefono', phoneInput.getNumber())
 }
 
+$('#id_nvv').change(function () {
+    if ($(this).val() == 0){
+        $('#boton').prop('disabled', true);
+    }
+    else {
+        $('#boton').prop('disabled', false);
+    }
+})
+
+
 // If file is uploaded, show its name
 $("#id_comprobante_pago").change(function () {
     let file = $(this).val();

@@ -19,7 +19,7 @@
 {% language 'es' %}
 
 <!-- Title of the page -->
-<div class="titulo_pagina d-flex justify-content-center">Ingresa una nota de venta</div>
+<div class="titulo_pagina d-flex justify-content-center">Ingresa una nueva orden de despacho</div>
 <!-- Display the form validation errors in case there are -->
 <div class="mensajeAlerta">
 	{% if formulario.errors %}
@@ -99,7 +99,7 @@
 	{% endif %}
 {% endfor %}
 <!-- Button for submitting the form -->
-<input class="btn btn-default" class="boton-sumbit" id="boton" type="submit" value="Subir" readonly>
+<input class="btn btn-default" class="boton-sumbit" id="boton" type="submit" value="Subir" disabled readonly>
 </form>
 
 <!-- Load the javascript of this template -->
