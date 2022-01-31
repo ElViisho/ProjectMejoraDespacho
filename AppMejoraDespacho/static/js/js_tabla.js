@@ -201,3 +201,24 @@ function format (d) {
         '</table>'+
     '</td>';
 }
+
+
+
+// Shows prompt for confirming if user wants to change the selected order's payment file
+function prompt_confirm() {
+    $('#confirm_texto').html(`¿Confirmas que quieres subir un nuevo comprobante de pago para la orden ${$('#id_nvv_for_submit').val()}? (Esto eliminará la anterior en caso de existir)<br>`);
+    $('#confirm_prompt_background').show();
+    $('#confirm_prompt').show();
+    $('#confirm_texto').show();
+    $('#boton_confirm').show();
+    $('#boton_cancel').show();
+}
+
+// Function to cancel the deletion
+function cancelar() {
+    $('#confirm_prompt_background').hide();
+    $('#confirm_prompt').hide();
+    $('#confirm_texto').hide();
+    $('#boton_confirm').hide();
+    $('#boton_cancel').hide();
+}

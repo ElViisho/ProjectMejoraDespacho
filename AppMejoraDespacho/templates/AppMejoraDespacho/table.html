@@ -113,8 +113,15 @@
             <div id="file_name"></div>
             {{ formulario.nuevo_comprobante_pago }}
             {{ formulario.nvv_for_submit }}
-            <input type="submit" class="nuevo_comprobante_submit" value="Subir" name="submit" style="display: none;" disabled readonly>
+            <input class="nuevo_comprobante_submit" value="Subir" onclick="prompt_confirm()" name="submit" style="display: none;" disabled readonly>
         </nobr>
+
+        <!-- Prompt for the user to confirm the deletion -->
+        <div id ="confirm_prompt_background" class="confirm_prompt_background" style="display: none;"></div>
+        <div id="confirm_prompt" class="confirm_prompt" style="display: none;">
+        <div id="confirm_texto" class="confirm_texto"></div>
+        <input class="btn" id="boton_confirm" type="submit" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
+        
     </form>
 </div>
 
