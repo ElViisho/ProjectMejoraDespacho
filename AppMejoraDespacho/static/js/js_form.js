@@ -28,6 +28,7 @@ $(document).ready(function() {
         } 
     });
 
+    change_button();
     change_dispath();
 
     // Set the phone input field to use the plugin for country code and validation of valid phone number format
@@ -64,17 +65,23 @@ $(document).ready(function() {
 
 
 window.onbeforeunload = function() {
-    sessionStorage.setItem('telefono', phoneInput.getNumber())
+    sessionStorage.setItem('comuna', $('#id_comuna').val());
 }
 
-$('#id_nvv').change(function () {
-    if ($(this).val() == 0){
+$('#id_nvv').change(change_button);
+$('#id_comuna').change(change_button)
+
+function change_button() {
+    let val_nvv = document.querySelector('#id_nvv').value;
+    let val_comuna = document.querySelector('#id_comuna').value;
+
+    if (val_nvv == 0 || val_comuna == 0){
         $('#boton').prop('disabled', true);
     }
     else {
         $('#boton').prop('disabled', false);
     }
-})
+}
 
 
 // If file is uploaded, show its name
@@ -91,12 +98,14 @@ $("#id_comprobante_pago").change(function () {
 function change_dispath() {
     let val = document.querySelector('input[name="tipo_despacho"]:checked').value;
     
+    // Is external dispatch
     if (val==1){
         $('#id_despacho_externo').show();
         $('#region_div').show();
         $('#id_region').prop('required', true);
         change_comunas(true);
     }
+    // Is dispatch with DIMACO
     else {
         $('#id_despacho_externo').hide();
         $('#region_div').hide();
@@ -120,6 +129,23 @@ function change_comunas(cambiar) {
         success: function (data) {
             $("#id_comuna").html(data);
         }
+    }).done(function() {
+        // Restore value of comunne before reload
+        var comuna = sessionStorage.getItem('comuna');
+        if (comuna){
+            $("#id_comuna").val(comuna);
+        }
+        sessionStorage.clear();
+
+        if ($("#id_region").prop('required') && $('#id_region').val()==0){
+            $("#id_comuna").val(0);
+            $("#id_comuna").prop('disabled', true);
+        }
+        else {
+            $("#id_comuna").prop('disabled', false);
+        }
+
+        change_button();
     });
 }
 

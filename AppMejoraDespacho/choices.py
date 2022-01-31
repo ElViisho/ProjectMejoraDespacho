@@ -34,41 +34,59 @@ choices_dispatch_way = (
 
 # Communes that the Santa Elena office dispatches
 comunas_santa_elena = (
-        (1, 'Alhué'),
-        (2, 'Buín'),
-        (3, 'Calera de Tango'),
-        (4, 'Cerrillos'),
-        (5, 'Cerro Navia'),
-        (6, 'Curacaví'),
-        (7, 'El Bosque'),
-        (8, 'El Monte'),
-        (9, 'Estación Central'),
-        (10, 'Isla de Maipo'),
-        (11, 'La Cisterna'),
-        (12, 'La Florida'),
-        (13, 'La Granja'),
-        (14, 'La Pintana'),
-        (15, 'Lo Espejo'),
-        (16, 'Lo Prado'),
-        (17, 'Macul'),
-        (18, 'Maipú'),
-        (19, 'María Pinto'),
-        (20, 'Melipilla'),
-        (21, 'Padre Hurtado'),
-        (22, 'Paine'),
-        (23, 'Pedro Aguirre Cerda'),
-        (24, 'Peñaflor'),
-        (25, 'Peñalolén'),
-        (26, 'Pirque'),
-        (27, 'Puente Alto'),
-        (28, 'Quinta Normal'),
-        (29, 'San Bernardo'),
-        (30, 'San Joaquín'),
-        (31, 'San José de Maipo'),
-        (32, 'San Miguel'),
-        (33, 'San Pedro'),
-        (34, 'San Ramón'),
-        (35, 'Talagante'),
+        ("0", "----------------------------------------"),
+        ("1", "Alhué"),
+        ("2", "Buin"),
+        ("3", "Calera de Tango"),
+        ("4", "Cerrillos"),
+        ("5", "Cerro Navia"),
+        ("6", "Colina"),
+        ("7", "Conchalí"),
+        ("8", "Curacaví"),
+        ("9", "El Bosque"),
+        ("10", "El Monte"),
+        ("11", "Estación Central"),
+        ("12", "Huechuraba"),
+        ("13", "Independencia"),
+        ("14", "Isla de Maipo"),
+        ("15", "La Cisterna"),
+        ("16", "La Florida"),
+        ("17", "La Granja"),
+        ("18", "La Pintana"),
+        ("19", "La Reina"),
+        ("20", "Lampa"),
+        ("21", "Las Condes"),
+        ("22", "Lo Barnechea"),
+        ("23", "Lo Espejo"),
+        ("24", "Lo Prado"),
+        ("25", "Macul"),
+        ("26", "Maipú"),
+        ("27", "María Pinto"),
+        ("28", "Melipilla"),
+        ("29", "Ñuñoa"),
+        ("30", "Padre Hurtado"),
+        ("31", "Paine"),
+        ("32", "Pedro Aguirre Cerda"),
+        ("33", "Peñaflor"),
+        ("34", "Peñalolén"),
+        ("35", "Pirque"),
+        ("36", "Providencia"),
+        ("37", "Pudahuel"),
+        ("38", "Puente Alto"),
+        ("39", "Quilicura"),
+        ("40", "Quinta Normal"),
+        ("41", "Recoleta"),
+        ("42", "Renca"),
+        ("43", "San Bernardo"),
+        ("44", "San Joaquín"),
+        ("45", "San José de Maipo"),
+        ("46", "San Miguel"),
+        ("47", "San Pedro"),
+        ("48", "San Ramón"),
+        ("49", "Santiago"),
+        ("50", "Talagante"),
+        ("51", "Til Til"),
+        ("52", "Vitacura"),
 )
 
 # The hours for dispatch
@@ -89,32 +107,35 @@ horas = (
 
 # Regions of Chile for dispatch
 regiones = (
-    ("1", "Arica y Parinacota"),
-    ("2", "Tarapacá"),
-    ("3", "Antofagasta"),
-    ("4", "Atacama"),
-    ("5", "Coquimbo"),
-    ("6", "Valparaíso"),
-    ("7", "Metropolitana de Santiago"),
-    ("8", "Libertador General Bernardo O'Higgins"),
-    ("9", "Maule"),
-    ("10", "Ñuble"),
-    ("11", "Biobío"),
-    ("12", "La Araucanía"),
-    ("13", "Los Ríos"),
-    ("14", "Los Lagos"),
-    ("15", "Aysén del General Carlos Ibáñez del Campo"),
-    ("16", "Magallanes y la Antártica Chilena")
+        ("0", "----------------------------------------"),
+        ("1", "Arica y Parinacota"),
+        ("2", "Tarapacá"),
+        ("3", "Antofagasta"),
+        ("4", "Atacama"),
+        ("5", "Coquimbo"),
+        ("6", "Valparaíso"),
+        ("7", "Metropolitana de Santiago"),
+        ("8", "Libertador General Bernardo O'Higgins"),
+        ("9", "Maule"),
+        ("10", "Ñuble"),
+        ("11", "Biobío"),
+        ("12", "La Araucanía"),
+        ("13", "Los Ríos"),
+        ("14", "Los Lagos"),
+        ("15", "Aysén del General Carlos Ibáñez del Campo"),
+        ("16", "Magallanes y la Antártica Chilena")
 )
 
 # Communes per region
 comunas_arica_y_parinacota = (
+        ("0", "----------------------------------------"),
         ("1", "Arica"),
         ("2", "Camarones"),
         ("3", "General Lagos"),
         ("4", "Putre")
 )
 comunas_tarapaca = (
+        ("0", "----------------------------------------"),
         ("1", "Alto Hospicio"),
         ("2", "Camiña"),
         ("3", "Colchane"),
@@ -124,6 +145,7 @@ comunas_tarapaca = (
         ("7", "Pozo Almonte"),
 )
 comunas_antofagasta = (
+        ("0", "----------------------------------------"),
         ("1", "Antofagasta"),
         ("2", "Calama"),
         ("3", "María Elena"),
@@ -135,6 +157,7 @@ comunas_antofagasta = (
         ("9", "Tocopilla"),
 )
 comunas_atacama = (
+        ("0", "----------------------------------------"),
         ("1", "Alto del Carmen"),
         ("2", "Caldera"),
         ("3", "Chañaral"),
@@ -146,6 +169,7 @@ comunas_atacama = (
         ("9", "Vallenar"),
 )
 comunas_coquimbo = (
+        ("0", "----------------------------------------"),
         ("1", "Andacollo"),
         ("2", "Canela"),
         ("3", "Combarbalá"),
@@ -163,6 +187,7 @@ comunas_coquimbo = (
         ("15", "Vicuña"),
 )
 comunas_valparaiso = (
+        ("0", "----------------------------------------"),
         ("1", "Algarrobo"),
         ("2", "Cabildo"),
         ("3", "Calle Larga"),
@@ -203,6 +228,7 @@ comunas_valparaiso = (
         ("38", "Zapallar"),
 )
 comunas_metropolitana = (
+        ("0", "----------------------------------------"),
         ("1", "Alhué"),
         ("2", "Buin"),
         ("3", "Calera de Tango"),
@@ -257,6 +283,7 @@ comunas_metropolitana = (
         ("52", "Vitacura"),
 )
 comunas_ohiggins = (
+        ("0", "----------------------------------------"),
         ("1", "Chimbarongo"),
         ("2", "Chépica"),
         ("3", "Codegua"),
@@ -292,6 +319,7 @@ comunas_ohiggins = (
         ("33", "Santa Cruz"),
 )
 comunas_maule = (
+        ("0", "----------------------------------------"),
         ("1", "Cauquenes"),
         ("2", "Chanco"),
         ("3", "Colbún"),
@@ -324,6 +352,7 @@ comunas_maule = (
         ("30", "Yerbas Buenas"),
 )
 comunas_nuble = (
+        ("0", "----------------------------------------"),
         ("1", "Bulnes"),
         ("2", "Chillán"),
         ("3", "Chillán Viejo"),
@@ -347,6 +376,7 @@ comunas_nuble = (
         ("21", "Yungay"),
 )
 comunas_biobio = (
+        ("0", "----------------------------------------"),
         ("1", "Alto Biobío"),
         ("2", "Antuco"),
         ("3", "Arauco"),
@@ -382,6 +412,7 @@ comunas_biobio = (
         ("33", "Yumbel"),
 )
 comunas_araucania = (
+        ("0", "----------------------------------------"),
         ("1", "Angol"),
         ("2", "Carahue"),
         ("3", "Cholchol"),
@@ -416,6 +447,7 @@ comunas_araucania = (
         ("32", "Villarrica"),
 )
 comunas_los_rios = (
+        ("0", "----------------------------------------"),
         ("1", "Corral"),
         ("2", "Futrono"),
         ("3", "La Unión"),
@@ -430,6 +462,7 @@ comunas_los_rios = (
         ("12", "Valdivia"),
 )
 comunas_los_lagos = (
+        ("0", "----------------------------------------"),
         ("1", "Ancud"),
         ("2", "Calbuco"),
         ("3", "Castro"),
@@ -462,6 +495,7 @@ comunas_los_lagos = (
         ("30", "San Pablo"),
 )
 comunas_aysen = (
+        ("0", "----------------------------------------"),
         ("1", "Aysén"),
         ("2", "Chile Chico"),
         ("3", "Cisnes"),
@@ -474,6 +508,7 @@ comunas_aysen = (
         ("10", "Tortel"),
 )
 comunas_magallanes = (
+        ("0", "----------------------------------------"),
         ("1", "Antártica"),
         ("2", "Cabo de Hornos"),
         ("3", "Laguna Blanca"),
