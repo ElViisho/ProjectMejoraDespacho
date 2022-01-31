@@ -14,6 +14,7 @@ from ProjectMejoraDespacho.settings import MEDIA_ROOT
 from .choices import comunas_santa_elena, comunas_todas, regiones
 from .queries import *
 from django.core.files.storage import FileSystemStorage
+import os 
 
 
 def loginPage(request):
@@ -210,10 +211,16 @@ def table(request, con_guia):
 			cleaned_data = data_obtenida.cleaned_data
 			nvv = cleaned_data["nvv_for_submit"]
 			file = cleaned_data["nuevo_comprobante_pago"]
+
+			obj = Ordenes.objects.filter(nvv=nvv)
+			prev_file = MEDIA_ROOT + '/' + str(obj[0].comprobante_pago)
+			if (prev_file != "None" and os.path.exists(prev_file)):
+				os.remove(prev_file)
+
 			now = datetime.datetime.now()
 			fs = FileSystemStorage(MEDIA_ROOT + '/comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/"))
 			filename = fs.save(file.name, file)
-			Ordenes.objects.filter(nvv=nvv).update(comprobante_pago='comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/") + filename)
+			obj.update(comprobante_pago='comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/") + filename)
 
 	queryset = Ordenes.objects.all() # Get the data from the database
 	
