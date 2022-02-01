@@ -89,11 +89,11 @@ def submit_nvv_form(request):
 			nvv = cleaned_data['nvv']
 
 			if cleaned_data['tipo_despacho'] == "1":
-				tipo_despacho = cleaned_data['despacho_externo']
-				comuna = comunas_todas[int(cleaned_data['region'])][int(cleaned_data['comuna'])-1][1] + ', ' + regiones[int(cleaned_data['region'])-1][1] 
+				tipo_despacho = cleaned_data['despacho_externo'] + '\\' + cleaned_data['direccion_despacho_externo']
+				comuna = comunas_todas[int(cleaned_data['region'])][int(cleaned_data['comuna'])][1] + ', ' + regiones[int(cleaned_data['region'])][1] 
 			else:
 				tipo_despacho = 'DIMACO'
-				comuna = comunas_santa_elena[int(cleaned_data['comuna'])-1][1]
+				comuna = comunas_santa_elena[int(cleaned_data['comuna'])][1]
 
 			if cleaned_data['comprobante_pago'] is None:
 				cleaned_data['comprobante_pago'] = "None"

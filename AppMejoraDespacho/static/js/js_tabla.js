@@ -125,6 +125,11 @@ $(document).ready(function() {
             $('#id_nvv_for_submit').val(row.data()[1]);
         }
     });
+
+    $('.despacho_externo').html(function() {
+        arr = $(this).html().split('\\');
+        return '<i>' + arr[0] + '</i><br>' + arr[1];
+    })
     
 });
 

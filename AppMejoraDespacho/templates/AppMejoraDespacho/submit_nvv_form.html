@@ -45,6 +45,7 @@
 		<label>{{ field.label }}</label><br>
 		{{ field }}
 		{{ formulario.despacho_externo }}
+		{{ formulario.direccion_despacho_externo }}
 	</div>
 	{% elif field.name == "region" %}
 	<div id = "region_div" class="form-group block-form">
@@ -89,7 +90,7 @@
 		</table>
 	</div>
 	<!-- if it's any of this fields, don't display anything  -->
-	{% elif field.name == "hora_despacho_fin" or field.name == "hora_despacho_extra_inicio" or field.name == "hora_despacho_extra_fin" or field.name == "despacho_externo" %}
+	{% elif field.name == "hora_despacho_fin" or field.name == "hora_despacho_extra_inicio" or field.name == "hora_despacho_extra_fin" or field.name == "despacho_externo" or field.name == "direccion_despacho_externo"%}
 	<!-- If it's no special case, just display the label with the field -->
 	{% else %}
 	<div class="form-group block-form">

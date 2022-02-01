@@ -101,6 +101,9 @@ function change_dispath() {
     // Is external dispatch
     if (val==1){
         $('#id_despacho_externo').show();
+        $('#id_direccion_despacho_externo').show();
+        $('#id_despacho_externo').prop('required', true);
+        $('#id_direccion_despacho_externo').prop('required', true);
         $('#region_div').show();
         $('#id_region').prop('required', true);
         change_comunas(true);
@@ -108,6 +111,9 @@ function change_dispath() {
     // Is dispatch with DIMACO
     else {
         $('#id_despacho_externo').hide();
+        $('#id_direccion_despacho_externo').hide();
+        $('#id_despacho_externo').prop('required', false);
+        $('#id_direccion_despacho_externo').prop('required', false);
         $('#region_div').hide();
         $('#id_region').prop('required', false);
         change_comunas(false);

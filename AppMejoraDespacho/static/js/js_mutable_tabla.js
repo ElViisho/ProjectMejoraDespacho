@@ -232,6 +232,11 @@ $(document).ready(function() {
             })
         })
     }
+
+    $('.despacho_externo').html(function() {
+        arr = $(this).html().split('\\');
+        return '<i>' + arr[0] + '</i><br>' + arr[1];
+    })
 });
 
 function textAreaChange() {

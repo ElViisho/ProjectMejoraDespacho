@@ -56,6 +56,7 @@ class ingresoForm(forms.Form):
     nvv = forms.ChoiceField(label='NVV', choices=get_nvvs, initial=0, required=True)
     tipo_despacho = forms.ChoiceField(label = 'Tipo de despacho', choices=choices_dispatch_way, initial=0, required=False, widget=forms.RadioSelect)
     despacho_externo = forms.CharField(max_length=150, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre empresa despacho'}))
+    direccion_despacho_externo = forms.CharField(max_length=150, required=False, widget=forms.TextInput(attrs={'placeholder': 'Dirección empresa despacho'}))
     region = forms.ChoiceField(label='Región de despacho', choices=regiones, initial=0, required=False)
     comuna = forms.ChoiceField(label='Comuna de despacho', choices=comunas_longest, initial=0, required=False)
     direccion = forms.CharField(label='Dirección de despacho', max_length=250, required=True, widget=forms.TextInput(attrs={'placeholder': 'Santa Elena 1596'}))
