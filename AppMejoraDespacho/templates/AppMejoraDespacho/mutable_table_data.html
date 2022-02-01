@@ -98,36 +98,26 @@
     </td>
     <td>
         <select class='estados_pedido_para_vendedor' id='{{ item.nvv }}'>
-            {% if item.estado_pedido_para_vendedor == 4 %}
+            {% if item.estado_pedido_para_vendedor == 3 %}
                 <option value=0>En preparación</option>
-                <option value=1>Sin pago adjunto</option>
-                <option value=2>Sin material</option>
-                <option value=3>Preparado incompleto</option>
-                <option selected value=4>Preparado completo</option>
-            {% elif item.estado_pedido_para_vendedor == 3 %}
-                <option value=0>En preparación</option>
-                <option value=1>Sin pago adjunto</option>
-                <option value=2>Sin material</option>
-                <option selected value=3>Preparado incompleto</option>
-                <option value=4>Preparado completo</option>
+                <option value=1>Detenido</option>
+                <option value=2>Preparado incompleto</option>
+                <option selected value=3>Preparado completo</option>
             {% elif item.estado_pedido_para_vendedor == 2 %}
                 <option value=0>En preparación</option>
-                <option value=1>Sin pago adjunto</option>
-                <option selected value=2>Sin material</option>
-                <option value=3>Preparado incompleto</option>
-                <option value=4>Preparado completo</option>
+                <option value=1>Detenido</option>
+                <option selected value=2>Preparado incompleto</option>
+                <option value=3>Preparado completo</option>
             {% elif item.estado_pedido_para_vendedor == 1 %}
                 <option value=0>En preparación</option>
-                <option selected value=1>Sin pago adjunto</option>
-                <option value=2>Sin material</option>
-                <option value=3>Preparado incompleto</option>
-                <option value=4>Preparado completo</option>
+                <option selected value=1>Detenido</option>
+                <option value=2>Preparado incompleto</option>
+                <option value=3>Preparado completo</option>
             {% else %}
                 <option selected value=0>En preparación</option>
-                <option value=1>Sin pago adjunto</option>
-                <option value=2>Sin material</option>
-                <option value=3>Preparado incompleto</option>
-                <option value=4>Preparado completo</option>
+                <option value=1>Detenido</option>
+                <option value=2>Preparado incompleto</option>
+                <option value=3>Preparado completo</option>
             {% endif %}
         </select>
     </td>
@@ -137,7 +127,7 @@
     -->
     <td style="display: none;">
         {{item.fecha_nvv}}\,\,{{item.cliente}}\,\,{{item.rut}}\,\,{{item.condicion_pago}}\,\,{% if item.comprobante_pago == "None" %}
-        No hay
+        No adjunto
     {% else %}
         <a href="{{ item.comprobante_pago.url }}" target="_blank">Link</a>
     {% endif %}\,\,{{item.observacion}}\,\,{{item.numero_guia}}\,\,{{item.nombre_vendedor}}\,\,{{item.nombre_asistente}}\,\,

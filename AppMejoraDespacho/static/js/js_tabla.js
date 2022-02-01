@@ -37,7 +37,6 @@ $(document).ready(function() {
             null,
             null,
             null,
-            null,
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
@@ -99,9 +98,9 @@ $(document).ready(function() {
     $('#listado tbody').on('click', 'td.show_hide', function () {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
-        var data = row.data()[11].split("\\,\\,")
+        var data = row.data()[10].split("\\,\\,")
+        data.push(row.data()[12])
         data.push(row.data()[13])
-        data.push(row.data()[14])
         data.unshift(row.data()[1])
  
         if ( row.child.isShown() ) {

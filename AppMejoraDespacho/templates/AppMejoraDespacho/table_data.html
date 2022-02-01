@@ -11,13 +11,6 @@
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
     <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
     <td>{{ item.fecha_solicitud|date:"d F Y" }}<br>{{ item.fecha_solicitud|date:"H:i" }}</td> <!-- Date when NVV was submitted to the table -->
-    <td> <!-- Way of dispatch. If it's internal, just show DIMACO. Else, show the name of the dispatcher and its direction -->
-        {% if item.tipo_despacho == "DIMACO" %}
-            {{ item.tipo_despacho }}
-        {% else %}
-            <div class="despacho_externo">{{ item.tipo_despacho }}</div>
-        {% endif %}
-    </td>
     <td>{{ item.comuna }}</td>  <!-- Commune address -->
     <td>{{ item.direccion }}</td> <!-- Dispatch address -->
     <td>{{ item.nombre_contacto }}</td> <!-- Name of the person to contact for the dispatch -->
@@ -49,7 +42,7 @@
     -->
     <td style="display: none;">
         {{item.fecha_nvv}}\,\,{{item.cliente}}\,\,{{item.rut}}\,\,{{item.condicion_pago}}\,\,{% if item.comprobante_pago == "None" %}
-        No hay
+        No adjunto
     {% else %}
         <a href="{{ item.comprobante_pago.url }}" target="_blank">Link</a>
     {% endif %}\,\,{{item.numero_guia}}\,\,{{item.nombre_vendedor}}\,\,{{item.nombre_asistente}}\,\,{{item.listo}}\,\,{{ item.observacion_despacho }}

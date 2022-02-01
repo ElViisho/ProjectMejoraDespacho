@@ -120,8 +120,12 @@ input#id_direccion::placeholder, input#id_cont_nombre::placeholder, input#id_con
     margin-right: 2%;
     margin-bottom: 10px;
 }
-/*  Sublabel under hour label, and any other labels that may or may not be added in the future */
+/*  Sublabel */
 .sublabel {
+    font-size: 18px;
+}
+/* Text for explaining the hour selector */
+.hour_explain{
     font-size: 14px;
 }
 
