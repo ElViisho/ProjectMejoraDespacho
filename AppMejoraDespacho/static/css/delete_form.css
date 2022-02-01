@@ -35,6 +35,14 @@ be interacted with*/
     margin-top: 25px;
 }
 
+#boton_confirm{
+    background-color: #007b34;
+    border-color: #015625;
+}
+#boton_cancel{
+    background-color: #d31f11;
+    border-color: #cc542c;
+}
 /*  The two buttons that appear for the confirmation prompt */
 #boton_confirm, #boton_cancel {
     position: relative;
@@ -42,12 +50,10 @@ be interacted with*/
     font-family: "Playfair Display", Georgia, "Times New Roman", serif;
     font-style: normal;
     transition: background-color 1s , border-color 1s;
-    background-color: #f42414;
     color: #dfdfdf;
     font-size: 20px;
-    border-radius: 5px;
+    border-radius: 10px;
     border-style: solid;
-    border-color: #cc542c;
     margin-top: 10px;
     margin-bottom: 25px;
     text-align: center;
@@ -59,6 +65,11 @@ be interacted with*/
     when the cursor hovers over them */
 #boton_confirm:hover, #boton_cancel:hover{
     cursor: pointer;
-    background-color: #ff948c;
     transition-duration: 1s;
+}
+#boton_confirm:hover{
+    background-color: #79c196;
+}
+#boton_cancel:hover{
+    background-color: #ff948c;
 }
