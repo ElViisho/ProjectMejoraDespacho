@@ -50,6 +50,7 @@ $(document).ready(function() {
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
         ],
         "search": {     // Searches for the whole match and not each word individually
             "smart": false
@@ -74,7 +75,7 @@ $(document).ready(function() {
                     return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
                 },
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4, 5, 8, 15, 9, 13, 16, 17]
+                    columns: [ 0, 1, 2, 17, 3, 4, 7, 14, 8, 12, 15, 16]
                 },
                 title: "Ordenes de despacho",
                 customize: function(xlsx) {
