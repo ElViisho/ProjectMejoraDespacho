@@ -213,14 +213,14 @@ def table(request, con_guia):
 			file = cleaned_data["nuevo_comprobante_pago"]
 
 			obj = Ordenes.objects.filter(nvv=nvv)
-			prev_file = os.path.join(MEDIA_ROOT, str(obj[0].comprobante_pago))
+			prev_file = os.path.join(MEDIA_ROOT, '/', str(obj[0].comprobante_pago))
 			if (prev_file != "None" and os.path.exists(prev_file)):
 				os.remove(prev_file)
 
 			now = datetime.datetime.now()
-			fs = FileSystemStorage(os.path.join(MEDIA_ROOT, 'comprobantes_de_pago', now.strftime("%Y/%m/%d")))
+			fs = FileSystemStorage(os.path.join(MEDIA_ROOT, '/comprobantes_de_pago/', now.strftime("%Y/%m/%d/")))
 			filename = fs.save(file.name, file)
-			obj.update(comprobante_pago=os.path.join('comprobantes_de_pago', now.strftime("%Y/%m/%d"), filename))
+			obj.update(comprobante_pago='comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/") + filename)
 
 	queryset = Ordenes.objects.all() # Get the data from the database
 	

@@ -1,0 +1,92 @@
+/*  For tables have fixed columns widths */
+.tabla{
+	table-layout: fixed;
+}
+
+/*  For the logo at the top header of all pages */
+.titlep{
+    color:whitesmoke;
+    font-family: Brush Script MT;
+    font-size: 50px;
+    font-weight: normal;
+    cursor: pointer;
+    text-align: center;
+}
+
+/*  Base format for majority of buttons */
+.button{
+    background-color: #f42414;
+	color: #dfdfdf;
+	font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-style: normal;
+    text-align: center;
+	font-size: 20px;
+	width: 300px;
+	height: 50px;
+	padding-top: 7.5px;
+	border-radius: 5px;
+	border-style: solid;
+	border-color: #cc542c;
+	transition: background-color 1s , border-color 1s;
+	justify-content: center;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	display: flex;	
+}
+/*  Base format for majority of buttons when cursor hovers over them */
+.button:hover{
+    cursor: pointer;
+    background-color: #ff948c;
+    transition-duration: 1s;
+}
+/*  Button for going back to first page that appears at the top of all pages */
+.button_inicio{
+    background-color: #007b34;
+	color: #dfdfdf;
+	font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-style: normal;
+	font-size: 15px;
+	width: 150px;
+	height: 40px;
+	border-radius: 5px;
+	border-style: solid;
+	border-color: #007030;
+	transition: background-color 1s , border-color 1s;
+	margin-left: 10px;
+	margin-bottom: 20px;
+}
+/*  Button for going back to first page when cursor hovers over it */
+.button_inicio:hover{
+    cursor: pointer;
+    background-color: #499b6c;
+    transition-duration: 1s;
+}
+
+/*  Logout text link */
+.logout{
+	text-align: right;
+	vertical-align: super;
+}
+
+/*  Base style for all bodies in the different html */
+body {
+	background-color: #e0e0e0;
+	font-family:  "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;;
+}
+
+/*  The big titles some pages have */
+.titulo_pagina {
+	font-size: 45px;
+	text-align: center;
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;
+	margin-bottom: 50px;
+	margin-top: 50px;
+	margin-left: 25%;
+	color: #444444;
+	border-radius: 50%;
+	width: 50%;
+	height: 25%;
+}
+

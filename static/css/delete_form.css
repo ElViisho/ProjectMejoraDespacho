@@ -1,0 +1,75 @@
+/*  The background that appears to cover all the page when the
+confirmation prompt appers, so all the other things can't 
+be interacted with*/
+.confirm_prompt_background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    background-color: grey;
+    opacity: 50%;
+    z-index: 1;
+}
+
+/*  The rectangle that appears as the background of the confirmation prompt */
+.confirm_prompt {
+    position: fixed;
+    width: 50%;
+    top: 25%;
+    left: 25%;
+    background-color: #dfdfdf;
+    border-style: solid;
+    border-color: #cecece;
+    border-radius: 5%;
+    text-align:center;
+    z-index: 1;
+}
+
+/*  The text of the confirmation prompt */
+.confirm_texto {
+    position: relative;
+    font-size: 25px;
+    color: #444444;
+    font-weight: bold;
+    margin-top: 25px;
+}
+
+#boton_confirm{
+    background-color: #007b34;
+    border-color: #015625;
+}
+#boton_cancel{
+    background-color: #d31f11;
+    border-color: #cc542c;
+}
+/*  The two buttons that appear for the confirmation prompt */
+#boton_confirm, #boton_cancel {
+    position: relative;
+    font-size: 20px;
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-style: normal;
+    transition: background-color 1s , border-color 1s;
+    color: #dfdfdf;
+    font-size: 20px;
+    border-radius: 10px;
+    border-style: solid;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    text-align: center;
+    width: 25%;
+    height: 50px;
+}
+
+/*  The two buttons that appear for the confirmation prompt,
+    when the cursor hovers over them */
+#boton_confirm:hover, #boton_cancel:hover{
+    cursor: pointer;
+    transition-duration: 1s;
+}
+#boton_confirm:hover{
+    background-color: #79c196;
+}
+#boton_cancel:hover{
+    background-color: #ff948c;
+}

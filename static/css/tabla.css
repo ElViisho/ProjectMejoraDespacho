@@ -1,0 +1,116 @@
+/*  For datatables plugin elements */
+.dataTables_length {
+    padding-left: 2em;
+}
+.dataTables_length,
+.dataTables_filter {
+    padding-top: 0.55em;
+    padding-right: 1em;
+}
+.dataTables_info {
+    padding-left: 1em;
+}
+.dt-buttons {
+    padding-left: 1em;
+}
+/*  Button to export to excel */
+.dt-button.buttons-excel {
+    background-color: #007b34;
+	color: #dfdfdf;
+	font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-style: normal;
+	font-size: 15px;
+	border-radius: 5px;
+	border-style: solid;
+	border-color: #007030;
+	transition: background-color 1s , border-color 1s;
+}
+/*  Excel button when cursor hovers over it */
+.dt-button.buttons-excel:hover{
+    cursor: pointer;
+    background-color: #499b6c;
+    transition-duration: 1s;
+}
+
+.child_table{
+    background-color: #f1f1f1 !important;
+}
+
+/*  Make cursor pointer when over the show and hide childs buttons on the table */
+.show_hide{
+    cursor: pointer;
+}
+
+/*  Make the table use all the width of the page since for default it didn't and looked weird */
+#listado, .dataTable {
+    width: 100% !important;
+}
+
+/*  Button for showing and hiding orders with guide */
+.boton_ocultar{
+    transition: background-color 1s , border-color 1s;
+    background-color: #f42414;
+    color: #dfdfdf;
+    font-size: 15px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #cc542c;
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    margin-left: 10px;
+    width: 250px;
+    padding: 2px;
+}
+/*  Button for showing and hiding orders with guide when cursor hovers over it*/
+.boton_ocultar:hover, #boton:hover{
+    cursor: pointer;
+    background-color: #ff948c;
+    transition-duration: 1s;
+}
+
+#boton{
+    transition: background-color 1s , border-color 1s;
+    background-color: #f42414;
+    color: #dfdfdf;
+    font-size: 16px;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #cc542c;
+    text-align: center;
+    width: 250px;
+}
+
+
+.custom-file-upload {
+    background-color: #f9574d69;
+}
+.nuevo_comprobante_submit{
+   background-color: #007b3457;
+}
+
+/*  Creates a custom upload button for submitting files */
+.custom-file-upload, .nuevo_comprobante_submit {
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   padding: 6px 12px;
+   cursor: pointer;
+   text-align: center;
+   font-size: 16px;
+}
+
+/*  For not showing base input file so only custom one is visible */
+input#id_nuevo_comprobante_pago {
+    display: none;
+}
+/*  For showing the name of the uploaded file */
+#file_name {
+    font-size: 16px;
+    color: #444444;
+    font-weight: bold;
+}
+
+.custom-file-upload, #file_name, .nuevo_comprobante_submit{
+	display: inherit;
+	margin-right: 5px;
+}
