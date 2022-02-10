@@ -43,7 +43,7 @@ def loginPage(request):
 				context = {"error":" Usuario y/o contraseña incorrecta, vuelva a intentarlo"}
 
 		
-		return render(request, "AppMejoraDespacho/login.html", context)
+		return render(request, "AppMejoraDespacho/user_authentication/login.html", context)
 
 def logoutUser(request):
 	'''
@@ -66,13 +66,13 @@ def registerPage(request):
 			form.save()
 			return redirect('confirm_user')
 
-	return render(request, 'AppMejoraDespacho/register_new.html', {'form':form})
+	return render(request, 'AppMejoraDespacho/user_authentication/register_new.html', {'form':form})
 
 def confirm_user(request):
 	'''
 	Funcion para mostrar la pagina de exitosa creación de usuario
 	'''
-	return render(request, "AppMejoraDespacho/confirm_user.html")
+	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_user.html")
 
 @login_required(login_url='login')
 def main(request):
@@ -101,7 +101,7 @@ def submit_nvv_form(request):
 		formulario = ingresoForm()
 		for field in formulario:
 			field.field.widget.attrs.update({"class": "form-control"})
-		return render(request, "AppMejoraDespacho/submit_nvv_form.html", {"formulario": formulario})
+		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", {"formulario": formulario})
 	if request.method == "POST":
 		# Get the data from the post into the form and validate it
 		data_obtenida = ingresoForm(request.POST or None, request.FILES or None)
@@ -159,7 +159,7 @@ def submit_nvv_form(request):
 			)		
 			return redirect("confirm_nvv")
 		# If data not valid, rerender the page and don't lose the data that was already there
-		return render(request, "AppMejoraDespacho/submit_nvv_form.html", {"formulario": data_obtenida})
+		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", {"formulario": data_obtenida})
 
 @login_required(login_url='login')
 def confirm_nvv(request):
@@ -167,7 +167,7 @@ def confirm_nvv(request):
 	Renders the page that confirms the succesful submitting of a new order
 	Page: confirm_nvv
 	'''
-	return render(request, "AppMejoraDespacho/confirm_nvv.html")
+	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_nvv.html")
 
 @login_required(login_url='login')
 def delete_nvv(request):
@@ -182,14 +182,14 @@ def delete_nvv(request):
 		formulario = deleteForm()
 		for field in formulario:
 			field.field.widget.attrs.update({"class": "form-control"})
-		return render(request, "AppMejoraDespacho/delete_nvv.html", {"formulario": formulario})
+		return render(request, "AppMejoraDespacho/forms/delete_nvv.html", {"formulario": formulario})
 	if request.method == "POST":
 		data_obtenida = deleteForm(request.POST or None)
 		if data_obtenida.is_valid():
 			cleaned_data = data_obtenida.cleaned_data
 			Ordenes.objects.filter(nvv=cleaned_data['nvv']).delete()
 			return redirect("confirm_delete_nvv")
-		return render(request, "AppMejoraDespacho/delete_nvv.html", {"formulario": data_obtenida})
+		return render(request, "AppMejoraDespacho/forms/delete_nvv.html", {"formulario": data_obtenida})
 
 @login_required(login_url='login')
 def confirm_delete_nvv(request):
@@ -197,7 +197,7 @@ def confirm_delete_nvv(request):
 	Renders the page that confirms the succesful deleting of an order
 	Page: confirm_delete_nvv
 	'''
-	return render(request, "AppMejoraDespacho/confirm_delete_nvv.html")
+	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_delete_nvv.html")
 
 @login_required(login_url='login')
 def table_with_guide(request):
@@ -251,7 +251,7 @@ def table(request, con_guia):
 		permissions = groups[0]
 	if (request.user.is_superuser):
 		permissions = "Eliminar"
-	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia, "formulario": data_obtenida,})
+	return render(request, "AppMejoraDespacho/tables/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia, "formulario": data_obtenida,})
 
 
 
@@ -317,7 +317,7 @@ def mutable_table(request, con_guia):
 		permissions = groups[0]
 	if (request.user.is_superuser):
 		permissions = "Despacho"
-	return render(request, "AppMejoraDespacho/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
+	return render(request, "AppMejoraDespacho/tables/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
 
 def change_numero_guia(nvv, listo):
 	'''
@@ -357,4 +357,4 @@ def load_comunas(request):
 	'''
 	region = request.GET.get('region')
 	com = comunas_todas[int(region)]
-	return render(request, 'AppMejoraDespacho/comuna_dropdown_list_options.html', {'comunas': com})
+	return render(request, 'AppMejoraDespacho/utilities/comuna_dropdown_list_options.html', {'comunas': com})

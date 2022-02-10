@@ -69,11 +69,11 @@
             {% for item in queryset %}
                 {% if con_guia == 'True' %}
                     {% if item.listo == 1 %}
-                        {% include 'AppMejoraDespacho/table_data.html' %}
+                        {% include 'AppMejoraDespacho/tables/table_data.html' %}
                     {% endif %}
                 {% else %}
                     {% if item.listo == 0 %}
-                        {% include 'AppMejoraDespacho/table_data.html' %}
+                        {% include 'AppMejoraDespacho/tables/table_data.html' %}
                     {% endif %}
                 {% endif %}
             {% endfor %}

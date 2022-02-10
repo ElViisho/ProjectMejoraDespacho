@@ -55,11 +55,11 @@
             {% for item in queryset %}
                 {% if con_guia == 'True' %}
                     {% if item.listo == 1 %}
-                        {% include 'AppMejoraDespacho/mutable_table_data.html' %}
+                        {% include 'AppMejoraDespacho/tables/mutable_table_data.html' %}
                     {% endif %}
                 {% else %}
                     {% if item.listo == 0 %}
-                        {% include 'AppMejoraDespacho/mutable_table_data.html' %}
+                        {% include 'AppMejoraDespacho/tables/mutable_table_data.html' %}
                     {% endif %}
                 {% endif %}
             {% endfor %}
