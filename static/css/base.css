@@ -5,10 +5,13 @@
 
 /*  For the logo at the top header of all pages */
 .titlep{
+<<<<<<< Updated upstream
     color:whitesmoke;
     font-family: Brush Script MT;
     font-size: 50px;
     font-weight: normal;
+=======
+>>>>>>> Stashed changes
     cursor: pointer;
     text-align: center;
 }
@@ -72,21 +75,32 @@
 
 /*  Base style for all bodies in the different html */
 body {
+<<<<<<< Updated upstream
 	background-color: #e0e0e0;
+=======
+>>>>>>> Stashed changes
 	font-family:  "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;;
 }
 
 /*  The big titles some pages have */
 .titulo_pagina {
+<<<<<<< Updated upstream
 	font-size: 45px;
+=======
+	font-size: 50px;
+>>>>>>> Stashed changes
 	text-align: center;
     font-family: "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;
 	margin-bottom: 50px;
 	margin-top: 50px;
+<<<<<<< Updated upstream
 	margin-left: 25%;
 	color: #444444;
 	border-radius: 50%;
 	width: 50%;
+=======
+	color: #444444;
+>>>>>>> Stashed changes
 	height: 25%;
 }
 

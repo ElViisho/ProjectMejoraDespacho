@@ -24,9 +24,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+<<<<<<< Updated upstream
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost', '192.168.2.249']
+=======
+DEBUG = False
+
+ALLOWED_HOSTS = ['127.0.0.1','localhost', '192.168.2.249', 'www.appdespachodimaco.com']
+>>>>>>> Stashed changes
 
 
 # Application definition
@@ -42,10 +48,13 @@ INSTALLED_APPS = [
     'AppMejoraDespacho',
     'file_resubmit',
     'phonenumber_field',
+<<<<<<< Updated upstream
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+=======
+>>>>>>> Stashed changes
 ]
 
 MIDDLEWARE = [
@@ -141,6 +150,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
+<<<<<<< Updated upstream
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -155,6 +165,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SITE_ID = 5
 
+=======
+>>>>>>> Stashed changes
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login'
 
@@ -183,3 +195,20 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+<<<<<<< Updated upstream
+=======
+
+# For the password reset
+JWT_SECRET = os.environ.get('JWT_SECRET')  # use settings secret key for JWT secret
+JWT_ALGORITHM = 'HS256'
+JWT_EXP_DELTA_SECONDS = 900
+
+DEFAULT_FROM_EMAIL = os.environ.get('MAIL_USER')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.environ.get('MAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('MAIL_PASS')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+>>>>>>> Stashed changes

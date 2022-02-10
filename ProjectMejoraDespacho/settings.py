@@ -42,10 +42,6 @@ INSTALLED_APPS = [
     'AppMejoraDespacho',
     'file_resubmit',
     'phonenumber_field',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -141,6 +137,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
+<<<<<<< Updated upstream
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -155,6 +152,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SITE_ID = 5
 
+=======
+>>>>>>> Stashed changes
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login'
 
@@ -183,3 +182,17 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# For the password reset
+JWT_SECRET = os.environ.get('JWT_SECRET')  # use settings secret key for JWT secret
+JWT_ALGORITHM = 'HS256'
+JWT_EXP_DELTA_SECONDS = 900
+
+DEFAULT_FROM_EMAIL = os.environ.get('MAIL_USER')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.environ.get('MAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('MAIL_PASS')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

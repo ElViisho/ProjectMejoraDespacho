@@ -1,0 +1,82 @@
+{% load static %}
+{% load tabla_tags %}
+
+<!-- This has the necessary data to show on the table, for each item on the database.
+    It's separate because sometimes it needs to be loaded and sometimes not, and it was more
+    concise and easier to read to put it like this and just reference it from table.html
+-->
+
+<tr class="text-center" id="{{ item.nvv }}">
+    <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
+    <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
+    <td>{{ item.fecha_solicitud|date:"d F Y" }}<br>{{ item.fecha_solicitud|date:"H:i" }}</td> <!-- Date when NVV was submitted to the table -->
+    <td>{{ item.comuna }}</td>  <!-- Commune address -->
+    <td>{{ item.direccion }}</td> <!-- Dispatch address -->
+    <td>{{ item.nombre_contacto }}</td> <!-- Name of the person to contact for the dispatch -->
+    <td>{{ item.telefono_contacto }}</td> <!-- Phone of the person to contact for the dispatch -->
+    <td> <!-- The state of the order -->
+        {% if item.listo == 1 %}
+            Despachado
+        {% else %}
+            {{ item.get_estado_pedido_para_vendedor_display }}
+        {% endif %}
+    </td>
+    <td> <!-- The agreed date of dispatch -->
+        {% if item.rango_horario_final == 0 %}
+            No asignada
+        {% else %}
+            {{ item.fecha_despacho_final|date:"d F Y" }}
+        {% endif %}
+    </td> 
+    <td> <!-- The agreed time range of dispatch. If it has two ranges, display both. Otherwise, display only the one that exists -->
+        {% if item.rango_horario_final == 0 %}
+            No asignado
+        {% else %}
+            {{ item.get_rango_horario_final_display }}
+        {% endif %}
+    </td>
+
+    <!-- Column that has all the other important data that is shown as a child when a row is clicked. This is not displayed, but it is necessary for it to be here
+        because it is what the DataTables plugin uses to extract its data from to display    
+    -->
+    <td style="display: none;">
+        {{item.fecha_nvv}}\,\,{{item.cliente}}\,\,{{item.rut}}\,\,{{item.condicion_pago}}\,\,{% if item.comprobante_pago == "None" %}
+        No adjunto
+    {% else %}
+        <a href="{{ item.comprobante_pago.url }}" target="_blank">Link</a>
+    {% endif %}\,\,{{item.numero_guia}}\,\,{{item.nombre_vendedor}}\,\,{{item.nombre_asistente}}\,\,{{item.listo}}\,\,{{ item.observacion_despacho }}
+    </td>
+    <!-- This is for the "export to excel" button. At first it always exported all the values from the state selector regardless of the selection. This updates to always
+        have only the selected value, and it is what its used to export.
+    -->
+    <td style="display: none;" id="estado_string{{ item.nvv }}" >
+        {% if item.listo == 1 %}
+            5
+        {% else %}
+            {{item.estado}}
+        {% endif %}
+    </td>
+    <td style="display: none;" id="estado_string{{ item.nvv }}" >
+        {{item.valor_neto_documento}}
+    </td>
+    <td style="display: none;" id="observacion{{ item.nvv}}">
+        {{ item.observacion }}
+    </td>
+    <td style="display: none;">
+        {{ item.fecha_despacho }}
+    </td>
+    <td style="display: none;">
+        {{ item.condicion_pago }}
+    </td>
+    <td style="display: none;">
+        {% if item.comprobante_pago == "None" %}
+        No
+    {% else %}
+        Si
+    {% endif %}
+    </td>
+    <td style="display: none;">
+        {{ item.tipo_despacho }}
+    </td>
+    
+</tr>

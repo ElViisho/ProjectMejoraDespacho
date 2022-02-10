@@ -1,0 +1,14 @@
+{% extends "AppMejoraDespacho/base.html" %}
+{% load static %}
+
+<!-- Deletes anything loaded into cache, because if user is here it means everything is already submitted -->
+{% block header %}
+<script src="{% static 'js/js_storage_clear.js' %}"></script>
+{% endblock header%}
+
+<!-- Template to show success on deleting order and has a button to go back to main -->
+
+{% block content %}
+<div class="titulo_pagina">Orden eliminada con éxito</div>
+<button type="button" class="button" onclick="window.location='/'">Volver a inicio</button>
+{% endblock content %}

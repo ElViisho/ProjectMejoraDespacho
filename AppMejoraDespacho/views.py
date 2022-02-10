@@ -2,10 +2,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from AppMejoraDespacho.models import *
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.db import connections
 
-from AppMejoraDespacho.form import ingresoForm, deleteForm, editFileForm
+from AppMejoraDespacho.form import ingresoForm, deleteForm, editFileForm, CreateUserForm
 import datetime
 from django.db import connections
 
@@ -16,6 +17,11 @@ from .queries import *
 from django.core.files.storage import FileSystemStorage
 import os 
 
+from django.utils.translation import activate
+
+from .password_reset_token import *
+from django.core.mail import send_mail
+import smtplib
 
 def loginPage(request):
 	'''
@@ -24,6 +30,7 @@ def loginPage(request):
 	it goes back to here inmediately
 	Page: login
 	'''
+	activate('es')
 	context = {}
 	if request.user.is_authenticated:
 		return redirect('main')
@@ -42,7 +49,7 @@ def loginPage(request):
 				context = {"error":" Usuario y/o contraseña incorrecta, vuelva a intentarlo"}
 
 		
-		return render(request, "AppMejoraDespacho/login.html", context)
+		return render(request, "AppMejoraDespacho/user_authentication/login.html", context)
 
 def logoutUser(request):
 	'''
@@ -50,8 +57,114 @@ def logoutUser(request):
 	It redirects to the login page afterwards
 	Page: logout
 	'''
+	activate('es')
 	logout(request)
 	return redirect('login')
+
+def registerPage(request):
+	'''
+	Method that handles the regisration of a new user
+	It redirects to the main page afterwards
+	Page: register_new
+	'''
+	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
+
+	form = CreateUserForm()
+
+	if request.method == "POST":
+		form = CreateUserForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect('confirm_user')
+
+	return render(request, 'AppMejoraDespacho/user_authentication/register_new.html', {'form':form})
+
+def confirm_user(request):
+	'''
+	Funcion para mostrar la pagina de exitosa creación de usuario
+	'''
+	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
+	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_user.html")
+
+def password_reset(request):
+	'''
+	Funcion para mostrar la pagina para resetear la contraseña de un usuario
+	'''
+	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
+
+	context = {}
+	if request.method == "POST":
+		mail = request.POST.get('mail')
+		try:
+			User.objects.get(username=mail)
+
+			token = encoded_reset_token(mail)
+			url = request.get_host()+'/new_password/?id='+token
+
+			send_mail(
+				'Cambio contraseña App despacho Dimaco',
+				'''Se ha generado este mail porque se hizo una solicitud de cambio de contraseña. Para iniciar el proceso anda al siguiente link\n{} \n
+En caso de que no hayas hecho esta solicitud, simplemente ignora este mensaje'''.format(url),
+				None,
+				[mail],
+				fail_silently=False,
+			)
+			return redirect('password_reset_done')
+		except smtplib.SMTPException:
+			context = {"error":"Error al intentar mandar mail. Por favor reintentar"}
+		except User.DoesNotExist:
+			context = {"error":"No existe usuario asociado a mail ingresado."}
+			
+	return render(request, "AppMejoraDespacho/user_authentication/password_reset.html", context)
+def password_reset_done(request):
+	'''
+	Funcion para mostrar la pagina para resetear la contraseña de un usuario
+	'''
+	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
+	
+	return render(request, "AppMejoraDespacho/user_authentication/password_reset_done.html")
+def create_new_password(request):
+	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
+
+	token = request.GET.get('id')
+	mail = decode_reset_token(token)
+	try:
+		user = User.objects.get(username__exact=mail)
+		if request.method == 'POST':
+			password = request.POST.get('password')
+			if (password != request.POST.get('password2')):
+				return render(request, "AppMejoraDespacho/user_authentication/create_new_password.html", {'error': 'Contraseñas no son iguales.'})
+			if len(password) < 8:
+				return render(request, "AppMejoraDespacho/user_authentication/create_new_password.html", {'error': 'Contraseña debe tener al menos 8 caractéres'})
+			first_isalpha = password[0].isalpha()
+			if all(c.isalpha() == first_isalpha for c in password):
+				return render(request, "AppMejoraDespacho/user_authentication/create_new_password.html", {'error': 'Contraseña debe tener al menos una letra y un dígito o símbolo'})
+
+			user.set_password(password)
+			user.save()
+			return redirect('create_new_password_success')
+	except:
+		return render(request, "AppMejoraDespacho/user_authentication/create_new_password_fail.html")
+
+	return render(request, "AppMejoraDespacho/user_authentication/create_new_password.html")
+def create_new_password_success(request):
+	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
+	
+	return render(request, "AppMejoraDespacho/user_authentication/create_new_password_success.html")
+
+
 
 @login_required(login_url='login')
 def main(request):
@@ -59,6 +172,7 @@ def main(request):
 	Renders the base page of the app
 	Page: main
 	'''
+	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
 	permissions = 'Básico'
 	if (len(groups) > 0):
@@ -71,6 +185,7 @@ def submit_nvv_form(request):
 	Renders the form for submitting a new order
 	Page: submit_nvv_form
 	'''
+	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
 	if (not request.user.is_superuser and len(groups)>0 and groups[0] == 'Despacho'):
 		return redirect('main')
@@ -80,7 +195,7 @@ def submit_nvv_form(request):
 		formulario = ingresoForm()
 		for field in formulario:
 			field.field.widget.attrs.update({"class": "form-control"})
-		return render(request, "AppMejoraDespacho/submit_nvv_form.html", {"formulario": formulario})
+		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", {"formulario": formulario})
 	if request.method == "POST":
 		# Get the data from the post into the form and validate it
 		data_obtenida = ingresoForm(request.POST or None, request.FILES or None)
@@ -138,7 +253,7 @@ def submit_nvv_form(request):
 			)		
 			return redirect("confirm_nvv")
 		# If data not valid, rerender the page and don't lose the data that was already there
-		return render(request, "AppMejoraDespacho/submit_nvv_form.html", {"formulario": data_obtenida})
+		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", {"formulario": data_obtenida})
 
 @login_required(login_url='login')
 def confirm_nvv(request):
@@ -146,7 +261,8 @@ def confirm_nvv(request):
 	Renders the page that confirms the succesful submitting of a new order
 	Page: confirm_nvv
 	'''
-	return render(request, "AppMejoraDespacho/confirm_nvv.html")
+	activate('es')
+	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_nvv.html")
 
 @login_required(login_url='login')
 def delete_nvv(request):
@@ -154,6 +270,7 @@ def delete_nvv(request):
 	Renders the form for deleting an order from the database
 	Page: delete_nvv
 	'''
+	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
 	if (not request.user.is_superuser and ((len(groups)>0 and groups[0] != 'Eliminar') or len(groups)==0) ):
 		return redirect('main')
@@ -161,14 +278,14 @@ def delete_nvv(request):
 		formulario = deleteForm()
 		for field in formulario:
 			field.field.widget.attrs.update({"class": "form-control"})
-		return render(request, "AppMejoraDespacho/delete_nvv.html", {"formulario": formulario})
+		return render(request, "AppMejoraDespacho/forms/delete_nvv.html", {"formulario": formulario})
 	if request.method == "POST":
 		data_obtenida = deleteForm(request.POST or None)
 		if data_obtenida.is_valid():
 			cleaned_data = data_obtenida.cleaned_data
 			Ordenes.objects.filter(nvv=cleaned_data['nvv']).delete()
 			return redirect("confirm_delete_nvv")
-		return render(request, "AppMejoraDespacho/delete_nvv.html", {"formulario": data_obtenida})
+		return render(request, "AppMejoraDespacho/forms/delete_nvv.html", {"formulario": data_obtenida})
 
 @login_required(login_url='login')
 def confirm_delete_nvv(request):
@@ -176,7 +293,8 @@ def confirm_delete_nvv(request):
 	Renders the page that confirms the succesful deleting of an order
 	Page: confirm_delete_nvv
 	'''
-	return render(request, "AppMejoraDespacho/confirm_delete_nvv.html")
+	activate('es')
+	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_delete_nvv.html")
 
 @login_required(login_url='login')
 def table_with_guide(request):
@@ -185,6 +303,7 @@ def table_with_guide(request):
 	to tell it to show only the	orders that have a dispatch order
 	Page: table_show
 	'''
+	activate('es')
 	con_guia = "True"
 	return table(request, con_guia)
 @login_required(login_url='login')
@@ -194,12 +313,14 @@ def table_no_guide(request):
 	to tell it to show only the	orders that don't have a dispatch order
 	Page: table_not_show
 	'''
+	activate('es')
 	con_guia = "False"
 	return table(request, con_guia)
 def table(request, con_guia):
 	'''
 	Renders the table with all the current data present in the database
 	'''	
+	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
 	if (not request.user.is_superuser and len(groups)>0 and groups[0] == 'Despacho'):
 		return redirect('main')
@@ -230,7 +351,7 @@ def table(request, con_guia):
 		permissions = groups[0]
 	if (request.user.is_superuser):
 		permissions = "Eliminar"
-	return render(request, "AppMejoraDespacho/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia, "formulario": data_obtenida,})
+	return render(request, "AppMejoraDespacho/tables/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia, "formulario": data_obtenida,})
 
 
 
@@ -241,6 +362,7 @@ def mutable_table_with_guide(request):
 	to tell it to show only the	orders that have a dispatch order
 	Page: mutable_table_show
 	'''
+	activate('es')
 	con_guia = "True"
 	return mutable_table(request, con_guia)
 @login_required(login_url='login')
@@ -250,6 +372,7 @@ def mutable_table_no_guide(request):
 	to tell it to show only the	orders that don't have a dispatch order
 	Page: mutable_table_not_show
 	'''
+	activate('es')
 	con_guia = "False"
 	return mutable_table(request, con_guia)
 def mutable_table(request, con_guia):
@@ -257,6 +380,7 @@ def mutable_table(request, con_guia):
 	Renders the table with all the current data present in the database,
 	whose some data may be changed
 	'''
+	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
 	if (not request.user.is_superuser and len(groups)>0 and groups[0] != 'Despacho'):
 		return redirect('main')
@@ -296,12 +420,13 @@ def mutable_table(request, con_guia):
 		permissions = groups[0]
 	if (request.user.is_superuser):
 		permissions = "Despacho"
-	return render(request, "AppMejoraDespacho/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
+	return render(request, "AppMejoraDespacho/tables/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
 
 def change_numero_guia(nvv, listo):
 	'''
 	Method for changing state of the order listo = not listo (ready to not ready)
 	'''
+	activate('es')
 	if not listo:
 		# Change to not ready and return True so it knows it was succesful
 		Ordenes.objects.filter(nvv=nvv).update(numero_guia='')
@@ -336,4 +461,4 @@ def load_comunas(request):
 	'''
 	region = request.GET.get('region')
 	com = comunas_todas[int(region)]
-	return render(request, 'AppMejoraDespacho/comuna_dropdown_list_options.html', {'comunas': com})
+	return render(request, 'AppMejoraDespacho/utilities/comuna_dropdown_list_options.html', {'comunas': com})

@@ -1,0 +1,42 @@
+{% extends "AppMejoraDespacho/user_authentication/base_auth.html" %}
+{% load static %}}
+<!-- Extends from base_auth.html
+	This template has the logo which is non-clickable and the login form
+ -->
+
+{% block content %}
+	<div class="titulo_pagina">¡Bienvenid@!</div>
+	
+	{%if error%}
+		<div class="alert alert-danger" role="alert" style="text-align: center; margin-left: 15%; margin-right: 15%;">
+			{{ error }}
+		</div>
+	{% endif %}
+	
+	<main class="form-signin">
+		
+		<form action="" method="POST">
+		{% csrf_token %}
+			
+			<h1 class="h1 mb-3 fw-normal"> Iniciar sesión </h1>
+			
+			<div class="form-floating">
+				<input type="text" name="username" placeholder="Username..." class="form-control">
+				<label for="floatingInput">Mail</label>
+			</div>
+			<div class="form-floating">
+				<input type="password" name="password" placeholder="Password..." class="form-control" >
+				<label for="floatingPassword">Contraseña</label>
+			</div>
+
+			<input class="button_iniciar_sesion" type="submit" value="Ingresar"><br>
+				
+			
+			<a href="password_reset"> ¿Olvidaste tu contraseña?</a><br>
+			¿No tienes cuenta? <a href="register_new"> Regístrate</a>
+
+			
+		</form>
+	</main>
+
+{% endblock content %}

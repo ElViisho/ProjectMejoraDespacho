@@ -1,0 +1,129 @@
+{% extends 'AppMejoraDespacho/base.html' %}
+{% load static %}
+{% load tabla_tags %}
+
+<!-- Header for the table  
+    It loads the stylesheet for it, as well as the delete_form (which was done before) for the confirmation prompt.
+    Also loads the different choices for the communes and regions
+    and the necessary files for the DataTables plugin
+-->
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/tabla.css' %}">
+<link rel="stylesheet" href="{% static 'css/delete_form.css' %}">
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.2.1/b-colvis-2.2.1/b-html5-2.2.1/r-2.2.9/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.2.1/b-colvis-2.2.1/b-html5-2.2.1/r-2.2.9/datatables.min.js"></script>
+
+<script src="https://cdn.datatables.net/plug-ins/preview/scrollToTop/dataTables.scrollToTop.min.js"></script>
+{% endblock header%}
+
+
+
+{% block content %}
+
+<div class="mensajeAlerta">
+	{% if formulario.errors %}
+		{% for field in formulario %}
+			{% for error in field.errors %}
+				<div class="alert alert-danger" role="alert" style="text-align: center; margin-left: 15%; margin-right: 15%;">
+					{{ error|escape }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+	{% endif %}
+</div>
+
+
+<!-- Start Table -->
+<div class="table-responsive table-l">
+    <table class="table table-hover table-image" id="listado">
+        <thead>
+            <!-- First row to show what each column means -->
+            <tr class="text-center display nowrap">
+                <th></th>
+                <th>NVV</th>
+                <th>Fecha solicitud</th>
+                <th>Comuna destino</th>
+                <th>Dirección destino</th>
+                <th>Nombre contacto</th>
+                <th>Teléfono contacto</th>
+                <th>Estado pedido</th>
+                <th>Fecha despacho asignada</th>
+                <th>Horario despacho asignado</th>
+                <th style="display: none;">Datos extra</th> <!-- These aren't displayed but are necessary -->
+                <th style="display: none;">Estado</th>      <!-- because here is where all the extra data is, -->
+                <th style="display: none;">Valor neto</th>  <!-- for the child rows and the export to excel -->
+                <th style="display: none;">Observación</th>  <!--  -->
+                <th style="display: none;">Fecha despacho solicitada</th>  <!-- -->
+                <th style="display: none;">Condición de pago</th>  <!--  -->
+                <th style="display: none;">Comprobante de pago asociado</th>  <!--  -->
+                <th style="display: none;">Forma de transporte</th> <!--  -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Check wether user wants to see the items with a guide number or without, and based on that
+                decide which items to show    
+            -->
+            {% for item in queryset %}
+                {% if con_guia == 'True' %}
+                    {% if item.listo == 1 %}
+                        {% include 'AppMejoraDespacho/tables/table_data.html' %}
+                    {% endif %}
+                {% else %}
+                    {% if item.listo == 0 %}
+                        {% include 'AppMejoraDespacho/tables/table_data.html' %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        <tfoot>
+            <!-- Foot of the table, same as the header, just for clarity of things -->
+            <tr class="text-center display nowrap">
+                <th></th>
+                <th>NVV</th>
+                <th>Fecha solicitud</th>
+                <th>Comuna destino</th>
+                <th>Dirección destino</th>
+                <th>Nombre contacto</th>
+                <th>Teléfono contacto</th>
+                <th>Estado pedido</th>
+                <th>Fecha despacho asignada</th>
+                <th>Horario despacho asignado</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<!-- The button to show the ones with or without guide number, based on what it is showing right now -->
+{% if con_guia == 'True'%}
+    <input class="boton_ocultar" onclick="window.location='table'" id="boton_ocultar" value="Mostrar ordenes sin despachar" readonly>
+{% else %} 
+    <input class="boton_ocultar" onclick="window.location='table_with_guide'" id="boton_ocultar" value="Mostrar ordenes despachadas" readonly>
+{% endif %}
+
+
+<div id="form_div" style="display: none;">
+    <form class="form" action="" method="POST" enctype="multipart/form-data" id ="formulario">
+        {% csrf_token %}
+        <nobr>
+            <label for="id_nuevo_comprobante_pago" class="custom-file-upload"><i class="fa fa-cloud-upload"></i> Elegir nuevo comprobante de pago</label> 
+            <div id="file_name"></div>
+            {{ formulario.nuevo_comprobante_pago }}
+            {{ formulario.nvv_for_submit }}
+            <input class="nuevo_comprobante_submit" value="Subir" onclick="prompt_confirm()" name="submit" style="display: none;" disabled readonly>
+        </nobr>
+
+        <!-- Prompt for the user to confirm the deletion -->
+        <div id ="confirm_prompt_background" class="confirm_prompt_background" style="display: none;"></div>
+        <div id="confirm_prompt" class="confirm_prompt" style="display: none;">
+        <div id="confirm_texto" class="confirm_texto"></div>
+        <input class="btn" id="boton_confirm" type="submit" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
+        
+    </form>
+</div>
+
+<script>var permissions = '{{ permissions }}';</script>
+<script src="{% static 'js/js_tabla.js' %}"></script>
+
+
+{% endblock content %}

@@ -1,0 +1,71 @@
+{% extends 'AppMejoraDespacho/base.html' %}
+{% load static %}
+
+<!-- This has the form stylesheet as well as the delete_form one, to stylize the form.
+    It also has the necessary files for the "select2" plugin, which makes the select field,
+    searchable.
+-->
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<link rel="stylesheet" href="{% static 'css/delete_form.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{% endblock header%}
+
+{% block content %}
+<!-- Simple rendering of the django deleteForm describe in forms.py -->
+<form action= "" class="formulario" id="formulario" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+<div class="form-group block-form">
+    <label>{{ formulario.nvv.label }}</label><br>
+    {{ formulario.nvv }}
+</div>
+<input class="btn btn-default boton-sumbit" onclick="prompt_confirm()" id="boton" disabled value="Eliminar" readonly> <!-- Calls the prompt to be shown -->
+
+<!-- Prompt for the user to confirm the deletion -->
+<div id ="confirm_prompt_background" class="confirm_prompt_background" style="display: none;"></div>
+<div id="confirm_prompt" class="confirm_prompt" style="display: none;">
+<div id="confirm_texto" class="confirm_texto"></div>
+<input class="btn" id="boton_confirm" type="submit" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
+</div>
+</form>
+
+<script>
+    $(document).ready(function() {
+		// Initiate selector with select2 plugin
+        $('#id_nvv').select2();
+	});
+
+    // If none nvv is selected, then the button is disabled
+    $('#id_nvv').change(function () {
+        if ($(this).val() == "None") {
+            $('#boton').prop('disabled', true);
+        }
+        else {
+            $('#boton').prop('disabled', false);
+        }
+    })
+
+    // Shows prompt for confirming if user wants to delete the selected order
+    function prompt_confirm() {
+        $('#confirm_texto').html(`¿Confirmas que quieres eliminar la nota de venta ${$('#id_nvv').val()}? <br>`);
+        $('#confirm_prompt_background').show();
+        $('#confirm_prompt').show();
+        $('#confirm_texto').show();
+        $('#boton_confirm').show();
+        $('#boton_cancel').show();
+    }
+
+    // Function to cancel the deletion
+    function cancelar() {
+        $('#confirm_prompt_background').hide();
+        $('#confirm_prompt').hide();
+        $('#confirm_texto').hide();
+        $('#boton_confirm').hide();
+        $('#boton_cancel').hide();
+    }
+
+</script>
+
+
+{% endblock content %}

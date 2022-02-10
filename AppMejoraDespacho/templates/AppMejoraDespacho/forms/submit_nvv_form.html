@@ -1,0 +1,112 @@
+{% extends 'AppMejoraDespacho/base.html' %}
+{% load static %}
+
+<!-- It loads the form stylesheet,
+	files for the select2 plugin
+	and files for the telephone input plugin
+-->
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+{% endblock header%}
+
+{% block content %}
+
+<!-- Title of the page -->
+<div class="titulo_pagina d-flex justify-content-center">Ingresa una nueva orden de despacho</div>
+<!-- Display the form validation errors in case there are -->
+<div class="mensajeAlerta">
+	{% if formulario.errors %}
+		{% for field in formulario %}
+			{% for error in field.errors %}
+				<div class="alert alert-danger" role="alert" style="text-align: center; margin-left: 15%; margin-right: 15%;">
+					{{ error|escape }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+	{% endif %}
+</div>
+
+<!-- Display the submition form -->
+<form class="form" action="" method="POST" enctype="multipart/form-data"id ="formulario">
+{% csrf_token %}
+
+<!-- Go through each field on the form -->
+{% for field in formulario %}
+	<!-- If it's field to select dispatch type, put a label below the external dispatch option in case this one is selected -->
+	{% if field.name == "tipo_despacho" %}
+	<div class="form-group block-form">
+		<label>{{ field.label }}</label><br>
+		{{ field }}
+		{{ formulario.despacho_externo }}
+		{{ formulario.direccion_despacho_externo }}
+	</div>
+	<div class="form-group block-form">
+		<label>Datos destino del material</label>
+		<div id = "region_div">
+			<label class="sublabel">Región de despacho</label>
+			{{ formulario.region }}
+		</div>
+			<label class="sublabel">Comuna de despacho</label>
+			{{ formulario.comuna }}
+			<label class="sublabel">Dirección de despacho</label>
+			{{ formulario.direccion }}
+	</div>
+	<!-- If it's field to submit a file, display the custom button done for it -->
+	{% elif field.name == "comprobante_pago" %}
+	<div class="form-group block-form">
+	<nobr>
+		<label>{{ field.label }}</label>
+		<label for="id_comprobante_pago" class="custom-file-upload"><i class="fa fa-cloud-upload"></i> Subir archivo</label> 
+		<div id="file_name"></div>
+		{{ field }}
+	</nobr>
+	</div>
+	<!-- If it is the first parameter of the hour field, create the blocks for rendering them correctly -->
+	{% elif field.name == "hora_despacho_inicio" %}
+	<div class="form-group block-form">
+		<label>{{ field.label }}</label>
+		<label class="hour_explain">En caso de haber horario en el que no se puede despachar, ingresar los rangos válidos de despacho. <br>
+				Ej: horario despacho 11-18 con hora de almuerzo 14-16, ingresar horarios de despacho 11-14 y 16-18</label><br>
+		<table class="table">
+			<tbody>
+				<nobr>
+				<tr class="text-center">
+					<div class="selector_hora">
+						<td>Rango 1</td>
+						<td>{{ field }} </td>
+						<td>{{ formulario.hora_despacho_fin }}</td>
+					</div>
+				</tr>
+				<tr class="text-center">
+					<div class="selector_hora">
+						<td>Rango 2 (opcional)</td>
+						<td>{{ formulario.hora_despacho_extra_inicio }}</td>
+						<td>{{ formulario.hora_despacho_extra_fin }}</td>
+					</div>
+				</tr>
+				</nobr>
+			</tbody>
+		</table>
+	</div>
+	<!-- if it's any of this fields, don't display anything  -->
+	{% elif field.name == "hora_despacho_fin" or field.name == "hora_despacho_extra_inicio" or field.name == "hora_despacho_extra_fin" or field.name == "despacho_externo" or field.name == "direccion_despacho_externo" or field.name == "region" or field.name == "comuna" or field.name == "direccion" %}
+	<!-- If it's no special case, just display the label with the field -->
+	{% else %}
+	<div class="form-group block-form">
+		<label>{{ field.label }}</label>
+		{{ field }}
+	</div>
+	{% endif %}
+{% endfor %}
+<!-- Button for submitting the form -->
+<input class="btn btn-default" class="boton-sumbit" id="boton" type="submit" value="Subir" disabled readonly>
+</form>
+
+<!-- Load the javascript of this template -->
+<script src="{% static 'js/js_form.js' %}"></script>
+
+{% endblock content %}

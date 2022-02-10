@@ -1,0 +1,32 @@
+{% load static %}
+{% load i18n %}
+{% language 'es' %}
+<!--
+    Base template for when user is not signed in
+-->
+<!DOCTYPE html>
+
+<html lang="es">
+    <head>
+		<meta charset="UTF-8">
+		<title>Dimaco</title>
+		<link rel="icon"href="{% static 'favicon.ico' %}">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+		<link rel="stylesheet" href="{% static 'css/login.css' %}">
+        {% block header %}{% endblock header %}
+    </head>
+    
+    <!-- Esential code for every page, 
+        it has the go back to main button,
+        the logo of Dimaco 
+        and the logout link.
+        It has a block called "content" where each child defines the body of the page
+    -->
+    <body class="text-center" style="background-color: #dfdfdf;">
+        <h1 class="titleeep" style="text-align: center;">
+			<img src="{% static 'images/logo.png'%}" onclick="window.location='login'" style="cursor: pointer; margin-bottom: 30px; width: 250px; height: 55px; margin-top: 9px;"></h1>
+    
+        {% block content %}{% endblock content %}
+    </body>
+</html>
+{% endlanguage %}

@@ -1,0 +1,101 @@
+{% extends 'AppMejoraDespacho/base.html' %}
+{% load static %}
+{% load tabla_tags %}
+
+<!-- Header for the table  
+    It loads the stylesheet for it, as well as the delete_form (which was done before) for the confirmation prompt.
+    Also loads the different choices for the communes and regions
+    and the necessary files for the DataTables plugin
+-->
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/tabla.css' %}">
+<link rel="stylesheet" href="{% static 'css/delete_form.css' %}">
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.2.1/b-colvis-2.2.1/b-html5-2.2.1/r-2.2.9/datatables.min.css"/>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/jszip-2.5.0/dt-1.11.3/b-2.2.1/b-colvis-2.2.1/b-html5-2.2.1/r-2.2.9/datatables.min.js"></script>
+
+<script src="https://cdn.datatables.net/plug-ins/preview/scrollToTop/dataTables.scrollToTop.min.js"></script>
+{% endblock header%}
+
+
+
+{% block content %}
+<!-- Start Table -->
+<div class="table-responsive table-l">
+    <table class="table table-hover table-image" id="listado">
+        <thead>
+            <!-- First row to show what each column means -->
+            <tr class="text-center display nowrap">
+                <th></th>
+                <th>NVV</th>
+                <th>Fecha solicitud</th>
+                <th>Tipo despacho</th>
+                <th>Comuna destino</th>
+                <th>Dirección destino</th>
+                <th>Estado despacho</th>
+                <th>Fecha despacho</th>
+                <th>Hora despacho solicitada</th>
+                <th>Rango horario</th>
+                <th>Estado pedido</th>
+                <th style="display: none;">Datos extra</th>             <!--  -->
+                <th style="display: none;">Estado</th>                  <!-- These aren't displayed but are necessary-->
+                <th style="display: none;">Valor neto</th>              <!-- because here is where all the extra data -->
+                <th style="display: none;">Rango horario</th>           <!-- is, for the child rows and the export to excel -->
+                <th style="display: none;">Estado pedido</th>           <!--  -->
+                <th style="display: none;">Observación despacho</th>    <!--  -->
+                <th style="display: none;">Fecha despacho</th>    <!--  -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Check wether user wants to see the items with a guide number or without, and based on that
+                decide which items to show    
+            -->
+            {% for item in queryset %}
+                {% if con_guia == 'True' %}
+                    {% if item.listo == 1 %}
+                        {% include 'AppMejoraDespacho/tables/mutable_table_data.html' %}
+                    {% endif %}
+                {% else %}
+                    {% if item.listo == 0 %}
+                        {% include 'AppMejoraDespacho/tables/mutable_table_data.html' %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        <tfoot>
+            <!-- Foot of the table, same as the header, just for clarity of things -->
+            <tr class="text-center display nowrap">
+                <th></th>
+                <th>NVV</th>
+                <th>Fecha solicitud</th>
+                <th>Tipo despacho</th>
+                <th>Comuna destino</th>
+                <th>Dirección destino</th>
+                <th>Estado despacho</th>
+                <th>Fecha despacho</th>
+                <th>Hora despacho solicitada</th>
+                <th>Rango horario</th>
+                <th>Estado pedido</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<!-- The button to show the ones with or without guide number, based on what it is showing right now -->
+{% if con_guia == 'True'%}
+    <input class="boton_ocultar" onclick="window.location='mutable_table'" id="boton_ocultar" value="Mostrar ordenes sin despachar" readonly>
+{% else %} 
+    <input class="boton_ocultar" onclick="window.location='mutable_table_with_guide'" id="boton_ocultar" value="Mostrar ordenes despachadas" readonly>
+{% endif %}
+
+<!-- The confirmation prompt for when user wants to mark order as ready -->
+<div id ="confirm_prompt_background" class="confirm_prompt_background" style="display: none;"></div>
+<div id="confirm_prompt" class="confirm_prompt" style="display: none;">
+<div id="confirm_texto" class="confirm_texto"></div>
+<input class="btn" onclick="confirmar()" id="boton_confirm" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
+
+<script>var permissions = "{{ permissions }}";</script> <!-- Has to define here, otherwise it wouldn't work, but it is needed in the javaScript below -->
+<script src="{% static 'js/js_mutable_tabla.js' %}"></script>
+
+
+{% endblock content %}

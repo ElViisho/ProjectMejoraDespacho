@@ -1,6 +1,8 @@
 from django import forms
 from AppMejoraDespacho.models import *
 from django.forms.widgets import NumberInput
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 from django.db import connections
 import datetime 
@@ -9,6 +11,39 @@ from .queries import query_get_relevant_NVVs
 
 from file_resubmit.admin import AdminResubmitFileWidget
 from phonenumber_field.formfields import PhoneNumberField
+
+# Form for creating a new user in the database
+class CreateUserForm(UserCreationForm):
+    username = forms.CharField(required=False)
+    firstname = forms.CharField(label='Nombre', min_length=2, max_length=150, required=False)
+    email = forms.EmailField(label='Mail', min_length=5, max_length=150)  
+    password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput(attrs={'placeholder': 'Contraseña', 'class':'form-control'}))  
+    password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput(attrs={'placeholder': 'Confirmar contraseña', 'class':'form-control'}))  
+
+    # Add new init method to add the attrs to the field
+    def __init__(self, *args, **kwargs):
+        super(CreateUserForm, self).__init__(*args, **kwargs)
+        self.fields['firstname'].widget.attrs.update({'placeholder': 'María', 'class':'form-control'})
+        self.fields['email'].widget.attrs.update({'placeholder': 'ejemplo@dimacosac.cl', 'class':'form-control'})
+
+    def clean_email(self):
+        mail = self.cleaned_data['email']
+        try:
+            user = User.objects.get(username=mail)
+        except User.DoesNotExist:
+            return mail
+        raise forms.ValidationError(u'Mail "%s" ya está registrado.' % mail)
+
+    def save(self, commit = True):
+        user = User.objects.create_user(  
+            self.cleaned_data['email'],  
+            self.cleaned_data['email'],  
+            self.cleaned_data['password1']
+        )
+        user.first_name = self.cleaned_data['firstname']
+        user.save()
+        return user
+        
 
 def validate_file(file):
     '''
