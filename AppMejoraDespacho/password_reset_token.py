@@ -8,7 +8,7 @@ def encoded_reset_token(user_id):
         'exp': datetime.utcnow() + timedelta(seconds=settings.JWT_EXP_DELTA_SECONDS)
     }
     encoded_data = jwt.encode(payload, settings.JWT_SECRET, settings.JWT_ALGORITHM)
-    return  encoded_data.decode('utf-8')
+    return  encoded_data
 
 def decode_reset_token(reset_token):
     try:

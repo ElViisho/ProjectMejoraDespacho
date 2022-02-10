@@ -86,6 +86,8 @@ def confirm_user(request):
 	Funcion para mostrar la pagina de exitosa creación de usuario
 	'''
 	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
 	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_user.html")
 
 def password_reset(request):
@@ -93,6 +95,8 @@ def password_reset(request):
 	Funcion para mostrar la pagina para resetear la contraseña de un usuario
 	'''
 	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
 
 	context = {}
 	if request.method == "POST":
@@ -100,21 +104,20 @@ def password_reset(request):
 		try:
 			User.objects.get(username=mail)
 
+			token = encoded_reset_token(mail)
+			url = request.get_host()+'/new_password/?id='+token
+
 			send_mail(
-				'Reset contraseña App despacho Dimaco',
-				'Se ha generado este mail para cambiar',
+				'Cambio contraseña App despacho Dimaco',
+				'''Se ha generado este mail porque se hizo una solicitud de cambio de contraseña. Para iniciar el proceso anda al siguiente link\n{} \n
+En caso de que no hayas hecho esta solicitud, simplemente ignora este mensaje'''.format(url),
 				None,
 				[mail],
 				fail_silently=False,
 			)
-			'''
-			user = User.objects.get(username__exact='john')
-			user.set_password('new password')
-			user.save()
-			'''
 			return redirect('password_reset_done')
 		except smtplib.SMTPException:
-			context = {"error":"Error al intentar mandar mail. Por favor, reintentar"}
+			context = {"error":"Error al intentar mandar mail. Por favor reintentar"}
 		except User.DoesNotExist:
 			context = {"error":"No existe usuario asociado a mail ingresado."}
 			
@@ -124,7 +127,44 @@ def password_reset_done(request):
 	Funcion para mostrar la pagina para resetear la contraseña de un usuario
 	'''
 	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
+	
 	return render(request, "AppMejoraDespacho/user_authentication/password_reset_done.html")
+def create_new_password(request):
+	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
+
+	token = request.GET.get('id')
+	mail = decode_reset_token(token)
+	try:
+		user = User.objects.get(username__exact=mail)
+		if request.method == 'POST':
+			password = request.POST.get('password')
+			if (password != request.POST.get('password2')):
+				return render(request, "AppMejoraDespacho/user_authentication/create_new_password.html", {'error': 'Contraseñas no son iguales.'})
+			if len(password) < 8:
+				return render(request, "AppMejoraDespacho/user_authentication/create_new_password.html", {'error': 'Contraseña debe tener al menos 8 caractéres'})
+			first_isalpha = password[0].isalpha()
+			if all(c.isalpha() == first_isalpha for c in password):
+				return render(request, "AppMejoraDespacho/user_authentication/create_new_password.html", {'error': 'Contraseña debe tener al menos una letra y un dígito o símbolo'})
+
+			user.set_password(password)
+			user.save()
+			return redirect('create_new_password_success')
+	except:
+		return render(request, "AppMejoraDespacho/user_authentication/create_new_password_fail.html")
+
+	return render(request, "AppMejoraDespacho/user_authentication/create_new_password.html")
+def create_new_password_success(request):
+	activate('es')
+	if request.user.is_authenticated:
+		return redirect('main')
+	
+	return render(request, "AppMejoraDespacho/user_authentication/create_new_password_success.html")
+
+
 
 @login_required(login_url='login')
 def main(request):
