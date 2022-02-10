@@ -26,6 +26,14 @@ class CreateUserForm(UserCreationForm):
         self.fields['firstname'].widget.attrs.update({'placeholder': 'María', 'class':'form-control'})
         self.fields['email'].widget.attrs.update({'placeholder': 'ejemplo@dimacosac.cl', 'class':'form-control'})
 
+    def clean_email(self):
+        mail = self.cleaned_data['email']
+        try:
+            user = User.objects.get(username=mail)
+        except User.DoesNotExist:
+            return mail
+        raise forms.ValidationError(u'Mail "%s" ya está registrado.' % mail)
+
     def save(self, commit = True):
         user = User.objects.create_user(  
             self.cleaned_data['email'],  
@@ -35,6 +43,7 @@ class CreateUserForm(UserCreationForm):
         user.first_name = self.cleaned_data['firstname']
         user.save()
         return user
+        
 
 def validate_file(file):
     '''
