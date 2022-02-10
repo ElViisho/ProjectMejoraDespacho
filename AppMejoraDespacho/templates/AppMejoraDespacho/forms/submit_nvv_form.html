@@ -1,6 +1,5 @@
 {% extends 'AppMejoraDespacho/base.html' %}
 {% load static %}
-{% load i18n %}
 
 <!-- It loads the form stylesheet,
 	files for the select2 plugin
@@ -15,8 +14,6 @@
 {% endblock header%}
 
 {% block content %}
-
-{% language 'es' %}
 
 <!-- Title of the page -->
 <div class="titulo_pagina d-flex justify-content-center">Ingresa una nueva orden de despacho</div>
@@ -111,7 +108,5 @@
 
 <!-- Load the javascript of this template -->
 <script src="{% static 'js/js_form.js' %}"></script>
-
-{% endlanguage %}
 
 {% endblock content %}

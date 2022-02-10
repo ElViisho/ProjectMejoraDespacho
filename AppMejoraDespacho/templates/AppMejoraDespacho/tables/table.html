@@ -1,6 +1,5 @@
 {% extends 'AppMejoraDespacho/base.html' %}
 {% load static %}
-{% load i18n %}
 {% load tabla_tags %}
 
 <!-- Header for the table  
@@ -21,7 +20,6 @@
 
 
 {% block content %}
-{% language 'es' %}
 
 <div class="mensajeAlerta">
 	{% if formulario.errors %}
@@ -124,7 +122,6 @@
     </form>
 </div>
 
-{% endlanguage %}
 <script>var permissions = '{{ permissions }}';</script>
 <script src="{% static 'js/js_tabla.js' %}"></script>
 
