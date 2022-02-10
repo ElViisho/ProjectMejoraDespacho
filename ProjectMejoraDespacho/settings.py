@@ -157,3 +157,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# For the password reset
+JWT_SECRET = SECRET_KEY  # use settings secret key for JWT secret
+JWT_ALGORITHM = 'HS256'
+JWT_EXP_DELTA_SECONDS = 86400
+
+DEFAULT_FROM_EMAIL = 'vicente.videla@dimacosac.cl'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'vicente.videla@dimacosac.cl'
+EMAIL_HOST_PASSWORD = '*********'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

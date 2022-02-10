@@ -19,6 +19,10 @@ import os
 
 from django.utils.translation import activate
 
+from .password_reset_token import *
+from django.core.mail import send_mail
+import smtplib
+
 def loginPage(request):
 	'''
 	Renders the login page
@@ -95,9 +99,24 @@ def password_reset(request):
 		mail = request.POST.get('mail')
 		try:
 			User.objects.get(username=mail)
+
+			send_mail(
+				'Reset contraseña App despacho Dimaco',
+				'Se ha generado este mail para cambiar',
+				None,
+				[mail],
+				fail_silently=False,
+			)
+			'''
+			user = User.objects.get(username__exact='john')
+			user.set_password('new password')
+			user.save()
+			'''
 			return redirect('password_reset_done')
-		except:
-			context = {"error":" No existe usuario asociado a mail ingresado."}
+		except smtplib.SMTPException:
+			context = {"error":"Error al intentar mandar mail. Por favor, reintentar"}
+		except User.DoesNotExist:
+			context = {"error":"No existe usuario asociado a mail ingresado."}
 			
 	return render(request, "AppMejoraDespacho/user_authentication/password_reset.html", context)
 def password_reset_done(request):
