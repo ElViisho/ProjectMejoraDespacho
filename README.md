@@ -57,7 +57,6 @@ Instalados con pip:
 - [django-allauth](https://django-allauth.readthedocs.io/en/latest/installation.html)
 
 Otros:
-- [Google OAuth](https://developers.google.com/identity/protocols/oauth2)
 - [Bootstrap](https://getbootstrap.com/)
 - [jQuery](https://jquery.com/)
 - [Select2](https://select2.org/)

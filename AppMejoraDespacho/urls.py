@@ -20,5 +20,7 @@ urlpatterns = [
     path('ajax/load-comunas/', views.load_comunas, name='ajax_load_comunas'),
 
     path('login', views.loginPage, name='login'),
+    path('register_new', views.registerPage, name='register_new'),
+    path('confirm_user', views.confirm_user, name='confirm_user'),
     path('logout', views.logoutUser, name='logout'),
 ]

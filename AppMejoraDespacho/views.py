@@ -5,9 +5,10 @@ from AppMejoraDespacho.models import *
 from django.contrib.auth.decorators import login_required
 from django.db import connections
 
-from AppMejoraDespacho.form import ingresoForm, deleteForm, editFileForm
+from AppMejoraDespacho.form import ingresoForm, deleteForm, editFileForm, CreateUserForm
 import datetime
 from django.db import connections
+from django.contrib import messages
 
 from ProjectMejoraDespacho.settings import MEDIA_ROOT
 
@@ -52,6 +53,26 @@ def logoutUser(request):
 	'''
 	logout(request)
 	return redirect('login')
+
+def registerPage(request):
+	if request.user.is_authenticated:
+		return redirect('main')
+
+	form = CreateUserForm()
+
+	if request.method == "POST":
+		form = CreateUserForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect('confirm_user')
+
+	return render(request, 'AppMejoraDespacho/register_new.html', {'form':form})
+
+def confirm_user(request):
+	'''
+	Funcion para mostrar la pagina de exitosa creación de usuario
+	'''
+	return render(request, "AppMejoraDespacho/confirm_user.html")
 
 @login_required(login_url='login')
 def main(request):

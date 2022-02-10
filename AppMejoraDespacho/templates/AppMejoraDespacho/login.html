@@ -1,27 +1,57 @@
 {% load static %}
-{% load socialaccount %}
+{% load i18n %}
 
 <!-- Does not extend from base.html
-	This template has the logo which is non-clickable and the login button
-	that redirects to google to be authenticated
+	This template has the logo which is non-clickable and the login form
  -->
+{% language 'es' %}
 <!DOCTYPE html>
 	<head>
 		<meta charset="UTF-8">
 		<title>Dimaco</title>
 		<link rel="icon"href="{% static 'favicon.ico' %}">
-		<link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 		<link rel="stylesheet" href="{% static 'css/login.css' %}">
     </head>
 
-	<body style="background-color: #dfdfdf;">
-		<h1 class="titlep" style="cursor: default; text-align: center;">
-			<img src="{% static 'images/logo.png'%}" style="width: 250px; height: 55px;"></h1>
-        <main class="form-signin">
-            <form action="{% provider_login_url 'google' %}" method="post">
-                {% csrf_token %}
-				<input type="submit" value="Iniciar sesión" class="button_iniciar_sesion" readonly>
-            </form>
+	<body class="text-center" style="background-color: #dfdfdf;">
+		<h1 class="titleeep" style="text-align: center;">
+			<img src="{% static 'images/logo.png'%}" style=" width: 250px; height: 55px; margin-top: 9px;"></h1>
+
+		<div class="titulo_pagina">¡Bienvenid@!</div>
+		
+		{%if error%}
+			<div class="alert alert-danger" role="alert" style="text-align: center; margin-left: 15%; margin-right: 15%;">
+				{{ error }}
+			</div>
+		{% endif %}
+		
+		<main class="form-signin">
+			
+            <form action="" method="POST">
+            {% csrf_token %}
+				
+				<h1 class="h1 mb-3 fw-normal"> Iniciar sesión </h1>
+				
+                <div class="form-floating">
+                    <input type="text" name="username" placeholder="Username..." class="form-control">
+                    <label for="floatingInput">Nombre de Usuario</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" name="password" placeholder="Password..." class="form-control" >
+                    <label for="floatingPassword">Contraseña</label>
+                </div>
+
+				<input class="button_iniciar_sesion" type="submit" value="Ingresar"><br>
+                  
+                
+				<a href="password_reset"> ¿Olvidaste tu contraseña?</a><br>
+				¿No tienes cuenta? <a href="register_new"> Regístrate</a>
+
+				
+        	</form>
         </main>
 	</body>
+
 </html>
+{% endlanguage %}
