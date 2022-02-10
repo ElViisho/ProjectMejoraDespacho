@@ -22,7 +22,7 @@
     -->
     <body class="text-center" style="background-color: #dfdfdf;">
         <h1 class="titleeep" style="text-align: center;">
-			<img src="{% static 'images/logo.png'%}" style=" width: 250px; height: 55px; margin-top: 9px;"></h1>
+			<img src="{% static 'images/logo.png'%}" onclick="window.location='login'" style="cursor: pointer; width: 250px; height: 55px; margin-top: 9px;"></h1>
     
         {% block content %}{% endblock content %}
     </body>

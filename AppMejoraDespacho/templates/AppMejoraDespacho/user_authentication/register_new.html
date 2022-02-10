@@ -26,13 +26,22 @@
         <form method="POST" action="">
             {% csrf_token %}
 
-            {% for field in form %}
-
-                <div class="form-floating">
-                    {{ field }}
-                    <label for="floatingInput">{{ field.label }}</label>
-                </div>
-            {% endfor %}
+            <div class="form-floating">
+                {{ form.firstname }}
+                <label for="floatingInput">{{ form.firstname.label }}</label>
+            </div>
+            <div class="form-floating">
+                {{ form.email }}
+                <label for="floatingInput">{{ form.email.label }}</label>
+            </div>
+            <div class="form-floating">
+                {{ form.password1 }}
+                <label for="floatingInput">{{ form.password1.label }}</label>
+            </div>
+            <div class="form-floating">
+                {{ form.password2 }}
+                <label for="floatingInput">{{ form.password2.label }}</label>
+            </div>
             
             <input class="button_iniciar_sesion" type="submit" value="Registrarse"><br>
         </form>

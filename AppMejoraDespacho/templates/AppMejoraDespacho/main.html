@@ -13,7 +13,7 @@
     and, if it has the privilege, delete an order from the datbase 
  -->
 {% block content %}
-<div class="titulo_pagina">¡Bienvenid@ {{ user.username }}!</div>
+<div class="titulo_pagina">¡Bienvenid@ {{ user.first_name }}!</div>
 {% if user.is_superuser %}
     <button type="button" class="button" onclick="window.location='submit_nvv_form'">Nueva orden de despacho</button>
     <button type="button" class="button" onclick="window.location='table'">Revisar estado de despacho</button>

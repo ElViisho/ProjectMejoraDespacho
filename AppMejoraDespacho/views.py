@@ -17,6 +17,7 @@ from .queries import *
 from django.core.files.storage import FileSystemStorage
 import os 
 
+from django.utils.translation import activate
 
 def loginPage(request):
 	'''
@@ -25,6 +26,7 @@ def loginPage(request):
 	it goes back to here inmediately
 	Page: login
 	'''
+	activate('es')
 	context = {}
 	if request.user.is_authenticated:
 		return redirect('main')
@@ -51,10 +53,17 @@ def logoutUser(request):
 	It redirects to the login page afterwards
 	Page: logout
 	'''
+	activate('es')
 	logout(request)
 	return redirect('login')
 
 def registerPage(request):
+	'''
+	Method that handles the regisration of a new user
+	It redirects to the main page afterwards
+	Page: register_new
+	'''
+	activate('es')
 	if request.user.is_authenticated:
 		return redirect('main')
 
@@ -72,6 +81,7 @@ def confirm_user(request):
 	'''
 	Funcion para mostrar la pagina de exitosa creación de usuario
 	'''
+	activate('es')
 	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_user.html")
 
 @login_required(login_url='login')
@@ -80,6 +90,7 @@ def main(request):
 	Renders the base page of the app
 	Page: main
 	'''
+	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
 	permissions = 'Básico'
 	if (len(groups) > 0):
@@ -92,6 +103,7 @@ def submit_nvv_form(request):
 	Renders the form for submitting a new order
 	Page: submit_nvv_form
 	'''
+	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
 	if (not request.user.is_superuser and len(groups)>0 and groups[0] == 'Despacho'):
 		return redirect('main')
@@ -167,6 +179,7 @@ def confirm_nvv(request):
 	Renders the page that confirms the succesful submitting of a new order
 	Page: confirm_nvv
 	'''
+	activate('es')
 	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_nvv.html")
 
 @login_required(login_url='login')
@@ -175,6 +188,7 @@ def delete_nvv(request):
 	Renders the form for deleting an order from the database
 	Page: delete_nvv
 	'''
+	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
 	if (not request.user.is_superuser and ((len(groups)>0 and groups[0] != 'Eliminar') or len(groups)==0) ):
 		return redirect('main')
@@ -197,6 +211,7 @@ def confirm_delete_nvv(request):
 	Renders the page that confirms the succesful deleting of an order
 	Page: confirm_delete_nvv
 	'''
+	activate('es')
 	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_delete_nvv.html")
 
 @login_required(login_url='login')
@@ -206,6 +221,7 @@ def table_with_guide(request):
 	to tell it to show only the	orders that have a dispatch order
 	Page: table_show
 	'''
+	activate('es')
 	con_guia = "True"
 	return table(request, con_guia)
 @login_required(login_url='login')
@@ -215,12 +231,14 @@ def table_no_guide(request):
 	to tell it to show only the	orders that don't have a dispatch order
 	Page: table_not_show
 	'''
+	activate('es')
 	con_guia = "False"
 	return table(request, con_guia)
 def table(request, con_guia):
 	'''
 	Renders the table with all the current data present in the database
 	'''	
+	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
 	if (not request.user.is_superuser and len(groups)>0 and groups[0] == 'Despacho'):
 		return redirect('main')
@@ -262,6 +280,7 @@ def mutable_table_with_guide(request):
 	to tell it to show only the	orders that have a dispatch order
 	Page: mutable_table_show
 	'''
+	activate('es')
 	con_guia = "True"
 	return mutable_table(request, con_guia)
 @login_required(login_url='login')
@@ -271,6 +290,7 @@ def mutable_table_no_guide(request):
 	to tell it to show only the	orders that don't have a dispatch order
 	Page: mutable_table_not_show
 	'''
+	activate('es')
 	con_guia = "False"
 	return mutable_table(request, con_guia)
 def mutable_table(request, con_guia):
@@ -278,6 +298,7 @@ def mutable_table(request, con_guia):
 	Renders the table with all the current data present in the database,
 	whose some data may be changed
 	'''
+	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
 	if (not request.user.is_superuser and len(groups)>0 and groups[0] != 'Despacho'):
 		return redirect('main')
@@ -323,6 +344,7 @@ def change_numero_guia(nvv, listo):
 	'''
 	Method for changing state of the order listo = not listo (ready to not ready)
 	'''
+	activate('es')
 	if not listo:
 		# Change to not ready and return True so it knows it was succesful
 		Ordenes.objects.filter(nvv=nvv).update(numero_guia='')

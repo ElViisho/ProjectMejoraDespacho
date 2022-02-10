@@ -14,23 +14,26 @@ from phonenumber_field.formfields import PhoneNumberField
 
 # Form for creating a new user in the database
 class CreateUserForm(UserCreationForm):
-    username = forms.CharField(label='Nombre de usuario', min_length=5, max_length=150)  
-    email = forms.EmailField(label='Mail')  
+    username = forms.CharField(required=False)
+    firstname = forms.CharField(label='Nombre', min_length=2, max_length=150, required=False)
+    email = forms.EmailField(label='Mail', min_length=5, max_length=150)  
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput(attrs={'placeholder': 'Contraseña', 'class':'form-control'}))  
     password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput(attrs={'placeholder': 'Confirmar contraseña', 'class':'form-control'}))  
 
     # Add new init method to add the attrs to the field
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update({'placeholder': 'Usuario', 'class':'form-control'})
+        self.fields['firstname'].widget.attrs.update({'placeholder': 'María', 'class':'form-control'})
         self.fields['email'].widget.attrs.update({'placeholder': 'ejemplo@dimacosac.cl', 'class':'form-control'})
 
     def save(self, commit = True):
         user = User.objects.create_user(  
-            self.cleaned_data['username'],  
             self.cleaned_data['email'],  
-            self.cleaned_data['password1']  
-        )  
+            self.cleaned_data['email'],  
+            self.cleaned_data['password1']
+        )
+        user.first_name = self.cleaned_data['firstname']
+        user.save()
         return user
 
 def validate_file(file):
