@@ -68,8 +68,8 @@
 
 /*  Base style for all bodies in the different html */
 body {
-	background-color: #e0e0e0;
 	font-family:  "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;;
+	font-size: 20px;
 }
 
 /*  The big titles some pages have */

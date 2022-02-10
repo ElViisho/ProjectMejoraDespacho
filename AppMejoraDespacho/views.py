@@ -2,13 +2,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from AppMejoraDespacho.models import *
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.db import connections
 
 from AppMejoraDespacho.form import ingresoForm, deleteForm, editFileForm, CreateUserForm
 import datetime
 from django.db import connections
-from django.contrib import messages
 
 from ProjectMejoraDespacho.settings import MEDIA_ROOT
 
@@ -83,6 +83,29 @@ def confirm_user(request):
 	'''
 	activate('es')
 	return render(request, "AppMejoraDespacho/confirmation_pages/confirm_user.html")
+
+def password_reset(request):
+	'''
+	Funcion para mostrar la pagina para resetear la contraseña de un usuario
+	'''
+	activate('es')
+
+	context = {}
+	if request.method == "POST":
+		mail = request.POST.get('mail')
+		try:
+			User.objects.get(username=mail)
+			return redirect('password_reset_done')
+		except:
+			context = {"error":" No existe usuario asociado a mail ingresado."}
+			
+	return render(request, "AppMejoraDespacho/user_authentication/password_reset.html", context)
+def password_reset_done(request):
+	'''
+	Funcion para mostrar la pagina para resetear la contraseña de un usuario
+	'''
+	activate('es')
+	return render(request, "AppMejoraDespacho/user_authentication/password_reset_done.html")
 
 @login_required(login_url='login')
 def main(request):
