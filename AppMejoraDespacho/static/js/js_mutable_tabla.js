@@ -109,7 +109,31 @@ $(document).ready(function() {
                     return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
                 },
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4, 5, 17, 8, 12, 13, 14, 15, 16]
+                    columns: [ 0, 1, 2, 3, 4, 5, 17, 8, 12, 13, 14, 15, 16],
+                    format: {
+                        body: function ( data, row, column, node ) {
+                            // Format date for excel
+                            if (column === 2 || column == 6) {
+                                d = data.split(' ');
+                                switch(d[2]){
+                                    case "Enero": mes = "01"; break;
+                                    case "Febrero": mes = "02"; break;
+                                    case "Marzo": mes = "03"; break;
+                                    case "Abril": mes = "04"; break;
+                                    case "Mayo": mes = "05"; break;
+                                    case "Junio": mes = "06"; break;
+                                    case "Julio": mes = "07"; break;
+                                    case "Agosto": mes = "08"; break;
+                                    case "Septiembre": mes = "09"; break;
+                                    case "Octubre": mes = "10"; break;
+                                    case "Noviembre": mes = "11"; break;
+                                    case "Diciembre": mes = "12"; break;
+                                }
+                                return d[0] + "-" + mes + "-" + d[4].substring(2,4);
+                            }
+                            return data;
+                        }
+                    }
                 },
                 title: "Ordenes de despacho",
                 customize: function(xlsx) {
@@ -117,13 +141,22 @@ $(document).ready(function() {
                     var lastXfIndex = $('cellXfs xf', styleSheet).length - 1;
                     var n1 = '<numFmt formatCode="$ #,##0" numFmtId="300"/>';
                     var s1 = '<xf numFmtId="300" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
+                    var n2 = '<numFmt formatCode="dd-mm-yyyy" numFmtId="302"/>';
+                    var s2 = '<xf numFmtId="302" fontId="0" fillId="0" borderId="0" applyFont="1" applyFill="1" applyBorder="1" xfId="0" applyNumberFormat="1"/>';
                     styleSheet.childNodes[0].childNodes[0].innerHTML += n1;
                     styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
+                    styleSheet.childNodes[0].childNodes[5].innerHTML += s1;
+                    styleSheet.childNodes[0].childNodes[5].innerHTML += s2;
 
                     var currencyFormat = lastXfIndex + 1;
+                    var dateFormat = lastXfIndex + 2;
                     var sheet = xlsx.xl.worksheets['sheet1.xml'];
                     $('row c[r^="J"]', sheet).attr( 's', currencyFormat );
                     $('row c[r="J2"]', sheet).attr( 's', '2' );
+                    $('row c[r^="C"]', sheet).attr( 's', dateFormat );
+                    $('row c[r="C2"]', sheet).attr( 's', '2' );
+                    $('row c[r^="G"]', sheet).attr( 's', dateFormat );
+                    $('row c[r="G2"]', sheet).attr( 's', '2' );
                 }
             }
         ]

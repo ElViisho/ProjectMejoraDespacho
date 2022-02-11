@@ -9,26 +9,29 @@
 <tr class="text-center" id="{{ item.nvv }}">
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
     <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
-    <td>{{ item.fecha_solicitud|date:"d F Y" }}<br>{{ item.fecha_solicitud|date:"H:i" }}</td> <!-- Date when NVV was submitted to the table -->
+    <td>{{ item.fecha_solicitud }}</td> <!-- Date when NVV was submitted to the table -->
     <td>{{ item.comuna }}</td>  <!-- Commune address -->
     <td>{{ item.direccion }}</td> <!-- Dispatch address -->
     <td>{{ item.nombre_contacto }}</td> <!-- Name of the person to contact for the dispatch -->
     <td>{{ item.telefono_contacto }}</td> <!-- Phone of the person to contact for the dispatch -->
-    <td> <!-- The state of the order -->
+    <!-- The state of the order -->
+    <td> 
         {% if item.listo == 1 %}
             Despachado
         {% else %}
             {{ item.get_estado_pedido_para_vendedor_display }}
         {% endif %}
     </td>
-    <td> <!-- The agreed date of dispatch -->
+    <!-- The agreed date of dispatch -->
+    <td> 
         {% if item.rango_horario_final == 0 %}
             No asignada
         {% else %}
             {{ item.fecha_despacho_final|date:"d F Y" }}
         {% endif %}
     </td> 
-    <td> <!-- The agreed time range of dispatch. If it has two ranges, display both. Otherwise, display only the one that exists -->
+    <!-- The agreed time range of dispatch. If it has two ranges, display both. Otherwise, display only the one that exists -->
+    <td> 
         {% if item.rango_horario_final == 0 %}
             No asignado
         {% else %}

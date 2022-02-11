@@ -1,11 +1,11 @@
 from ProjectMejoraDespacho import settings
-from datetime import datetime, timedelta
+import datetime
 import jwt
 
 def encoded_reset_token(user_id):
     payload = {
         'user_id': user_id,
-        'exp': datetime.utcnow() + timedelta(seconds=settings.JWT_EXP_DELTA_SECONDS)
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=settings.JWT_EXP_DELTA_SECONDS)
     }
     encoded_data = jwt.encode(payload, settings.JWT_SECRET, settings.JWT_ALGORITHM)
     return  encoded_data
