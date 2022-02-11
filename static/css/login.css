@@ -1,30 +1,13 @@
-<<<<<<< Updated upstream
-/*  Div that contains button for aligning it correctly */
-.form-signin{
-    text-align: center;
-    margin-top: 5%;
-}
-
-/*  Button for logging in */
-.button_iniciar_sesion{
-    font-size: 30px;
-    background-color: #007b34;
-	color: #dfdfdf;
-	font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-    font-style: normal;
-	border-radius: 5px;
-	border-style: solid;
-	border-color: #007030;
-	transition: background-color 1s , border-color 1s;
-}
-/*  Button for logging in when cursor hovers over it */
-=======
 .form-signin {
     width: 100%;
     max-width: 500px;
     padding: 15px;
     margin: auto;
     text-align: center;
+}
+
+.form-floating{
+	margin-top: 15px;
 }
   
   /*  Button for logging in */
@@ -44,13 +27,10 @@
     transition: background-color 1s , border-color 1s;
 }
   /*  Button for logging in when cursor hovers over it */
->>>>>>> Stashed changes
 .button_iniciar_sesion:hover{
     cursor: pointer;
     background-color: #499b6c;
     transition-duration: 1s;
-<<<<<<< Updated upstream
-=======
 }
 
 /*  The big titles some pages have */
@@ -72,5 +52,4 @@
 body {
 	font-family:  "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/;;
 	font-size: 18px;
->>>>>>> Stashed changes
 }

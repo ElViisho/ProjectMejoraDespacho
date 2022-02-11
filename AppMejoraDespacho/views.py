@@ -248,7 +248,7 @@ def submit_nvv_form(request):
 				hora_de_despacho_fin = datetime.time(hour=int(cleaned_data['hora_despacho_fin'])),
 				hora_despacho_extra_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_extra_inicio'])),
 				hora_despacho_extra_fin = datetime.time(hour=int(cleaned_data['hora_despacho_extra_fin'])),
-				nombre_asistente = request.user.get_full_name(),
+				nombre_asistente = request.user.email,
 				valor_neto_documento = datos_maeedo[0]["VANEDO"],
 			)		
 			return redirect("confirm_nvv")
@@ -339,7 +339,7 @@ def table(request, con_guia):
 				os.remove(prev_file)
 
 			now = datetime.datetime.now()
-			fs = FileSystemStorage(os.path.join(MEDIA_ROOT, 'comprobantes_de_pago', now.strftime("%Y/%m/%d")))
+			fs = FileSystemStorage(os.path.join(MEDIA_ROOT,'comprobantes_de_pago', now.strftime("%Y/%m/%d")))
 			filename = fs.save(file.name, file)
 			obj.update(comprobante_pago=os.path.join('comprobantes_de_pago', now.strftime("%Y/%m/%d"), filename))
 
