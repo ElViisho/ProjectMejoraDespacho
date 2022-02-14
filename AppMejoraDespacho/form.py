@@ -16,7 +16,8 @@ from phonenumber_field.formfields import PhoneNumberField
 class CreateUserForm(UserCreationForm):
     username = forms.CharField(required=False)
     firstname = forms.CharField(label='Nombre', min_length=2, max_length=150, required=False)
-    email = forms.EmailField(label='Mail', min_length=5, max_length=150)  
+    email = forms.EmailField(label='Mail', min_length=5, max_length=150)
+    email2 = forms.EmailField(label='Confirmación mail', min_length=5, max_length=150)
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput(attrs={'placeholder': 'Contraseña', 'class':'form-control'}))  
     password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput(attrs={'placeholder': 'Confirmar contraseña', 'class':'form-control'}))  
 
@@ -25,6 +26,7 @@ class CreateUserForm(UserCreationForm):
         super(CreateUserForm, self).__init__(*args, **kwargs)
         self.fields['firstname'].widget.attrs.update({'placeholder': 'María', 'class':'form-control'})
         self.fields['email'].widget.attrs.update({'placeholder': 'ejemplo@dimacosac.cl', 'class':'form-control'})
+        self.fields['email2'].widget.attrs.update({'placeholder': 'ejemplo@dimacosac.cl', 'class':'form-control'})
 
     def clean_email(self):
         mail = self.cleaned_data['email']
@@ -33,6 +35,16 @@ class CreateUserForm(UserCreationForm):
         except User.DoesNotExist:
             return mail
         raise forms.ValidationError(u'Mail "%s" ya está registrado.' % mail)
+
+    def clean_email2(self):
+        mail2 = self.cleaned_data['email2']
+        try:
+            mail = self.cleaned_data['email']
+        except:
+            return mail2
+        if (mail != mail2):
+            raise forms.ValidationError(u'Campos de mail no coinciden.')
+        return mail2
 
     def save(self, commit = True):
         user = User.objects.create_user(  

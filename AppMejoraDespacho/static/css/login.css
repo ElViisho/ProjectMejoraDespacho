@@ -5,6 +5,10 @@
     margin: auto;
     text-align: center;
 }
+
+.form-floating{
+	margin-top: 15px;
+}
   
   /*  Button for logging in */
 .button_iniciar_sesion{

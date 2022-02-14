@@ -29,11 +29,18 @@
             <div class="form-floating">
                 {{ form.firstname }}
                 <label for="floatingInput">{{ form.firstname.label }}</label>
-            </div>
+            </div><br>
+            Ingresa con tu mail institucional @dimacosac.cl.
             <div class="form-floating">
                 {{ form.email }}
                 <label for="floatingInput">{{ form.email.label }}</label>
             </div>
+            <div class="form-floating">
+                {{ form.email2 }}
+                <label for="floatingInput">{{ form.email2.label }}</label>
+            </div><br>
+            La contraseña debe tener 8 caractéres o más, <br>
+			con al menos una letra y un número o símbolo.
             <div class="form-floating">
                 {{ form.password1 }}
                 <label for="floatingInput">{{ form.password1.label }}</label>
@@ -50,5 +57,16 @@
             ¿Posees ya una cuenta?  <a href="{% url 'login' %}">Inicia Sesión</a>
         </div>
     </main>
+
+    <script type="text/javascript">
+		var username = sessionStorage.getItem('username');
+        if (username){
+            $("#id_email").val(username);
+        }
+
+        window.onbeforeunload = function () {
+			sessionStorage.setItem('username', $('#id_email').val());
+		}
+	</script>
 
 {% endblock content %}

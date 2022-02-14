@@ -21,7 +21,7 @@
 			<h1 class="h1 mb-3 fw-normal"> Iniciar sesión </h1>
 			
 			<div class="form-floating">
-				<input type="text" name="username" placeholder="Username..." class="form-control">
+				<input type="text" id="username" name="username" placeholder="Username..." class="form-control">
 				<label for="floatingInput">Mail</label>
 			</div>
 			<div class="form-floating">
@@ -29,7 +29,7 @@
 				<label for="floatingPassword">Contraseña</label>
 			</div>
 
-			<input class="button_iniciar_sesion" type="submit" value="Ingresar"><br>
+			<input class="button_iniciar_sesion submit" type="submit" value="Ingresar"><br>
 				
 			
 			<a href="password_reset"> ¿Olvidaste tu contraseña?</a><br>
@@ -39,4 +39,14 @@
 		</form>
 	</main>
 
+	<script type="text/javascript">
+		var username = sessionStorage.getItem('username');
+        if (username){
+            $("#username").val(username);
+        }
+
+		window.onbeforeunload = function () {
+			sessionStorage.setItem('username', $('#username').val());
+		}
+	</script>
 {% endblock content %}

@@ -28,7 +28,47 @@ const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "S
 let nvv = "";
 let table = "";
 
-$(document).ready(function() { 
+$(document).ready(function() {
+	//Custom ordering for dates
+	(function () {
+ 
+	var customDateDDMMMYYYYToOrd = function (date) {
+		"use strict"; //let's avoid tom-foolery in this function
+		// Convert to a number YYYYMMDD which we can use to order
+		var dateParts = date.split(' ');
+		return (dateParts[2] * 10000) + ($.inArray(dateParts[1], ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]) * 100) + (dateParts[0]*1);
+	};
+	 
+	// This will help DataTables magic detect the "dd-MMM-yyyy" format; Unshift
+	// so that it's the first data type (so it takes priority over existing)
+	jQuery.fn.dataTableExt.aTypes.unshift(
+		function (sData) {
+			"use strict"; //let's avoid tom-foolery in this function
+			if (/^([0-2]?\d|3[0-1]) (enero|febrero|marzo|abril|Mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre) \d{4}/i.test(sData)) {
+				return 'date-dd-mmm-yyyy';
+			}
+			return null;
+		}
+	);
+	 
+	// define the sorts
+	jQuery.fn.dataTableExt.oSort['date-dd-mmm-yyyy-asc'] = function (a, b) {
+		"use strict"; //let's avoid tom-foolery in this function
+		var ordA = customDateDDMMMYYYYToOrd(a),
+			ordB = customDateDDMMMYYYYToOrd(b);
+		return (ordA < ordB) ? -1 : ((ordA > ordB) ? 1 : 0);
+	};
+	 
+	jQuery.fn.dataTableExt.oSort['date-dd-mmm-yyyy-desc'] = function (a, b) {
+		"use strict"; //let's avoid tom-foolery in this function
+		var ordA = customDateDDMMMYYYYToOrd(a),
+			ordB = customDateDDMMMYYYYToOrd(b);
+		return (ordA < ordB) ? 1 : ((ordA > ordB) ? -1 : 0);
+	};
+	 
+	})();
+	
+	
     // Add plugin of DataTable to table of data
     table = $('#listado').DataTable({ 
         "dom": domDataTable(),    // Display order of objects of table
@@ -52,6 +92,9 @@ $(document).ready(function() {
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
         ],
+		columnDefs: [
+		   { type: 'date-dd-mmm-yyyy', targets: [2,8] }
+		 ],
         "search": {     // Searches for the whole match and not each word individually
             "smart": false
         },
@@ -63,7 +106,7 @@ $(document).ready(function() {
         "scrollY": "70vh",
         "scrollCollapse": true,
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
-        order: [ 2, 'asc' ],            // Default order by date
+        order: [ 7, 'asc' ],            // Default order by state
         scrollToTop: true,              // When changing page it goes back to top of table
         buttons: [                      // Export to Excel button
             {
@@ -79,9 +122,11 @@ $(document).ready(function() {
                     format: {
                         body: function ( data, row, column, node ) {
                             // Format date for excel
-                            if (column === 2 || column == 7) {
+                            if (column === 2 || column === 8) {
+								if (data == 'No asignada') return data;
                                 d = data.split(' ');
-                                switch(d[2]){
+								var mes="";
+                                switch(d[1]){
                                     case "Enero": mes = "01"; break;
                                     case "Febrero": mes = "02"; break;
                                     case "Marzo": mes = "03"; break;
@@ -94,9 +139,30 @@ $(document).ready(function() {
                                     case "Octubre": mes = "10"; break;
                                     case "Noviembre": mes = "11"; break;
                                     case "Diciembre": mes = "12"; break;
+									default: mes=""; break;
                                 }
-                                return d[0] + "-" + mes + "-" + d[4].substring(2,4);
+                                return d[0]+"-"+mes+"-"+d[2];
                             }
+							else if (column === 7){
+								d = data.split(' ');
+								var mes="";
+                                switch(d[0]){
+                                    case "Ene.": mes = "01"; break;
+                                    case "Feb.": mes = "02"; break;
+                                    case "Mar.": mes = "03"; break;
+                                    case "Abr.": mes = "04"; break;
+                                    case "Mayo": mes = "05"; break;
+                                    case "Jun.": mes = "06"; break;
+                                    case "Jul.": mes = "07"; break;
+                                    case "Ago.": mes = "08"; break;
+                                    case "Sept.": mes = "09"; break;
+                                    case "Oct.": mes = "10"; break;
+                                    case "Nov.": mes = "11"; break;
+                                    case "Dic.": mes = "12"; break;
+									default: mes=""; break;
+                                }
+                                return d[1].slice(0,-1)+"-"+mes+"-"+d[2];
+							}
                             return data;
                         }
                     }
@@ -123,10 +189,12 @@ $(document).ready(function() {
                     $('row c[r="C2"]', sheet).attr( 's', '2' );
                     $('row c[r^="H"]', sheet).attr( 's', dateFormat );
                     $('row c[r="H2"]', sheet).attr( 's', '2' );
+					$('row c[r^="I"]', sheet).attr( 's', dateFormat );
+                    $('row c[r="I2"]', sheet).attr( 's', '2' );
                 }
             }
         ]
-    });    
+    });
 
     // When + symbol or NVV value is clicked, it shows all the relevant info
     $('#listado tbody').on('click', 'td.show_hide', function () {

@@ -22,7 +22,24 @@ const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "S
 let nvv = "";
 let table = "";
 
-$(document).ready(function() { 
+$(document).ready(function() {
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth() + 1; //January is 0!
+	var yyyy = today.getFullYear();
+
+	if (dd < 10) {
+	   dd = '0' + dd;
+	}
+
+	if (mm < 10) {
+	   mm = '0' + mm;
+	} 
+		
+	today = yyyy + '-' + mm + '-' + dd;
+	$('.fecha_despacho').prop("min", today);
+	
+	
     // Add plugin of DataTable to table of data
     table = $('#listado').DataTable({ 
         "dom": '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>',    // Display order of objects of table
