@@ -365,9 +365,13 @@ def table(request, con_guia):
 			filename = fs.save(file.name, file)
 			obj.update(comprobante_pago='comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/") + filename)
 
-	queryset = Ordenes.objects.all() # Get the data from the database
+	sucursal = 'V'
+	if ('Concepcion' in groups):
+		sucursal = 'CON'
+	elif ('Colina' in groups):
+		sucursal = 'COL'
+	queryset = Ordenes.objects.filter(nvv__startswith=sucursal) # Get the data from the database
 	
-	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
 	permissions = 'Básico'
 	if (request.user.is_superuser or 'Eliminar' in groups):
 		permissions = "Eliminar"
