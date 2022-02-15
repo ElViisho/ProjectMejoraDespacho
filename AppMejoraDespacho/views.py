@@ -365,6 +365,7 @@ def table(request, con_guia):
 			filename = fs.save(file.name, file)
 			obj.update(comprobante_pago='comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/") + filename)
 
+	# Get depending on office
 	sucursal = 'V'
 	if ('Concepcion' in groups):
 		sucursal = 'CON'
@@ -436,7 +437,13 @@ def mutable_table(request, con_guia):
 		elif (data['type'] == 'observaciones_pedido'):
 			Ordenes.objects.filter(nvv=data['nvv']).update(observacion_despacho=data['observaciones'])
 	
-	queryset = Ordenes.objects.all() # Get the data from the database
+	# Get depending on office
+	sucursal = 'V'
+	if ('Concepcion' in groups):
+		sucursal = 'CON'
+	elif ('Colina' in groups):
+		sucursal = 'COL'
+	queryset = Ordenes.objects.filter(nvv__startswith=sucursal) # Get the data from the database
 	
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
 	permissions = 'Básico'
