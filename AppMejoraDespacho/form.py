@@ -30,6 +30,9 @@ class CreateUserForm(UserCreationForm):
 
     def clean_email(self):
         mail = self.cleaned_data['email']
+        domain = mail.split('@')[1]
+        if (domain != 'dimacosac.cl'):
+            raise forms.ValidationError(u'Mail no es @dimacosac.cl.')
         try:
             user = User.objects.get(username=mail)
         except User.DoesNotExist:
@@ -82,25 +85,25 @@ def dictfetchall(cursor):
     return tuple(nvvs)
 
 # Get all the NVVs that are relevant and are not already submitted
-def get_nvvs():
+def get_nvvs(sucursal, nvv_start):
     on_base = Ordenes.objects.values('nvv')
     uwu = ['', '']
     for i in on_base:
         uwu.append(i['nvv'])
     cursor = connections['dimaco'].cursor()
-    cursor.execute(query_get_relevant_NVVs.format(tuple(uwu)))
+    cursor.execute(query_get_relevant_NVVs.format(sucursal, nvv_start, tuple(uwu), sucursal))
     return dictfetchall(cursor)
 
 # Get the next valid day for dispatch (n day from now, if it's a weekend, get to monday)
 def now_plus_n(n):
     dia = datetime.date.today() + datetime.timedelta(days=n)
-    while (dia.weekday() in [5,6]):
-        dia += datetime.timedelta(days=1)
+    if (dia.weekday() in [5,6]):
+        dia += datetime.timedelta(days=2)
     return dia
 
 # Form for submitting a new order to the database
 class ingresoForm(forms.Form):
-    nvv = forms.ChoiceField(label='NVV', choices=get_nvvs, initial=0, required=True)
+    nvv = forms.ChoiceField(label='NVV', initial=0, required=True)
     tipo_despacho = forms.ChoiceField(label = 'Tipo de despacho', choices=choices_dispatch_way, initial=0, required=False, widget=forms.RadioSelect)
     despacho_externo = forms.CharField(max_length=150, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre transporte'}))
     direccion_despacho_externo = forms.CharField(max_length=150, required=False, widget=forms.TextInput(attrs={'placeholder': 'Dirección transporte'}))
@@ -134,8 +137,14 @@ class ingresoForm(forms.Form):
 
     # Add new init method so that the get_nvv function is recalled everytime so that it is updated with the latest data
     def __init__(self, *args, **kwargs):
+        sucursal = kwargs.pop('sucursal')
         super(ingresoForm, self).__init__(*args, **kwargs)
-        self.nvv = get_nvvs()
+        if (sucursal == 'Colina'):
+            self.nvv = get_nvvs('006', 'COL%')
+        elif (sucursal == 'Concepcion'):
+            self.nvv = get_nvvs('002', 'CON%')
+        else:
+            self.nvv = get_nvvs('000', 'V%')
         self.fields['nvv'].choices = self.nvv
 
 

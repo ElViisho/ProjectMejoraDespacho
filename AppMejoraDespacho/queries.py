@@ -6,16 +6,16 @@ to get the data for the different orders
 # Query to get all NVVs that are still active and relevant
 query_get_relevant_NVVs = """SELECT DISTINCT [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] FROM [DIMACO_NEW].[dbo].[MAEEDO] WITH (NOLOCK)
                 INNER JOIN [DIMACO_NEW].[dbo].[MAEDDO] ON [MAEEDO].[IDMAEEDO] = [MAEDDO].[IDMAEEDO]
-                WHERE SUDO = '000' 
+                WHERE SUDO = '{}' 
                 AND [DIMACO_NEW].[dbo].[MAEEDO].[TIDO] = 'NVV'
-                AND [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] LIKE 'V%'
+                AND [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] LIKE '{}'
                 AND ESDO <> 'C'
                 AND [DIMACO_NEW].[dbo].[MAEEDO].[NUDO] NOT IN {}
                 AND [DIMACO_NEW].[dbo].[MAEEDO].[IDMAEEDO] IN 
                     (SELECT [IDMAEEDO] FROM [DIMACO_NEW].[dbo].[MAEDDO] WITH (NOLOCK)
                     WHERE CAPRCO1 > (CAPREX1 + CAPRAD1)
                     AND TIDO = 'NVV'
-                    AND SULIDO = '000'
+                    AND SULIDO = '{}'
                     AND LILG<>'IM')
                 AND [DIMACO_NEW].[dbo].[MAEEDO].[IDMAEEDO] IN (
 					SELECT DISTINCT IDMAEEDO FROM [DIMACO_NEW].[dbo].[MAEEDOOB] WITH (NOLOCK)
@@ -44,6 +44,5 @@ query_get_seller_name = """SELECT DISTINCT [NOKOFU] FROM [DIMACO_NEW].[dbo].[TAB
 
 # Query to get the data for the dispatch guide of the order %s
 query_get_dispatch_guide = """SELECT DISTINCT [TIDO], [NUDO], [FEEMLI] FROM [DIMACO_NEW].[dbo].[MAEDDO] WITH (NOLOCK)
-                WHERE NUDOPA = %s
-                AND TIDO IN ('FCV', 'GDV')
-                AND SULIDO = '000';"""
+                WHERE NUDOPA = '{}'
+                AND TIDO IN ('FCV', 'GDV');"""

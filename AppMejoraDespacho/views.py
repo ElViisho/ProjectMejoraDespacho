@@ -12,7 +12,7 @@ from django.db import connections
 
 from ProjectMejoraDespacho.settings import MEDIA_ROOT
 
-from .choices import comunas_santa_elena, comunas_todas, regiones
+from .choices import comunas_santa_elena, comunas_colina, comunas_todas, regiones
 from .queries import *
 from django.core.files.storage import FileSystemStorage
 import os 
@@ -200,26 +200,37 @@ def submit_nvv_form(request):
 	groups = list(request.user.groups.values_list('name', flat= True))
 	if (not request.user.is_superuser and 'Despacho' in groups):
 		return redirect('main')
+	
+	sucursal = 'Santa Elena'
+	if ('Concepcion' in groups):
+		sucursal='Concepcion'
+	elif ('Colina' in groups):
+		sucursal='Colina'
 
 	if request.method == 'GET':
 		# Get form withut data and pass it to the renderer
-		formulario = ingresoForm()
+		formulario = ingresoForm(sucursal=sucursal)
 		for field in formulario:
 			field.field.widget.attrs.update({"class": "form-control"})
 		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", {"formulario": formulario})
 	if request.method == "POST":
 		# Get the data from the post into the form and validate it
-		data_obtenida = ingresoForm(request.POST or None, request.FILES or None)
+		data_obtenida = ingresoForm(request.POST or None, request.FILES or None, sucursal=sucursal)
 		if data_obtenida.is_valid():
 			cleaned_data = data_obtenida.cleaned_data
 			nvv = cleaned_data['nvv']
 
+			comunas = comunas_todas
+			if ('Santa Elena' in groups):
+				comunas[0] = comunas_santa_elena
+			elif ('Colina' in groups):
+				comunas[0] = comunas_colina
 			if cleaned_data['tipo_despacho'] == "1":
 				tipo_despacho = cleaned_data['despacho_externo'] + '\\' + cleaned_data['direccion_despacho_externo']
-				comuna = comunas_todas[int(cleaned_data['region'])][int(cleaned_data['comuna'])][1] + ', ' + regiones[int(cleaned_data['region'])][1] 
+				comuna = comunas[int(cleaned_data['region'])][int(cleaned_data['comuna'])][1] + ', ' + regiones[int(cleaned_data['region'])][1] 
 			else:
 				tipo_despacho = 'DIMACO'
-				comuna = comunas_santa_elena[int(cleaned_data['comuna'])][1]
+				comuna = comunas[0][int(cleaned_data['comuna'])][1]
 
 			if cleaned_data['comprobante_pago'] is None:
 				cleaned_data['comprobante_pago'] = "None"
@@ -441,7 +452,7 @@ def change_numero_guia(nvv, listo):
 	else:
 		# Retrieve the guide number from Random ERP database
 		cursor = connections['dimaco'].cursor()
-		cursor.execute(query_get_dispatch_guide, [nvv])
+		cursor.execute(query_get_dispatch_guide.format(nvv))
 		datos = dictfetchall(cursor)
 		if datos:
 			# If there is, change it on this database and return True so it knows it was succesful
@@ -467,5 +478,12 @@ def load_comunas(request):
 	on the form
 	'''
 	region = request.GET.get('region')
-	com = comunas_todas[int(region)]
+
+	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to know which template to show
+	comunas = comunas_todas
+	if ('Santa Elena' in groups):
+		comunas[0] = comunas_santa_elena
+	elif ('Colina' in groups):
+		comunas[0] = comunas_colina
+	com = comunas[int(region)]
 	return render(request, 'AppMejoraDespacho/utilities/comuna_dropdown_list_options.html', {'comunas': com})
