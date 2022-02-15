@@ -83,7 +83,7 @@ def registerPage(request):
 
 def confirm_user(request):
 	'''
-	Funcion para mostrar la pagina de exitosa creación de usuario
+	Method to show the succesful creating of a new user
 	'''
 	activate('es')
 	if request.user.is_authenticated:
@@ -92,7 +92,7 @@ def confirm_user(request):
 
 def password_reset(request):
 	'''
-	Funcion para mostrar la pagina para resetear la contraseña de un usuario
+	Method that shows the page for resetting a user password
 	'''
 	activate('es')
 	if request.user.is_authenticated:
@@ -124,7 +124,7 @@ En caso de que no hayas hecho esta solicitud, simplemente ignora este mensaje'''
 	return render(request, "AppMejoraDespacho/user_authentication/password_reset.html", context)
 def password_reset_done(request):
 	'''
-	Funcion para mostrar la pagina para resetear la contraseña de un usuario
+	Method that shows the page for correct sending the password reset request
 	'''
 	activate('es')
 	if request.user.is_authenticated:
@@ -132,6 +132,10 @@ def password_reset_done(request):
 	
 	return render(request, "AppMejoraDespacho/user_authentication/password_reset_done.html")
 def create_new_password(request):
+	'''
+	Method that shows the page for creating a new password, but checks if token is expired
+	to know if it's valid to change the password
+	'''
 	activate('es')
 	if request.user.is_authenticated:
 		return redirect('main')
@@ -158,6 +162,9 @@ def create_new_password(request):
 
 	return render(request, "AppMejoraDespacho/user_authentication/create_new_password.html")
 def create_new_password_success(request):
+	'''
+	Method to show the succesful changing the password
+	'''
 	activate('es')
 	if request.user.is_authenticated:
 		return redirect('main')
@@ -173,11 +180,15 @@ def main(request):
 	Page: main
 	'''
 	activate('es')
-	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
-	permissions = 'Básico'
-	if (len(groups) > 0):
-		permissions = groups[0]
-	return render(request, "AppMejoraDespacho/main.html", {"permissions": permissions})
+	if (request.user.is_superuser):
+		return render(request, "AppMejoraDespacho/main.html")
+
+	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to know which template to show
+	if ('Despacho' in groups):
+		return render(request, "AppMejoraDespacho/main_despacho.html")
+	elif ('Eliminar' in groups):
+		return render(request, "AppMejoraDespacho/main_eliminar.html")
+	return render(request, "AppMejoraDespacho/main_basico.html")
 
 @login_required(login_url='login')
 def submit_nvv_form(request):
@@ -187,7 +198,7 @@ def submit_nvv_form(request):
 	'''
 	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
-	if (not request.user.is_superuser and len(groups)>0 and groups[0] == 'Despacho'):
+	if (not request.user.is_superuser and 'Despacho' in groups):
 		return redirect('main')
 
 	if request.method == 'GET':
@@ -272,7 +283,7 @@ def delete_nvv(request):
 	'''
 	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
-	if (not request.user.is_superuser and ((len(groups)>0 and groups[0] != 'Eliminar') or len(groups)==0) ):
+	if (not request.user.is_superuser and not ('Eliminar' in groups) ):
 		return redirect('main')
 	if request.method == 'GET':
 		formulario = deleteForm()
@@ -322,7 +333,7 @@ def table(request, con_guia):
 	'''	
 	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
-	if (not request.user.is_superuser and len(groups)>0 and groups[0] == 'Despacho'):
+	if (not request.user.is_superuser and 'Despacho' in groups):
 		return redirect('main')
 	data_obtenida = editFileForm()
 	
@@ -347,9 +358,7 @@ def table(request, con_guia):
 	
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
 	permissions = 'Básico'
-	if (len(groups) > 0):
-		permissions = groups[0]
-	if (request.user.is_superuser):
+	if (request.user.is_superuser or 'Eliminar' in groups):
 		permissions = "Eliminar"
 	return render(request, "AppMejoraDespacho/tables/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia, "formulario": data_obtenida,})
 
@@ -382,7 +391,7 @@ def mutable_table(request, con_guia):
 	'''
 	activate('es')
 	groups = list(request.user.groups.values_list('name', flat= True))
-	if (not request.user.is_superuser and len(groups)>0 and groups[0] != 'Despacho'):
+	if (not request.user.is_superuser and not ('Despacho' in groups)):
 		return redirect('main')
 	# If there's a POST request, it means user is trying to submit data into the database from the table
 	if request.method == "POST":
@@ -416,9 +425,7 @@ def mutable_table(request, con_guia):
 	
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
 	permissions = 'Básico'
-	if (len(groups) > 0):
-		permissions = groups[0]
-	if (request.user.is_superuser):
+	if (request.user.is_superuser or 'Despacho' in groups):
 		permissions = "Despacho"
 	return render(request, "AppMejoraDespacho/tables/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
 
