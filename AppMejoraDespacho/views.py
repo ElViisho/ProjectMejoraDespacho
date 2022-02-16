@@ -12,7 +12,7 @@ from django.db import connections
 
 from ProjectMejoraDespacho.settings import MEDIA_ROOT
 
-from .choices import comunas_santa_elena, comunas_colina, comunas_todas, regiones
+from .choices import comunas_metropolitana, comunas_todas, regiones
 from .queries import *
 from django.core.files.storage import FileSystemStorage
 import os 
@@ -221,10 +221,8 @@ def submit_nvv_form(request):
 			nvv = cleaned_data['nvv']
 
 			comunas = comunas_todas
-			if ('Santa Elena' in groups):
-				comunas[0] = comunas_santa_elena
-			elif ('Colina' in groups):
-				comunas[0] = comunas_colina
+			if ('Santa Elena' in groups or 'Colina' in groups):
+				comunas[0] = comunas_metropolitana
 			if cleaned_data['tipo_despacho'] == "1":
 				tipo_despacho = cleaned_data['despacho_externo'] + '\\' + cleaned_data['direccion_despacho_externo']
 				comuna = comunas[int(cleaned_data['region'])][int(cleaned_data['comuna'])][1] + ', ' + regiones[int(cleaned_data['region'])][1] 
@@ -376,7 +374,7 @@ def table(request, con_guia):
 	permissions = 'Básico'
 	if (request.user.is_superuser or 'Eliminar' in groups):
 		permissions = "Eliminar"
-	return render(request, "AppMejoraDespacho/tables/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia, "formulario": data_obtenida,})
+	return render(request, "AppMejoraDespacho/tables/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_metropolitana, "con_guia": con_guia, "formulario": data_obtenida,})
 
 
 
@@ -449,7 +447,7 @@ def mutable_table(request, con_guia):
 	permissions = 'Básico'
 	if (request.user.is_superuser or 'Despacho' in groups):
 		permissions = "Despacho"
-	return render(request, "AppMejoraDespacho/tables/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_santa_elena, "con_guia": con_guia,})
+	return render(request, "AppMejoraDespacho/tables/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_metropolitana, "con_guia": con_guia,})
 
 def change_numero_guia(nvv, listo):
 	'''
@@ -492,9 +490,7 @@ def load_comunas(request):
 
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to know which template to show
 	comunas = comunas_todas
-	if ('Santa Elena' in groups):
-		comunas[0] = comunas_santa_elena
-	elif ('Colina' in groups):
-		comunas[0] = comunas_colina
+	if ('Santa Elena' in groups or 'Colina' in groups):
+		comunas[0] = comunas_metropolitana
 	com = comunas[int(region)]
 	return render(request, 'AppMejoraDespacho/utilities/comuna_dropdown_list_options.html', {'comunas': com})

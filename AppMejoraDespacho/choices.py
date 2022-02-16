@@ -31,68 +31,6 @@ choices_dispatch_way = (
         (1, "EXTERNO"))
 )
 
-# Communes that the Santa Elena office dispatches
-comunas_santa_elena = (
-        ("0", "----------------------------------------"),
-        (1, 'Alhué'),
-        (2, 'Buin'),
-        (3, 'Calera de Tango'),
-        (4, 'Cerrillo'),
-        (5, 'Cerro Navia'),
-        (6, 'Curacaví'),
-        (7, 'El Bosque'),
-        (8, 'El Monte'),
-        (9, 'Estación Central'),
-        (10, 'Isla de Maipo'),
-        (11, 'La Cisterna'),
-        (12, 'La Florida'),
-        (13, 'La Granja'),
-        (14, 'La Pintana'),
-        (15, 'Lo Espejo'),
-        (16, 'Lo Prado'),
-        (17, 'Macul'),
-        (18, 'Maipú'),
-        (19, 'María Pinto'),
-        (20, 'Melipilla'),
-        (21, 'Ñuñoa'),
-        (22, 'Padre Hurtado'),
-        (23, 'Paine'),
-        (24, 'Pedro Aguirre Cerda'),
-        (25, 'Peñaflor'),
-        (26, 'Peñalolén'),
-        (27, 'Pirque'),
-        (28, 'Puente Alto'),
-        (29, 'Quinta Normal'),
-        (30, 'San Bernardo'),
-        (31, 'San Joaquín'),
-        (32, 'San José de Maipo'),
-        (33, 'San Miguel'),
-        (34, 'San Pedro'),
-        (35, 'San Ramón'),
-        (36, 'Santiago'),
-        (37, 'Talagante'),
-)
-
-# Communes that the Colina office dispatches
-comunas_colina = (
-        ("0", "----------------------------------------"),
-        (1, 'Colina'),
-        (2, 'Conchalí'),
-        (3, 'Huechuraba'),
-        (4, 'Independencia'),
-        (5, 'La Reina'),
-        (6, 'Lampa'),
-        (7, 'Las Condes'),
-        (8, 'Lo Barnechea'),
-        (9, 'Providencia'),
-        (10, 'Pudahuel'),
-        (11, 'Quilicura'),
-        (12, 'Recoleta'),
-        (13, 'Renca'),
-        (14, 'Til-Til'),
-        (15, 'Vitacura'),
-)
-
 # The hours for dispatch
 horas = (
 	("8", "08:00"),
@@ -526,7 +464,7 @@ comunas_magallanes = (
         ("11", "Torres del Paine"),
 )
 # All the communes arraya in one array, in the same order as the regions array
-comunas_todas = [comunas_santa_elena, comunas_arica_y_parinacota, comunas_tarapaca, comunas_antofagasta, comunas_atacama, comunas_coquimbo, comunas_valparaiso, comunas_metropolitana, comunas_ohiggins,
+comunas_todas = [comunas_metropolitana, comunas_arica_y_parinacota, comunas_tarapaca, comunas_antofagasta, comunas_atacama, comunas_coquimbo, comunas_valparaiso, comunas_metropolitana, comunas_ohiggins,
         comunas_maule, comunas_nuble, comunas_biobio, comunas_araucania, comunas_los_rios, comunas_los_lagos, comunas_aysen, comunas_magallanes]
 
 
