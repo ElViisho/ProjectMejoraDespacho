@@ -134,7 +134,7 @@ LOGOUT_REDIRECT_URL = '/login'
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'America/Santiago'
 
@@ -164,11 +164,11 @@ JWT_SECRET = SECRET_KEY  # use settings secret key for JWT secret
 JWT_ALGORITHM = 'HS256'
 JWT_EXP_DELTA_SECONDS = 900
 
-DEFAULT_FROM_EMAIL = '***'
+DEFAULT_FROM_EMAIL = 'vichovido@outlook.com'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = '***'
-EMAIL_HOST_PASSWORD = '***'
+EMAIL_HOST = 'smtp-mail.outlook.com'
+EMAIL_HOST_USER = 'vichovido@outlook.com'
+EMAIL_HOST_PASSWORD = 'Pulpito2003'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

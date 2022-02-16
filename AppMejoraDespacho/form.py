@@ -81,7 +81,7 @@ def dictfetchall(cursor):
     d = cursor.fetchall()
     nvvs = [('0', '-------------')]
     for i in range(len(d)):
-        nvvs.append((str(i+1), d[i][0]))
+        nvvs.append((d[i][0], d[i][0]))
     return tuple(nvvs)
 
 # Get all the NVVs that are relevant and are not already submitted
@@ -103,7 +103,7 @@ def now_plus_n(n):
 
 # Form for submitting a new order to the database
 class ingresoForm(forms.Form):
-    nvv = forms.ChoiceField(label='NVV', initial=0, required=True)
+    nvv = forms.ChoiceField(label='NVV', initial=0, required=True, error_messages={'invalid_choice':'Error en el campo NVV: ya fue subida a la base (probablemente unos segundos antes que tú, ahora no debiera aparecer en la lista y sí en la tabla)'})
     tipo_despacho = forms.ChoiceField(label = 'Tipo de despacho', choices=choices_dispatch_way, initial=0, required=False, widget=forms.RadioSelect)
     despacho_externo = forms.CharField(max_length=150, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre transporte'}))
     direccion_despacho_externo = forms.CharField(max_length=150, required=False, widget=forms.TextInput(attrs={'placeholder': 'Dirección transporte'}))
@@ -146,16 +146,6 @@ class ingresoForm(forms.Form):
         else:
             self.nvv = get_nvvs('000', 'V%')
         self.fields['nvv'].choices = self.nvv
-
-
-    def clean_nvv(self):
-        '''
-        Method for validating the nvv field
-        '''
-        # Since it is a selection, it returns an index, so here it gets the value of that index
-        i = self.cleaned_data['nvv']
-        nvv_choices = self.nvv
-        return nvv_choices[int(i)][1]
 
     def clean_fecha_despacho(self):
         '''
