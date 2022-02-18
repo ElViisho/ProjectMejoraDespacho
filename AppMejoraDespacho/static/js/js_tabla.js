@@ -250,7 +250,7 @@ function enable_button(){
 // For showing the child data
 function format (d) {
     var n_guia = '';
-    var comprobante = '<td>' + $('#form_div').html() +'</td>';;
+    var comprobante = '<td>' + $('#form_div').html() +'</td>';
     // Choses which button to show depending on if order is ready or not, and also if it must show the guide number or not
     rowspan = 2;
     if (d[9] == 1) {
@@ -312,7 +312,7 @@ function format (d) {
 
 // Shows prompt for confirming if user wants to change the selected order's payment file
 function prompt_confirm() {
-    $('#confirm_texto').html(`¿Confirmas que quieres subir un nuevo comprobante de pago para la orden ${$('#id_nvv_for_submit').val()}? (Esto eliminará la anterior en caso de existir)<br>`);
+    $('#confirm_texto').html(`¿Confirmas que quieres subir un nuevo comprobante de pago para la orden ${$('#id_nvv_for_submit').val()}? (Esto eliminará el anterior en caso de existir)<br>`);
     $('#confirm_prompt_background').show();
     $('#confirm_prompt').show();
     $('#confirm_texto').show();

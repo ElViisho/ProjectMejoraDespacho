@@ -19,6 +19,20 @@
 
 
 {% block content %}
+
+<div class="mensajeAlerta">
+	{% if formulario.errors %}
+		{% for field in formulario %}
+			{% for error in field.errors %}
+				<div class="alert alert-danger" role="alert" style="text-align: center; margin-left: 15%; margin-right: 15%;">
+					{{ error|escape }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+	{% endif %}
+</div>
+
+
 <!-- Start Table -->
 <div class="table-responsive table-l">
     <table class="table table-hover table-image" id="listado">
@@ -92,6 +106,25 @@
 <div id="confirm_prompt" class="confirm_prompt" style="display: none;">
 <div id="confirm_texto" class="confirm_texto"></div>
 <input class="btn" onclick="confirmar()" id="boton_confirm" value="Confirmar" readonly> <input class="btn" onclick="cancelar()" id="boton_cancel" value="Cancelar" readonly>
+
+<div id="form_div" style="display: none;">
+    <form class="form" action="" method="POST" enctype="multipart/form-data" id ="formulario">
+        {% csrf_token %}
+        <nobr>
+            <label for="id_nuevo_comprobante_pago" class="custom-file-upload"><i class="fa fa-cloud-upload"></i> Elegir nuevo voucher de despacho</label> 
+            <div id="file_name"></div>
+            {{ formulario.nuevo_comprobante_pago }}
+            {{ formulario.nvv_for_submit }}
+            <input class="nuevo_comprobante_submit" value="Subir" onclick="prompt_confirm_file()" name="submit" style="display: none;" disabled readonly>
+        </nobr>
+
+        <!-- Prompt for the user to confirm new file -->
+        <div id ="confirm_prompt_background_file" class="confirm_prompt_background" style="display: none;"></div>
+        <div id="confirm_prompt_file" class="confirm_prompt" style="display: none;">
+        <div id="confirm_texto_file" class="confirm_texto"></div>
+        <input class="btn" id="boton_confirm_file" type="submit" value="Confirmar" readonly> <input class="btn" onclick="cancelar_file()" id="boton_cancel_file" value="Cancelar" readonly>
+    </form>
+</div>
 
 <script>var permissions = "{{ permissions }}";</script> <!-- Has to define here, otherwise it wouldn't work, but it is needed in the javaScript below -->
 <script src="{% static 'js/js_mutable_tabla.js' %}"></script>

@@ -35,16 +35,16 @@ be interacted with*/
     margin-top: 25px;
 }
 
-#boton_confirm{
+#boton_confirm, #boton_confirm_file{
     background-color: #007b34;
     border-color: #015625;
 }
-#boton_cancel{
+#boton_cancel, #boton_cancel_file{
     background-color: #d31f11;
     border-color: #cc542c;
 }
 /*  The two buttons that appear for the confirmation prompt */
-#boton_confirm, #boton_cancel {
+#boton_confirm, #boton_cancel, #boton_confirm_file, #boton_cancel_file {
     position: relative;
     font-size: 20px;
     font-family: "Playfair Display", Georgia, "Times New Roman", serif;
@@ -63,13 +63,13 @@ be interacted with*/
 
 /*  The two buttons that appear for the confirmation prompt,
     when the cursor hovers over them */
-#boton_confirm:hover, #boton_cancel:hover{
+#boton_confirm:hover, #boton_cancel:hover, #boton_confirm_file:hover, #boton_cancel_file:hover{
     cursor: pointer;
     transition-duration: 1s;
 }
-#boton_confirm:hover{
+#boton_confirm:hover, #boton_confirm_file:hover{
     background-color: #79c196;
 }
-#boton_cancel:hover{
+#boton_cancel:hover, #boton_cancel_file:hover{
     background-color: #ff948c;
 }

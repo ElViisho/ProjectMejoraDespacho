@@ -205,6 +205,7 @@ $(document).ready(function() {
             nvv = row.data()[1];
             row.child( format(data) ).show();
             tr.addClass('shown');
+            $('#id_nvv_for_submit').val(row.data()[1]);
         }
     } );
 
@@ -320,19 +321,41 @@ function dateChange(picker) {
     }
 }
 
+// If file is uploaded, show its name and enable button
+function enable_button(){
+    $('.nuevo_comprobante_submit').prop('disabled', false);
+    $('.nuevo_comprobante_submit').show();
+
+    let file = $('#id_nuevo_comprobante_pago').val();
+    let name = file.split("\\");
+    let nombre = name[name.length-1];
+    if (file != null) {
+        $('#file_name').html(nombre);
+    }
+}
+
 // Initialize variable as 0 (falsey)
 var listo = 0;
 
 // For showing the child data
 function format (d) {
     var n_guia = '';
+    var comprobante = '';
     // Choses which button to show depending on if order is ready or not, and also if it must show the guide number or not
     listo = d[10];
     if (d[10] == 1) {
         n_guia = '<tr class="child_table">'+
             '<td>Número de guía:</td>'+
             '<td>' + d[7] + '</td>' +
+            '<td>Voucher de despacho:</td>' + 
+            '<td>' + d[13] +'</td>' +
         '</tr>'
+        comprobante = '<tr class ="child_table">'+
+                        '<td></td>'+
+                        '<td></td>'+
+                        '<td></td>'+
+                        '<td>' + $('#form_div').html() +'</td>' +
+                    '</tr>';
         boton_guia_despacho = "Borrar número de guía";
     }
     else boton_guia_despacho = "Marcar como despachado";
@@ -352,7 +375,7 @@ function format (d) {
                 '<td>Nombre vendedor:</td>' +
                 '<td>' + d[8] + '</td>' +
                 '<td>Valor neto:</td>' +
-                '<td>$' + Number(d[14]).toLocaleString() + '</td>' + 
+                '<td>$' + Number(d[15]).toLocaleString() + '</td>' + 
             '</tr>' +
             '<tr class="child_table">' +
                 '<td>Solicitado por:</td>' +
@@ -379,15 +402,16 @@ function format (d) {
             '<tr class="child_table">'+
                 '<td>Nombre Contacto:</td>'+
                 '<td>' + d[11] + '</td>'+
-                '<td rowspan="7" style="vertical-align: top;">Observaciones del pedido:</td>' +
-                '<td rowspan="7" style="vertical-align: top;"><textarea onchange="textAreaChange()" class="observaciones_pedido" id="'+ d[0] +
-                    '" style="resize:none" rows=3 cols=50 placeholder="Ingrese alguna observación en caso de ser pertinente">' + d[13] + '</textarea></td>' +
+                '<td rowspan="2" style="vertical-align: top;">Observaciones del pedido:</td>' +
+                '<td rowspan="2" style="vertical-align: top;"><textarea onchange="textAreaChange()" class="observaciones_pedido" id="'+ d[0] +
+                    '" style="resize:none" rows=3 cols=50 placeholder="Ingrese alguna observación en caso de ser pertinente">' + d[14] + '</textarea></td>' +
             '</tr>'+
             '<tr class="child_table">'+
                 '<td>Teléfono Contacto:</td>'+
                 '<td>' + d[12] + '</td>'+
             '</tr>'+
             n_guia +
+            comprobante +
             boton_despacho +
         '</table>' +
     '</td>';
@@ -447,4 +471,23 @@ function confirmar() {
         timeout: 5000 
     })
 
+}
+
+// The prompt for confirmation of changes on table
+function prompt_confirm_file() {
+    $('#confirm_texto_file').html(`¿Confirmas que quieres subir un nuevo voucher de despacho para la orden ${$('#id_nvv_for_submit').val()}? (Esto eliminará el anterior en caso de existir)<br>`);
+    $('#confirm_prompt_background_file').show();
+    $('#confirm_prompt_file').show();
+    $('#confirm_texto_file').show();
+    $('#boton_confirm_file').show();
+    $('#boton_cancel_file').show();
+}
+
+// Function to cancel the deletion
+function cancelar_file() {
+    $('#confirm_prompt_background_file').hide();
+    $('#confirm_prompt_file').hide();
+    $('#confirm_texto_file').hide();
+    $('#boton_confirm_file').hide();
+    $('#boton_cancel_file').hide();
 }

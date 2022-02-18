@@ -131,7 +131,11 @@
     {% else %}
         <a href="{{ item.comprobante_pago.url }}" target="_blank">Link</a>
     {% endif %}\,\,{{item.observacion}}\,\,{{item.numero_guia}}\,\,{{item.nombre_vendedor}}\,\,{{item.nombre_asistente}}\,\,
-    {{item.listo}}\,\,{{ item.nombre_contacto }}\,\,{{ item.telefono_contacto }}
+    {{item.listo}}\,\,{{ item.nombre_contacto }}\,\,{{ item.telefono_contacto }}\,\,{% if item.documento_salida == "None" %}
+        No adjunto
+    {% else %}
+        <a href="{{ item.documento_salida.url }}" target="_blank">Link</a>
+    {% endif %}
     </td>
     <!-- This is for the "export to excel" button. At first it always exported all the values from the state selector regardless of the selection. This updates to always
         have only the selected value, and it is what its used to export.

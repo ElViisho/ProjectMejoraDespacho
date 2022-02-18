@@ -354,14 +354,14 @@ def table(request, con_guia):
 			file = cleaned_data["nuevo_comprobante_pago"]
 
 			obj = Ordenes.objects.filter(nvv=nvv)
-			prev_file = MEDIA_ROOT + '/' + str(obj[0].comprobante_pago)
+			prev_file = os.path.join(MEDIA_ROOT, str(obj[0].comprobante_pago))
 			if (prev_file != "None" and os.path.exists(prev_file)):
 				os.remove(prev_file)
 
 			now = datetime.datetime.now()
-			fs = FileSystemStorage(MEDIA_ROOT + '/comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/"))
+			fs = FileSystemStorage(os.path.join(MEDIA_ROOT,'comprobantes_de_pago', now.strftime("%Y/%m/%d/")))
 			filename = fs.save(file.name, file)
-			obj.update(comprobante_pago='comprobantes_de_pago/'+ now.strftime("%Y/%m/%d/") + filename)
+			obj.update(comprobante_pago=os.path.join('comprobantes_de_pago/', now.strftime("%Y/%m/%d/"), filename))
 
 	# Get depending on office
 	sucursal = 'V'
@@ -407,33 +407,53 @@ def mutable_table(request, con_guia):
 	groups = list(request.user.groups.values_list('name', flat= True))
 	if (not request.user.is_superuser and not ('Despacho' in groups)):
 		return redirect('main')
+
+	data_obtenida = editFileForm()
+	
 	# If there's a POST request, it means user is trying to submit data into the database from the table
 	if request.method == "POST":
-		data = request.POST
-		# POST request for changing the state of an order from the selection list on the table
-		if (data['type'] == 'estado'):
-			Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
-		# POST request for submitting the order as dispatched and retrieving its guide number from Random ERP database
-		elif (data['type'] == 'numero_guia'):
-			nvv = data['nvv']
-			listo = 1-int(data['listo'])
-			Ordenes.objects.filter(nvv=nvv).update(listo=listo)
-			bool_n_guia = change_numero_guia(nvv, listo)
-			# If there's no guide number, return garbage so it detects an error and prompts the user about it
-			if (not bool_n_guia):
-				return 'error'
-		# POST request for submitting a new hour range for dispatch of the order
-		elif (data['type'] == 'rango_horario'):
-			Ordenes.objects.filter(nvv=data['nvv']).update(rango_horario_final=data['option'])
-		# POST request for changing the state of the order for the seller (different list than the other)
-		elif (data['type'] == 'estado_pedido_para_vendedor'):
-			Ordenes.objects.filter(nvv=data['nvv']).update(estado_pedido_para_vendedor=data['option'])
-		# POST request for submitting a new dispatch date
-		elif (data['type'] == 'fecha_despacho'):
-			Ordenes.objects.filter(nvv=data['nvv']).update(fecha_despacho_final=data['date'])
-		# POST request for submitting new observations that may be pertinent
-		elif (data['type'] == 'observaciones_pedido'):
-			Ordenes.objects.filter(nvv=data['nvv']).update(observacion_despacho=data['observaciones'])
+		data_obtenida = editFileForm(request.POST or None, request.FILES or None)
+		if data_obtenida.is_valid():
+			cleaned_data = data_obtenida.cleaned_data
+			nvv = cleaned_data["nvv_for_submit"]
+			file = cleaned_data["nuevo_comprobante_pago"]
+
+			obj = Ordenes.objects.filter(nvv=nvv)
+			prev_file = os.path.join(MEDIA_ROOT, str(obj[0].documento_salida))
+			if (prev_file != "None" and os.path.exists(prev_file)):
+				os.remove(prev_file)
+
+			now = datetime.datetime.now()
+			fs = FileSystemStorage(os.path.join(MEDIA_ROOT,'voucher_de_despacho', now.strftime("%Y/%m/%d/")))
+			filename = fs.save(file.name, file)
+			obj.update(documento_salida=os.path.join('voucher_de_despacho/', now.strftime("%Y/%m/%d/"), filename))
+		else:
+			data = request.POST
+			# POST request for changing the state of an order from the selection list on the table
+			if (data['type'] == 'estado'):
+				Ordenes.objects.filter(nvv=data['nvv']).update(estado=data['option'])
+			# POST request for submitting the order as dispatched and retrieving its guide number from Random ERP database
+			elif (data['type'] == 'numero_guia'):
+				nvv = data['nvv']
+				listo = 1-int(data['listo'])
+				Ordenes.objects.filter(nvv=nvv).update(listo=listo)
+				bool_n_guia = change_numero_guia(nvv, listo)
+				# If there's no guide number, return garbage so it detects an error and prompts the user about it
+				if (not bool_n_guia):
+					return 'error'
+			# POST request for submitting a new hour range for dispatch of the order
+			elif (data['type'] == 'rango_horario'):
+				Ordenes.objects.filter(nvv=data['nvv']).update(rango_horario_final=data['option'])
+			# POST request for changing the state of the order for the seller (different list than the other)
+			elif (data['type'] == 'estado_pedido_para_vendedor'):
+				Ordenes.objects.filter(nvv=data['nvv']).update(estado_pedido_para_vendedor=data['option'])
+			# POST request for submitting a new dispatch date
+			elif (data['type'] == 'fecha_despacho'):
+				Ordenes.objects.filter(nvv=data['nvv']).update(fecha_despacho_final=data['date'])
+			# POST request for submitting new observations that may be pertinent
+			elif (data['type'] == 'observaciones_pedido'):
+				Ordenes.objects.filter(nvv=data['nvv']).update(observacion_despacho=data['observaciones'])
+			
 	
 	# Get depending on office
 	sucursal = 'V'
@@ -447,7 +467,7 @@ def mutable_table(request, con_guia):
 	permissions = 'Básico'
 	if (request.user.is_superuser or 'Despacho' in groups):
 		permissions = "Despacho"
-	return render(request, "AppMejoraDespacho/tables/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_metropolitana, "con_guia": con_guia,})
+	return render(request, "AppMejoraDespacho/tables/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_metropolitana, "con_guia": con_guia, "formulario": data_obtenida,})
 
 def change_numero_guia(nvv, listo):
 	'''
