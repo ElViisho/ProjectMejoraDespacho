@@ -114,8 +114,11 @@ function change_dispath() {
         $('#id_direccion_despacho_externo').hide();
         $('#id_despacho_externo').prop('required', false);
         $('#id_direccion_despacho_externo').prop('required', false);
-        $('#region_div').hide();
-        $('#id_region').prop('required', false);
+        if (sucursal != 1){
+            $('#region_div').hide();
+            $('#id_region').prop('required', false);
+        }
+        else $('#id_region').prop('required', true);
         change_comunas(false);
     }
 }

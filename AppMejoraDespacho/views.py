@@ -392,8 +392,6 @@ def table(request, con_guia):
 		return redirect("/?sucursal="+sucursal)
 	data_obtenida = editFileForm()
 
-	
-
 	context = get_sucursales(groups, sucursal)
 	if not(context):
 		return render(request, "AppMejoraDespacho/error.html")
@@ -607,6 +605,7 @@ def load_comunas(request):
 	return render(request, 'AppMejoraDespacho/utilities/comuna_dropdown_list_options.html', {'comunas': com})
 
 def get_sucursales(groups, sucursal):
+	s = sucursal
 	colina = '0'
 	concepcion = '0'
 	santa_elena = '0'
@@ -624,11 +623,11 @@ def get_sucursales(groups, sucursal):
 		sedes_usuario += '2'
 	
 	if (len(sedes_usuario) == 1):
-		sucursal = sedes_usuario[0]
+		s = sedes_usuario[0]
 
-	if not (sucursal in ['0', '1', '2']) or not(sucursal in sedes_usuario):
+	if not (s in ['0', '1', '2']) or not(s in sedes_usuario):
 		return False
-	return {'sucursal': sucursal, 'colina': colina, 'concepcion': concepcion, 'santa_elena': santa_elena,}
+	return {'sucursal': s, 'colina': colina, 'concepcion': concepcion, 'santa_elena': santa_elena,}
 
 def handler404(request, exception):
 	'''
