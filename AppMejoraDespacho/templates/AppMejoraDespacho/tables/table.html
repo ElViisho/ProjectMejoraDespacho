@@ -95,9 +95,9 @@
 
 <!-- The button to show the ones with or without guide number, based on what it is showing right now -->
 {% if con_guia == 'True'%}
-    <input class="boton_ocultar" onclick="window.location='table'" id="boton_ocultar" value="Mostrar ordenes sin despachar" readonly>
+    <input class="boton_ocultar" onclick="keep_sucursal('table')" id="boton_ocultar" value="Mostrar ordenes sin despachar" readonly>
 {% else %} 
-    <input class="boton_ocultar" onclick="window.location='table_with_guide'" id="boton_ocultar" value="Mostrar ordenes despachadas" readonly>
+    <input class="boton_ocultar" onclick="keep_sucursal('table_with_guide')" id="boton_ocultar" value="Mostrar ordenes despachadas" readonly>
 {% endif %}
 
 

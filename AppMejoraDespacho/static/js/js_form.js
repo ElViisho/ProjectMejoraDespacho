@@ -127,10 +127,15 @@ function change_comunas(cambiar) {
     if (cambiar) var regionId = $('#id_region').val();
     else var regionId = 0;
 
+    var url_string = window.location.href
+    var url_param = new URL(url_string);
+    var sucursal = url_param.searchParams.get("sucursal");
+
     $.ajax({
         url: url,
         data: {
-            'region': regionId
+            'region': regionId,
+            'sucursal': sucursal
         },
         success: function (data) {
             $("#id_comuna").html(data);

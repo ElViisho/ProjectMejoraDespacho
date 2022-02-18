@@ -24,3 +24,6 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'AppMejoraDespacho.views.handler404'
+handler500 = 'AppMejoraDespacho.views.handler500'

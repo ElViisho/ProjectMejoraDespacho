@@ -31,10 +31,27 @@
     <body style="background-color: #dfdfdf;">
         <table class="table tabla">
             <thead>
-                <th id="button"><button type="button" class="button_inicio" onclick="window.location='/'" style="margin-right: 20px;">Volver a inicio</button></th>
-                <th id="logo"><h1 class="titlep" onclick="window.location='/'">
-                    <img src="{% static 'images/logo.png'%}" style="width: 250px; height: 55px;">
-                </h1></th>
+                <th id="button">
+                    <button type="button" class="button_inicio" id="button_inicio" onclick="keep_sucursal('/')" style="margin-right: 20px;">Volver a inicio</button>
+                </th>
+                <th id="logo">
+                    <h1 class="titlep" onclick="keep_sucursal('/')">
+                        <img src="{% static 'images/logo.png'%}" style="width: 250px; height: 55px;">
+                    </h1>
+                    <table class="table tabla">
+                        <th class="tabla_sede">
+                            {% if colina == '1' and sucursal != '0'%} 
+                                <button type="button" class="button_sede" onclick="cambiar_sucursal(0)" style="margin-right: 20px;">Colina</button>
+                            {% endif %}
+                            {% if concepcion == '1' and sucursal != '1' %} 
+                                <button type="button" class="button_sede" onclick="cambiar_sucursal(1)"  style="margin-right: 20px;">Concepción</button>
+                            {% endif %}
+                            {% if santa_elena == '1' and sucursal != '2' %} 
+                                <button type="button" class="button_sede" onclick="cambiar_sucursal(2)"  style="margin-right: 20px;">Santa Elena</button> 
+                            {% endif %}
+                        </th>
+                    </table>
+                </th>
                 <th class="logout">
                     <a href="{% url 'logout' %}" ID="Logout" class="nav-link"> Cerrar sesión </a>
                 </th>
@@ -43,6 +60,22 @@
         
 
         {% block content %}{% endblock content %}
+
+        <script type="text/javascript">
+            function cambiar_sucursal(n){
+                var prev_url = window.location.href;
+                var new_loc = prev_url.split("\?");
+                window.location = new_loc[0] + "?sucursal=" + n;
+            }
+
+            function keep_sucursal(new_loc){
+                var url_string = window.location.href
+                var url_param = new URL(url_string);
+                var sucursal = url_param.searchParams.get("sucursal");
+                if (sucursal == null) sucursal = '2'
+                window.location=new_loc+'?sucursal=' + sucursal;
+            }
+        </script>
 
         
     </body>

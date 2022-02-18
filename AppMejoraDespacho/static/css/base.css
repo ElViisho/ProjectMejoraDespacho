@@ -37,32 +37,48 @@
     background-color: #ff948c;
     transition-duration: 1s;
 }
-/*  Button for going back to first page that appears at the top of all pages */
-.button_inicio{
+
+.button_inicio, .button_sede{
     background-color: #007b34;
 	color: #dfdfdf;
 	font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
     font-style: normal;
-	font-size: 15px;
-	width: 150px;
-	height: 40px;
 	border-radius: 5px;
 	border-style: solid;
 	border-color: #007030;
 	transition: background-color 1s , border-color 1s;
-	margin-left: 10px;
-	margin-bottom: 20px;
 }
-/*  Button for going back to first page when cursor hovers over it */
-.button_inicio:hover{
+/*  Buttons when cursor hovers over it */
+.button_inicio:hover, .button_sede:hover{
     cursor: pointer;
     background-color: #499b6c;
     transition-duration: 1s;
+}
+/*  Button for going back to first page that appears at the top of all pages */
+.button_inicio{
+	font-size: 15px;
+	width: 150px;
+	height: 40px;
+	margin-left: 10px;
+}
+/*  Button for changing office */
+.button_sede{
+	font-size: 12px;
+	width: 120px;
+	height: 30px;
+}
+
+.tabla_sede{
+	text-align: center;
 }
 
 /*  Logout text link */
 .logout{
 	text-align: right;
+	vertical-align: super;
+}
+#button{
+	text-align: left;
 	vertical-align: super;
 }
 

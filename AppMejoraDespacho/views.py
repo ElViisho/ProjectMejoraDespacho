@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from AppMejoraDespacho.models import *
@@ -12,7 +11,7 @@ from django.db import connections
 
 from ProjectMejoraDespacho.settings import MEDIA_ROOT
 
-from .choices import comunas_metropolitana, comunas_todas, regiones
+from .choices import comunas_metropolitana, comunas_biobio, comunas_todas, regiones
 from .queries import *
 from django.core.files.storage import FileSystemStorage
 import os 
@@ -170,6 +169,8 @@ def create_new_password_success(request):
 		return redirect('main')
 	
 	return render(request, "AppMejoraDespacho/user_authentication/create_new_password_success.html")
+def go_back_to_login(request):
+	return redirect('login')
 
 
 
@@ -180,15 +181,23 @@ def main(request):
 	Page: main
 	'''
 	activate('es')
-	if (request.user.is_superuser):
-		return render(request, "AppMejoraDespacho/main.html")
+	# Get user groups to know which template and buttons to show
+	# And redirect or show errors in case it doesn't have permissions
+	groups = list(request.user.groups.values_list('name', flat= True))
+	sucursal = request.GET.get('sucursal', '2')
 
-	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to know which template to show
+	context = get_sucursales(groups, sucursal)
+	if not(context):
+		return render(request, "AppMejoraDespacho/error.html")
+
+	if (request.user.is_superuser):
+		return render(request, "AppMejoraDespacho/main.html", context)
+	
 	if ('Despacho' in groups):
-		return render(request, "AppMejoraDespacho/main_despacho.html")
+		return render(request, "AppMejoraDespacho/main_despacho.html", context)
 	elif ('Eliminar' in groups):
-		return render(request, "AppMejoraDespacho/main_eliminar.html")
-	return render(request, "AppMejoraDespacho/main_basico.html")
+		return render(request, "AppMejoraDespacho/main_eliminar.html", context)
+	return render(request, "AppMejoraDespacho/main_basico.html", context)
 
 @login_required(login_url='login')
 def submit_nvv_form(request):
@@ -197,22 +206,33 @@ def submit_nvv_form(request):
 	Page: submit_nvv_form
 	'''
 	activate('es')
+	# Get user groups to know which template and buttons to show
+	# And redirect or show errors in case it doesn't have permissions
 	groups = list(request.user.groups.values_list('name', flat= True))
-	if (not request.user.is_superuser and 'Despacho' in groups):
-		return redirect('main')
+	sucursal = request.GET.get('sucursal', '2')
+	n_sucursal = sucursal
 	
-	sucursal = 'Santa Elena'
-	if ('Concepcion' in groups):
-		sucursal='Concepcion'
-	elif ('Colina' in groups):
-		sucursal='Colina'
+	if (not request.user.is_superuser and 'Despacho' in groups):
+		return redirect("/?sucursal="+n_sucursal)
+
+	context = get_sucursales(groups, sucursal)
+	if not(context):
+		return render(request, "AppMejoraDespacho/error.html")
+
+	if (sucursal == '0'):
+		sucursal = 'Colina'
+	elif (sucursal == '1'):
+		sucursal = 'Concepcion'
+	elif (sucursal == '2'):
+		sucursal = 'Santa Elena'
 
 	if request.method == 'GET':
 		# Get form withut data and pass it to the renderer
 		formulario = ingresoForm(sucursal=sucursal)
 		for field in formulario:
 			field.field.widget.attrs.update({"class": "form-control"})
-		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", {"formulario": formulario})
+		context['formulario'] = formulario
+		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", context)
 	if request.method == "POST":
 		# Get the data from the post into the form and validate it
 		data_obtenida = ingresoForm(request.POST or None, request.FILES or None, sucursal=sucursal)
@@ -221,8 +241,10 @@ def submit_nvv_form(request):
 			nvv = cleaned_data['nvv']
 
 			comunas = comunas_todas
-			if ('Santa Elena' in groups or 'Colina' in groups):
+			if (sucursal == 'Santa Elena' or sucursal == 'Colina'):
 				comunas[0] = comunas_metropolitana
+			elif (sucursal == 'Concepcion'):
+				comunas[0] = comunas_biobio
 			if cleaned_data['tipo_despacho'] == "1":
 				tipo_despacho = cleaned_data['despacho_externo'] + '\\' + cleaned_data['direccion_despacho_externo']
 				comuna = comunas[int(cleaned_data['region'])][int(cleaned_data['comuna'])][1] + ', ' + regiones[int(cleaned_data['region'])][1] 
@@ -271,9 +293,10 @@ def submit_nvv_form(request):
 				nombre_asistente = request.user.get_full_name(),
 				valor_neto_documento = datos_maeedo[0]["VANEDO"],
 			)		
-			return redirect("confirm_nvv")
+			return redirect("/confirm_nvv?sucursal="+n_sucursal)
 		# If data not valid, rerender the page and don't lose the data that was already there
-		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", {"formulario": data_obtenida})
+		context['formulario'] = data_obtenida
+		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", context)
 
 @login_required(login_url='login')
 def confirm_nvv(request):
@@ -291,21 +314,40 @@ def delete_nvv(request):
 	Page: delete_nvv
 	'''
 	activate('es')
+	# Get user groups to know which template and buttons to show
+	# And redirect or show errors in case it doesn't have permissions
 	groups = list(request.user.groups.values_list('name', flat= True))
+	sucursal = request.GET.get('sucursal', '2')
+	n_sucursal = sucursal
+
 	if (not request.user.is_superuser and not ('Eliminar' in groups) ):
-		return redirect('main')
+		return redirect("/?sucursal="+n_sucursal)
+
+	context = get_sucursales(groups, sucursal)
+	if not(context):
+		return render(request, "AppMejoraDespacho/error.html")
+
+	if (sucursal == '0'):
+		sucursal = 'COL'
+	elif (sucursal == '1'):
+		sucursal = 'CON'
+	elif (sucursal == '2'):
+		sucursal = 'V'
+	
 	if request.method == 'GET':
-		formulario = deleteForm()
+		formulario = deleteForm(sucursal=sucursal)
 		for field in formulario:
 			field.field.widget.attrs.update({"class": "form-control"})
-		return render(request, "AppMejoraDespacho/forms/delete_nvv.html", {"formulario": formulario})
+		context['formulario'] = formulario
+		return render(request, "AppMejoraDespacho/forms/delete_nvv.html", context)
 	if request.method == "POST":
-		data_obtenida = deleteForm(request.POST or None)
+		data_obtenida = deleteForm(request.POST or None, sucursal=sucursal)
 		if data_obtenida.is_valid():
 			cleaned_data = data_obtenida.cleaned_data
 			Ordenes.objects.filter(nvv=cleaned_data['nvv']).delete()
-			return redirect("confirm_delete_nvv")
-		return render(request, "AppMejoraDespacho/forms/delete_nvv.html", {"formulario": data_obtenida})
+			return redirect("/confirm_delete_nvv?sucursal="+n_sucursal)
+		context['formulario'] = data_obtenida
+		return render(request, "AppMejoraDespacho/forms/delete_nvv.html", context)
 
 @login_required(login_url='login')
 def confirm_delete_nvv(request):
@@ -341,10 +383,31 @@ def table(request, con_guia):
 	Renders the table with all the current data present in the database
 	'''	
 	activate('es')
+	# Get user groups to know which template and buttons to show
+	# And redirect or show errors in case it doesn't have permissions
 	groups = list(request.user.groups.values_list('name', flat= True))
+	sucursal = request.GET.get('sucursal', '2')
+	
 	if (not request.user.is_superuser and 'Despacho' in groups):
-		return redirect('main')
+		return redirect("/?sucursal="+sucursal)
 	data_obtenida = editFileForm()
+
+	
+
+	context = get_sucursales(groups, sucursal)
+	if not(context):
+		return render(request, "AppMejoraDespacho/error.html")
+
+	# Get depending on office
+	if (sucursal == '0'):
+		sucursal = 'COL'
+		context["comunas"] = comunas_metropolitana
+	elif (sucursal == '1'):
+		sucursal = 'CON'
+		context["comunas"] = comunas_biobio
+	elif (sucursal == '2'):
+		sucursal = 'V'
+		context["comunas"] = comunas_metropolitana
 	
 	if (request.method == "POST"):
 		data_obtenida = editFileForm(request.POST or None, request.FILES or None)
@@ -363,18 +426,17 @@ def table(request, con_guia):
 			filename = fs.save(file.name, file)
 			obj.update(comprobante_pago=os.path.join('comprobantes_de_pago/', now.strftime("%Y/%m/%d/"), filename))
 
-	# Get depending on office
-	sucursal = 'V'
-	if ('Concepcion' in groups):
-		sucursal = 'CON'
-	elif ('Colina' in groups):
-		sucursal = 'COL'
 	queryset = Ordenes.objects.filter(nvv__startswith=sucursal) # Get the data from the database
 	
 	permissions = 'Básico'
 	if (request.user.is_superuser or 'Eliminar' in groups):
 		permissions = "Eliminar"
-	return render(request, "AppMejoraDespacho/tables/table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_metropolitana, "con_guia": con_guia, "formulario": data_obtenida,})
+	context["permissions"] = permissions
+	context["queryset"] = queryset
+	
+	context["con_guia"] = con_guia
+	context["formulario"] = data_obtenida
+	return render(request, "AppMejoraDespacho/tables/table.html",context)
 
 
 
@@ -404,11 +466,30 @@ def mutable_table(request, con_guia):
 	whose some data may be changed
 	'''
 	activate('es')
+	# Get user groups to know which template and buttons to show
+	# And redirect or show errors in case it doesn't have permissions
 	groups = list(request.user.groups.values_list('name', flat= True))
+	sucursal = request.GET.get('sucursal', '2')
+
 	if (not request.user.is_superuser and not ('Despacho' in groups)):
-		return redirect('main')
+		return redirect("/?sucursal="+sucursal)
 
 	data_obtenida = editFileForm()
+
+	context = get_sucursales(groups, sucursal)
+	if not(context):
+		return render(request, "AppMejoraDespacho/error.html")
+
+	# Get depending on office
+	if (sucursal == '0'):
+		sucursal = 'COL'
+		context["comunas"] = comunas_metropolitana
+	elif (sucursal == '1'):
+		sucursal = 'CON'
+		context["comunas"] = comunas_biobio
+	elif (sucursal == '2'):
+		sucursal = 'V'
+		context["comunas"] = comunas_metropolitana
 	
 	# If there's a POST request, it means user is trying to submit data into the database from the table
 	if request.method == "POST":
@@ -509,8 +590,54 @@ def load_comunas(request):
 	region = request.GET.get('region')
 
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to know which template to show
+
+	sucursal = request.GET.get('sucursal', '2')
+
+	context = get_sucursales(groups, sucursal)
+	if not(context):
+		return render(request, "AppMejoraDespacho/error.html")
+
 	comunas = comunas_todas
-	if ('Santa Elena' in groups or 'Colina' in groups):
+	if (sucursal == '0' or sucursal == '2'):
 		comunas[0] = comunas_metropolitana
+	elif (sucursal == '1'):
+		comunas[0] = comunas_biobio
+		
 	com = comunas[int(region)]
 	return render(request, 'AppMejoraDespacho/utilities/comuna_dropdown_list_options.html', {'comunas': com})
+
+def get_sucursales(groups, sucursal):
+	colina = '0'
+	concepcion = '0'
+	santa_elena = '0'
+	sedes_usuario = []
+	if ('Colina' in groups):
+		colina = '1'
+		sedes_usuario += '0'
+	if ('Concepcion' in groups):
+		concepcion = '1'
+		sedes_usuario += '1'
+	if ('Santa Elena' in groups):
+		santa_elena = '1'
+		sedes_usuario += '2'
+	if not(sedes_usuario):
+		sedes_usuario += '2'
+	
+	if (len(sedes_usuario) == 1):
+		sucursal = sedes_usuario[0]
+
+	if not (sucursal in ['0', '1', '2']) or not(sucursal in sedes_usuario):
+		return False
+	return {'sucursal': sucursal, 'colina': colina, 'concepcion': concepcion, 'santa_elena': santa_elena,}
+
+def handler404(request, exception):
+	'''
+	Method for handling the 404 error
+	'''
+	return render(request, '404.html')
+
+def handler500(request):
+	'''
+	Method for handling the 500 error
+	'''
+	return render(request, '500.html')

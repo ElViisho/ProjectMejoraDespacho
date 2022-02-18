@@ -188,8 +188,9 @@ class deleteForm(forms.Form):
     nvv = forms.ChoiceField(label='Eliga una NVV para eliminar', choices=(), required=True)
 
     def __init__(self, *args, **kwargs):
+        sucursal = kwargs.pop('sucursal')
         super(deleteForm, self).__init__(*args, **kwargs)
-        queryset = Ordenes.objects.all()
+        queryset = Ordenes.objects.filter(nvv__startswith=sucursal) # Get the data from the database
         choices_nvv = [("None", "----------")]
         for i in queryset:
             choices_nvv.append((i,i))
