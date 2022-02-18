@@ -257,8 +257,9 @@ function format (d) {
         n_guia = '<tr class="child_table">'+
             '<td>Número de guía:</td>'+
             '<td>' + d[6] + '</td>' +
+            '<td>Voucher de Despacho:</td>'+
+            '<td>' + d[11] +'</td>' +
         '</tr>'
-        rowspan = 3;
         comprobante = '';
     }
     
@@ -269,7 +270,7 @@ function format (d) {
                 '<td>Solicitado por:</td>' +
                 '<td>' + d[8] + '</td>' +
                 '<td>Valor neto:</td>' +
-                '<td>$' + Number(d[11]).toLocaleString() + '</td>' +
+                '<td>$' + Number(d[12]).toLocaleString() + '</td>' +
             '</tr>' +
             '<tr class="child_table">' +
                 '<td>Nombre vendedor:</td>' +
@@ -299,7 +300,7 @@ function format (d) {
             '</tr>'+
             '<tr class="child_table">' +
                 '<td rowspan="' + rowspan + '" style="vertical-align: top;">Obervaciones solicitud:</td>'+
-                '<td rowspan="' + rowspan + '" style="vertical-align: top;">' + d[12] + '</td>'+
+                '<td rowspan="' + rowspan + '" style="vertical-align: top;">' + d[13] + '</td>'+
             '</tr>' +
             '<tr class="child_table"></tr>' +
             '<tr class="child_table"></tr>' +
