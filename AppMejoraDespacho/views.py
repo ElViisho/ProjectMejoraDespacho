@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from AppMejoraDespacho.models import *
@@ -243,17 +244,16 @@ def submit_nvv_form(request):
 			nvv = cleaned_data['nvv']
 
 			comunas = comunas_todas
-			if (sucursal == 'Santa Elena' or sucursal == 'Colina'):
-				comunas[0] = comunas_metropolitana
-			elif (sucursal == 'Concepcion'):
-				comunas[0] = comunas_biobio
-			if cleaned_data['tipo_despacho'] == "1":
+			if (cleaned_data['tipo_despacho'] == "1"):
 				tipo_despacho = cleaned_data['despacho_externo'] + '\\' + cleaned_data['direccion_despacho_externo']
 				comuna = comunas[int(cleaned_data['region'])][int(cleaned_data['comuna'])][1] + ', ' + regiones[int(cleaned_data['region'])][1] 
-			else:
+			elif sucursal != 'Concepcion':
 				tipo_despacho = 'DIMACO'
 				comuna = comunas[0][int(cleaned_data['comuna'])][1]
-
+			else:
+				tipo_despacho = 'DIMACO'
+				comuna = comunas[int(cleaned_data['region'])][int(cleaned_data['comuna'])][1] + ', ' + regiones[int(cleaned_data['region'])][1]
+                
 			if cleaned_data['comprobante_pago'] is None:
 				cleaned_data['comprobante_pago'] = "None"
 
@@ -292,7 +292,7 @@ def submit_nvv_form(request):
 				hora_de_despacho_fin = datetime.time(hour=int(cleaned_data['hora_despacho_fin'])),
 				hora_despacho_extra_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_extra_inicio'])),
 				hora_despacho_extra_fin = datetime.time(hour=int(cleaned_data['hora_despacho_extra_fin'])),
-				nombre_asistente = request.user.get_full_name(),
+				nombre_asistente = request.user.email,
 				valor_neto_documento = datos_maeedo[0]["VANEDO"],
 			)		
 			return redirect("/confirm_nvv?sucursal="+n_sucursal)
@@ -527,7 +527,9 @@ def mutable_table(request, con_guia):
 				bool_n_guia = change_numero_guia(nvv, listo)
 				# If there's no guide number, return garbage so it detects an error and prompts the user about it
 				if (not bool_n_guia):
-					return 'error'
+					response = JsonResponse({"error": "there was an error"})
+					response.status_code = 403 # To announce that the user isn't allowed to publish
+					return response
 			# POST request for submitting a new hour range for dispatch of the order
 			elif (data['type'] == 'rango_horario'):
 				Ordenes.objects.filter(nvv=data['nvv']).update(rango_horario_final=data['option'])

@@ -68,9 +68,9 @@
     <!-- The agreed time range of dispatch. If it has two ranges, display both. Otherwise, display only the one that exists -->
     <td> 
         {% if item.hora_despacho_extra_inicio|date:"G" == "0" %}
-            {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }}
+            {{ item.hora_de_despacho_inicio|date:"H:i" }} - {{ item.hora_de_despacho_fin|date:"H:i" }}
         {% else %}
-            {{ item.hora_de_despacho_inicio }} - {{ item.hora_de_despacho_fin }},<br>{{ item.hora_despacho_extra_inicio }} - {{ item.hora_despacho_extra_fin }}
+            {{ item.hora_de_despacho_inicio|date:"H:i" }} - {{ item.hora_de_despacho_fin|date:"H:i" }},<br>{{ item.hora_despacho_extra_inicio|date:"H:i" }} - {{ item.hora_despacho_extra_fin|date:"H:i" }}
         {% endif %}
     </td>
     <td>

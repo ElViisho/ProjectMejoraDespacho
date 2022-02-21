@@ -522,18 +522,20 @@ function confirmar() {
         beforeSend: function () {
             // While waiting for response
             $('#confirm_texto').html('Cargando...');
-            $('#boton_confirm').prop('disabled', true);
-            $('#boton_cancel').prop('disabled', true);
+            $('#boton_confirm').hide();
+            $('#boton_cancel').hide();
+            document.getElementById('confirm_texto').style.marginBottom = '25px';
         },
         data: {"type": "numero_guia", "nvv": nvv, "listo": listo},
         success: function () {
-            // Reload table with new data
-            window.location.reload();
+			// Prompt the user the success and after 1 second reload table
+            $('#confirm_texto').html('Éxito. La página se recargará en breve.');
+            setTimeout('window.location.reload()', 1000);
         },
         error: function () {
-            // Prompt the user there was no guide number and after 3 secondes reload table
+            // Prompt the user there was no guide number and after 2 seconds reload table
             $('#confirm_texto').html('Error. Orden no tiene documento asociado. La página se recargará en breve.');
-            setTimeout('window.location.reload()', 3000);
+            setTimeout('window.location.reload()', 2000);
         },
         timeout: 5000 
     })
