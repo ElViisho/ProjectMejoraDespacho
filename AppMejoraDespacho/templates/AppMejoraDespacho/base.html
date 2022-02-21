@@ -79,8 +79,8 @@
                 var url_string = window.location.href
                 var url_param = new URL(url_string);
                 var sucursal = url_param.searchParams.get("sucursal");
-                if (sucursal == null) sucursal = '2'
-                window.location=new_loc+'?sucursal=' + sucursal;
+                if (sucursal == null) window.location=new_loc;
+                else window.location=new_loc+'?sucursal=' + sucursal;
             }
         </script>
 

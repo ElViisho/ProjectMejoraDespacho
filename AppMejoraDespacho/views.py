@@ -184,7 +184,7 @@ def main(request):
 	# Get user groups to know which template and buttons to show
 	# And redirect or show errors in case it doesn't have permissions
 	groups = list(request.user.groups.values_list('name', flat= True))
-	sucursal = request.GET.get('sucursal', '2')
+	sucursal = request.GET.get('sucursal')
 
 	context = get_sucursales(groups, sucursal)
 	if not(context):
@@ -209,7 +209,7 @@ def submit_nvv_form(request):
 	# Get user groups to know which template and buttons to show
 	# And redirect or show errors in case it doesn't have permissions
 	groups = list(request.user.groups.values_list('name', flat= True))
-	sucursal = request.GET.get('sucursal', '2')
+	sucursal = request.GET.get('sucursal')
 	n_sucursal = sucursal
 	
 	if (not request.user.is_superuser and 'Despacho' in groups):
@@ -218,6 +218,8 @@ def submit_nvv_form(request):
 	context = get_sucursales(groups, sucursal)
 	if not(context):
 		return render(request, "AppMejoraDespacho/error.html")
+
+	sucursal = context['sucursal']
 
 	if (sucursal == '0'):
 		sucursal = 'Colina'
@@ -317,7 +319,7 @@ def delete_nvv(request):
 	# Get user groups to know which template and buttons to show
 	# And redirect or show errors in case it doesn't have permissions
 	groups = list(request.user.groups.values_list('name', flat= True))
-	sucursal = request.GET.get('sucursal', '2')
+	sucursal = request.GET.get('sucursal')
 	n_sucursal = sucursal
 
 	if (not request.user.is_superuser and not ('Eliminar' in groups) ):
@@ -326,6 +328,8 @@ def delete_nvv(request):
 	context = get_sucursales(groups, sucursal)
 	if not(context):
 		return render(request, "AppMejoraDespacho/error.html")
+
+	sucursal = context['sucursal']
 
 	if (sucursal == '0'):
 		sucursal = 'COL'
@@ -386,15 +390,17 @@ def table(request, con_guia):
 	# Get user groups to know which template and buttons to show
 	# And redirect or show errors in case it doesn't have permissions
 	groups = list(request.user.groups.values_list('name', flat= True))
-	sucursal = request.GET.get('sucursal', '2')
+	sucursal = request.GET.get('sucursal')
 	
 	if (not request.user.is_superuser and 'Despacho' in groups):
 		return redirect("/?sucursal="+sucursal)
 	data_obtenida = editFileForm()
 
 	context = get_sucursales(groups, sucursal)
-	if not(context):
+	if (context == False):
 		return render(request, "AppMejoraDespacho/error.html")
+
+	sucursal = context['sucursal']
 
 	# Get depending on office
 	if (sucursal == '0'):
@@ -467,7 +473,7 @@ def mutable_table(request, con_guia):
 	# Get user groups to know which template and buttons to show
 	# And redirect or show errors in case it doesn't have permissions
 	groups = list(request.user.groups.values_list('name', flat= True))
-	sucursal = request.GET.get('sucursal', '2')
+	sucursal = request.GET.get('sucursal')
 
 	if (not request.user.is_superuser and not ('Despacho' in groups)):
 		return redirect("/?sucursal="+sucursal)
@@ -477,6 +483,8 @@ def mutable_table(request, con_guia):
 	context = get_sucursales(groups, sucursal)
 	if not(context):
 		return render(request, "AppMejoraDespacho/error.html")
+
+	sucursal = context['sucursal']
 
 	# Get depending on office
 	if (sucursal == '0'):
@@ -586,22 +594,8 @@ def load_comunas(request):
 	on the form
 	'''
 	region = request.GET.get('region')
-
-	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to know which template to show
-
-	sucursal = request.GET.get('sucursal', '2')
-
-	context = get_sucursales(groups, sucursal)
-	if not(context):
-		return render(request, "AppMejoraDespacho/error.html")
-
-	comunas = comunas_todas
-	if (sucursal == '0' or sucursal == '2'):
-		comunas[0] = comunas_metropolitana
-	elif (sucursal == '1'):
-		comunas[0] = comunas_biobio
 		
-	com = comunas[int(region)]
+	com = comunas_todas[int(region)]
 	return render(request, 'AppMejoraDespacho/utilities/comuna_dropdown_list_options.html', {'comunas': com})
 
 def get_sucursales(groups, sucursal):
@@ -619,14 +613,13 @@ def get_sucursales(groups, sucursal):
 	if ('Santa Elena' in groups):
 		santa_elena = '1'
 		sedes_usuario += '2'
-	if not(sedes_usuario):
-		sedes_usuario += '2'
-	
-	if (len(sedes_usuario) == 1):
+
+	if (s is None):
 		s = sedes_usuario[0]
 
 	if not (s in ['0', '1', '2']) or not(s in sedes_usuario):
 		return False
+		
 	return {'sucursal': s, 'colina': colina, 'concepcion': concepcion, 'santa_elena': santa_elena,}
 
 def handler404(request, exception):
