@@ -535,18 +535,18 @@ def mutable_table(request, con_guia):
 			
 	
 	# Get depending on office
-	sucursal = 'V'
-	if ('Concepcion' in groups):
-		sucursal = 'CON'
-	elif ('Colina' in groups):
-		sucursal = 'COL'
 	queryset = Ordenes.objects.filter(nvv__startswith=sucursal) # Get the data from the database
 	
 	groups = list(request.user.groups.values_list('name', flat= True)) # Get user permissions to pass it to the template so it knows what to show
 	permissions = 'Básico'
 	if (request.user.is_superuser or 'Despacho' in groups):
 		permissions = "Despacho"
-	return render(request, "AppMejoraDespacho/tables/mutable_table.html",{"permissions": permissions, "queryset": queryset, "comunas": comunas_metropolitana, "con_guia": con_guia, "formulario": data_obtenida,})
+	context["permissions"] = permissions
+	context["queryset"] = queryset
+	
+	context["con_guia"] = con_guia
+	context["formulario"] = data_obtenida
+	return render(request, "AppMejoraDespacho/tables/mutable_table.html", context)
 
 def change_numero_guia(nvv, listo):
 	'''
