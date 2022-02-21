@@ -6,3 +6,4 @@ mssql-django
 django-file-resubmit
 git+https://github.com/julian-r/python-magic.git
 django-phonenumber-field[phonenumbers]
+jwt

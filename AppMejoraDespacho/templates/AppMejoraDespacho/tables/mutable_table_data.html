@@ -8,15 +8,9 @@
 <tr class="text-center" id="{{ item.nvv }}">
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
     <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
-    <td>{{ item.fecha_solicitud }}</td> <!-- Date when NVV was submitted to the table -->
+    <td>{{ item.fecha_solicitud|date:"d F Y" }}</td> <!-- Date when NVV was submitted to the table -->
     <!-- Way of dispatch. If it's internal, just show DIMACO. Else, show the name of the dispatcher and its direction -->
-    <td>
-        {% if item.tipo_despacho == "DIMACO" %}
-            {{ item.tipo_despacho }}
-        {% else %}
-            <div class="despacho_externo">{{ item.tipo_despacho }}</div>
-        {% endif %}
-    </td>
+    <td class="despacho_externo"> {{ item.tipo_despacho }} </td>
     <td>{{ item.comuna }}</td>  <!-- Commune address -->
     <td>{{ item.direccion }}</td> <!-- Dispatch address -->
     <!-- The state selector, which is dependant of many things. Couldn't figure out how to make
@@ -161,6 +155,9 @@
     </td>
     <td style="display: none;" id="fecha_despacho_final{{ item.nvv }}" >
         {{ item.fecha_despacho_final }}
+    </td>
+    <td style="display: none;" id="observacion{{ item.nvv }}" >
+        {{ item.observacion }}
     </td>
     
 </tr>

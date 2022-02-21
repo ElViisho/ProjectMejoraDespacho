@@ -38,6 +38,45 @@ $(document).ready(function() {
 		
 	today = yyyy + '-' + mm + '-' + dd;
 	$('.fecha_despacho').prop("min", today);
+
+    //Custom ordering for dates
+	(function () {
+ 
+        var customDateDDMMMYYYYToOrd = function (date) {
+            "use strict"; //let's avoid tom-foolery in this function
+            // Convert to a number YYYYMMDD which we can use to order
+            var dateParts = date.split(' ');
+            return (dateParts[2] * 10000) + ($.inArray(dateParts[1], ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]) * 100) + (dateParts[0]*1);
+        };
+         
+        // This will help DataTables magic detect the "dd-MMM-yyyy" format; Unshift
+        // so that it's the first data type (so it takes priority over existing)
+        jQuery.fn.dataTableExt.aTypes.unshift(
+            function (sData) {
+                "use strict"; //let's avoid tom-foolery in this function
+                if (/^([0-2]?\d|3[0-1]) (enero|febrero|marzo|abril|Mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre) \d{4}/i.test(sData)) {
+                    return 'date-dd-mmm-yyyy';
+                }
+                return null;
+            }
+        );
+         
+        // define the sorts
+        jQuery.fn.dataTableExt.oSort['date-dd-mmm-yyyy-asc'] = function (a, b) {
+            "use strict"; //let's avoid tom-foolery in this function
+            var ordA = customDateDDMMMYYYYToOrd(a),
+                ordB = customDateDDMMMYYYYToOrd(b);
+            return (ordA < ordB) ? -1 : ((ordA > ordB) ? 1 : 0);
+        };
+         
+        jQuery.fn.dataTableExt.oSort['date-dd-mmm-yyyy-desc'] = function (a, b) {
+            "use strict"; //let's avoid tom-foolery in this function
+            var ordA = customDateDDMMMYYYYToOrd(a),
+                ordB = customDateDDMMMYYYYToOrd(b);
+            return (ordA < ordB) ? 1 : ((ordA > ordB) ? -1 : 0);
+        };
+         
+        })();
 	
 	
     // Add plugin of DataTable to table of data
@@ -102,6 +141,10 @@ $(document).ready(function() {
                 } },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
+        ],
+        columnDefs: [
+            { type: 'date-dd-mmm-yyyy', targets: [2] }
         ],
         "search": {     // Searches for the whole match and not each word individually
             "smart": false
@@ -126,12 +169,34 @@ $(document).ready(function() {
                     return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
                 },
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4, 5, 17, 8, 12, 13, 14, 15, 16],
+                    columns: [ 0, 1, 2, 3, 4, 5, 17, 8, 12, 13, 14, 15, 18, 16],
                     format: {
                         body: function ( data, row, column, node ) {
                             // Format date for excel
-                            if (column === 2 || column == 6) {
+                            if (column === 2 ) {
+								if (data == 'No asignada') return data;
                                 d = data.split(' ');
+								var mes="";
+                                switch(d[1]){
+                                    case "Enero": mes = "01"; break;
+                                    case "Febrero": mes = "02"; break;
+                                    case "Marzo": mes = "03"; break;
+                                    case "Abril": mes = "04"; break;
+                                    case "Mayo": mes = "05"; break;
+                                    case "Junio": mes = "06"; break;
+                                    case "Julio": mes = "07"; break;
+                                    case "Agosto": mes = "08"; break;
+                                    case "Septiembre": mes = "09"; break;
+                                    case "Octubre": mes = "10"; break;
+                                    case "Noviembre": mes = "11"; break;
+                                    case "Diciembre": mes = "12"; break;
+									default: mes=""; break;
+                                }
+                                return d[0]+"-"+mes+"-"+d[2];
+                            }
+                            else if (column === 6) {
+                                d = data.split(' ');
+								var mes="";
                                 switch(d[2]){
                                     case "Enero": mes = "01"; break;
                                     case "Febrero": mes = "02"; break;
@@ -145,8 +210,9 @@ $(document).ready(function() {
                                     case "Octubre": mes = "10"; break;
                                     case "Noviembre": mes = "11"; break;
                                     case "Diciembre": mes = "12"; break;
+									default: mes=""; break;
                                 }
-                                return d[0] + "-" + mes + "-" + d[4].substring(2,4);
+                                return d[0]+"-"+mes+"-"+d[4];
                             }
                             return data;
                         }
@@ -286,6 +352,7 @@ $(document).ready(function() {
 
     $('.despacho_externo').html(function() {
         arr = $(this).html().split('\\');
+        if (!arr[1]) return 'DIMACO';
         return '<i>' + arr[0] + '</i><br>' + arr[1];
     })
 });

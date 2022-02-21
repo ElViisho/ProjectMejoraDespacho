@@ -94,7 +94,7 @@ $(document).ready(function() {
         ],
 		columnDefs: [
 		   { type: 'date-dd-mmm-yyyy', targets: [2,8] }
-		 ],
+		],
         "search": {     // Searches for the whole match and not each word individually
             "smart": false
         },
@@ -122,7 +122,7 @@ $(document).ready(function() {
                     format: {
                         body: function ( data, row, column, node ) {
                             // Format date for excel
-                            if (column === 2 || column === 8) {
+                            if (column === 2 || column === 8 || column === 7) {
 								if (data == 'No asignada') return data;
                                 d = data.split(' ');
 								var mes="";
@@ -143,26 +143,6 @@ $(document).ready(function() {
                                 }
                                 return d[0]+"-"+mes+"-"+d[2];
                             }
-							else if (column === 7){
-								d = data.split(' ');
-								var mes="";
-                                switch(d[0]){
-                                    case "Ene.": mes = "01"; break;
-                                    case "Feb.": mes = "02"; break;
-                                    case "Mar.": mes = "03"; break;
-                                    case "Abr.": mes = "04"; break;
-                                    case "Mayo": mes = "05"; break;
-                                    case "Jun.": mes = "06"; break;
-                                    case "Jul.": mes = "07"; break;
-                                    case "Ago.": mes = "08"; break;
-                                    case "Sept.": mes = "09"; break;
-                                    case "Oct.": mes = "10"; break;
-                                    case "Nov.": mes = "11"; break;
-                                    case "Dic.": mes = "12"; break;
-									default: mes=""; break;
-                                }
-                                return d[1].slice(0,-1)+"-"+mes+"-"+d[2];
-							}
                             return data;
                         }
                     }
@@ -183,8 +163,8 @@ $(document).ready(function() {
                     var currencyFormat = lastXfIndex + 1;
                     var dateFormat = lastXfIndex + 2;
                     var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('row c[r^="J"]', sheet).attr( 's', currencyFormat );
-                    $('row c[r="J2"]', sheet).attr( 's', '2' );
+                    $('row c[r^="K"]', sheet).attr( 's', currencyFormat );
+                    $('row c[r="K2"]', sheet).attr( 's', '2' );
                     $('row c[r^="C"]', sheet).attr( 's', dateFormat );
                     $('row c[r="C2"]', sheet).attr( 's', '2' );
                     $('row c[r^="H"]', sheet).attr( 's', dateFormat );
@@ -226,11 +206,6 @@ $(document).ready(function() {
             $('#id_nvv_for_submit').val(row.data()[1]);
         }
     });
-
-    $('.despacho_externo').html(function() {
-        arr = $(this).html().split('\\');
-        return '<i>' + arr[0] + '</i><br>' + arr[1];
-    })
     
 });
 

@@ -8,7 +8,7 @@
 <tr class="text-center" id="{{ item.nvv }}">
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
     <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
-    <td>{{ item.fecha_solicitud }}</td> <!-- Date when NVV was submitted to the table -->
+    <td>{{ item.fecha_solicitud|date:"d F Y" }}</td> <!-- Date when NVV was submitted to the table -->
     <td>{{ item.comuna }}</td>  <!-- Commune address -->
     <td>{{ item.direccion }}</td> <!-- Dispatch address -->
     <td>{{ item.nombre_contacto }}</td> <!-- Name of the person to contact for the dispatch -->
@@ -70,7 +70,7 @@
         {{ item.observacion }}
     </td>
     <td style="display: none;">
-        {{ item.fecha_despacho }}
+        {{ item.fecha_despacho|date:"d F Y" }}
     </td>
     <td style="display: none;">
         {{ item.condicion_pago }}
