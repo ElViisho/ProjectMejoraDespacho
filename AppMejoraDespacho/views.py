@@ -190,6 +190,8 @@ def main(request):
 	context = get_sucursales(groups, sucursal)
 	if not(context):
 		return render(request, "AppMejoraDespacho/error.html")
+	elif (context == 'sin_sede'):
+		return render(request, "AppMejoraDespacho/sin_sede.html")
 
 	if (request.user.is_superuser):
 		return render(request, "AppMejoraDespacho/main.html", context)
@@ -617,7 +619,10 @@ def get_sucursales(groups, sucursal):
 		sedes_usuario += '2'
 
 	if (s is None):
-		s = sedes_usuario[0]
+		try:
+			s = sedes_usuario[0]
+		except: 
+			return 'sin_sede'
 
 	if not (s in ['0', '1', '2']) or not(s in sedes_usuario):
 		return False
