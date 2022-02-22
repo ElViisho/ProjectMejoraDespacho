@@ -187,20 +187,28 @@ def main(request):
 	groups = list(request.user.groups.values_list('name', flat= True))
 	sucursal = request.GET.get('sucursal')
 
+	cookie = request.COOKIES.get('cookie_sucursal')
+	if sucursal is None and cookie is not None:
+		sucursal = cookie
+
 	context = get_sucursales(groups, sucursal)
 	if not(context):
 		return render(request, "AppMejoraDespacho/error.html")
 	elif (context == 'sin_sede'):
 		return render(request, "AppMejoraDespacho/sin_sede.html")
 
+	sucursal = context['sucursal']
+
 	if (request.user.is_superuser):
-		return render(request, "AppMejoraDespacho/main.html", context)
-	
-	if ('Despacho' in groups):
-		return render(request, "AppMejoraDespacho/main_despacho.html", context)
+		template = "AppMejoraDespacho/main.html"
+	elif ('Despacho' in groups):
+		template = "AppMejoraDespacho/main_despacho.html"
 	elif ('Eliminar' in groups):
-		return render(request, "AppMejoraDespacho/main_eliminar.html", context)
-	return render(request, "AppMejoraDespacho/main_basico.html", context)
+		template = "AppMejoraDespacho/main_eliminar.html"
+	else:
+		template = "AppMejoraDespacho/main_basico.html"
+
+	return response_with_cookie_sucursal(request, template, context, sucursal)
 
 @login_required(login_url='login')
 def submit_nvv_form(request):
@@ -218,11 +226,18 @@ def submit_nvv_form(request):
 	if (not request.user.is_superuser and 'Despacho' in groups):
 		return redirect("/?sucursal="+n_sucursal)
 
+	cookie = request.COOKIES.get('cookie_sucursal')
+	if sucursal is None and cookie is not None:
+		sucursal = cookie
+
 	context = get_sucursales(groups, sucursal)
 	if not(context):
 		return render(request, "AppMejoraDespacho/error.html")
+	elif (context == 'sin_sede'):
+		return render(request, "AppMejoraDespacho/sin_sede.html")
 
 	sucursal = context['sucursal']
+	n_sucursal = sucursal
 
 	if (sucursal == '0'):
 		sucursal = 'Colina'
@@ -237,7 +252,7 @@ def submit_nvv_form(request):
 		for field in formulario:
 			field.field.widget.attrs.update({"class": "form-control"})
 		context['formulario'] = formulario
-		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", context)
+		return response_with_cookie_sucursal(request, "AppMejoraDespacho/forms/submit_nvv_form.html", context, n_sucursal)
 	if request.method == "POST":
 		# Get the data from the post into the form and validate it
 		data_obtenida = ingresoForm(request.POST or None, request.FILES or None, sucursal=sucursal)
@@ -300,7 +315,7 @@ def submit_nvv_form(request):
 			return redirect("/confirm_nvv?sucursal="+n_sucursal)
 		# If data not valid, rerender the page and don't lose the data that was already there
 		context['formulario'] = data_obtenida
-		return render(request, "AppMejoraDespacho/forms/submit_nvv_form.html", context)
+		return response_with_cookie_sucursal(request, "AppMejoraDespacho/forms/submit_nvv_form.html", context, n_sucursal)
 
 @login_required(login_url='login')
 def confirm_nvv(request):
@@ -327,11 +342,18 @@ def delete_nvv(request):
 	if (not request.user.is_superuser and not ('Eliminar' in groups) ):
 		return redirect("/?sucursal="+n_sucursal)
 
+	cookie = request.COOKIES.get('cookie_sucursal')
+	if sucursal is None and cookie is not None:
+		sucursal = cookie
+
 	context = get_sucursales(groups, sucursal)
 	if not(context):
 		return render(request, "AppMejoraDespacho/error.html")
+	elif (context == 'sin_sede'):
+		return render(request, "AppMejoraDespacho/sin_sede.html")
 
 	sucursal = context['sucursal']
+	n_sucursal = sucursal
 
 	if (sucursal == '0'):
 		sucursal = 'COL'
@@ -345,15 +367,14 @@ def delete_nvv(request):
 		for field in formulario:
 			field.field.widget.attrs.update({"class": "form-control"})
 		context['formulario'] = formulario
-		return render(request, "AppMejoraDespacho/forms/delete_nvv.html", context)
+		return response_with_cookie_sucursal(request, "AppMejoraDespacho/forms/delete_nvv.html", context, n_sucursal)
 	if request.method == "POST":
 		data_obtenida = deleteForm(request.POST or None, sucursal=sucursal)
 		if data_obtenida.is_valid():
 			cleaned_data = data_obtenida.cleaned_data
 			Ordenes.objects.filter(nvv=cleaned_data['nvv']).delete()
 			return redirect("/confirm_delete_nvv?sucursal="+n_sucursal)
-		context['formulario'] = data_obtenida
-		return render(request, "AppMejoraDespacho/forms/delete_nvv.html", context)
+		return response_with_cookie_sucursal(request, "AppMejoraDespacho/forms/delete_nvv.html", context, n_sucursal)
 
 @login_required(login_url='login')
 def confirm_delete_nvv(request):
@@ -398,11 +419,18 @@ def table(request, con_guia):
 		return redirect("/?sucursal="+sucursal)
 	data_obtenida = editFileForm()
 
+	cookie = request.COOKIES.get('cookie_sucursal')
+	if sucursal is None and cookie is not None:
+		sucursal = cookie
+
 	context = get_sucursales(groups, sucursal)
-	if (context == False):
+	if not(context):
 		return render(request, "AppMejoraDespacho/error.html")
+	elif (context == 'sin_sede'):
+		return render(request, "AppMejoraDespacho/sin_sede.html")
 
 	sucursal = context['sucursal']
+	n_sucursal = sucursal
 
 	# Get depending on office
 	if (sucursal == '0'):
@@ -442,7 +470,7 @@ def table(request, con_guia):
 	
 	context["con_guia"] = con_guia
 	context["formulario"] = data_obtenida
-	return render(request, "AppMejoraDespacho/tables/table.html",context)
+	return response_with_cookie_sucursal(request, "AppMejoraDespacho/tables/table.html", context, n_sucursal)
 
 
 
@@ -482,11 +510,18 @@ def mutable_table(request, con_guia):
 
 	data_obtenida = editFileForm()
 
+	cookie = request.COOKIES.get('cookie_sucursal')
+	if sucursal is None and cookie is not None:
+		sucursal = cookie
+
 	context = get_sucursales(groups, sucursal)
 	if not(context):
 		return render(request, "AppMejoraDespacho/error.html")
+	elif (context == 'sin_sede'):
+		return render(request, "AppMejoraDespacho/sin_sede.html")
 
 	sucursal = context['sucursal']
+	n_sucursal = sucursal
 
 	# Get depending on office
 	if (sucursal == '0'):
@@ -558,7 +593,7 @@ def mutable_table(request, con_guia):
 	
 	context["con_guia"] = con_guia
 	context["formulario"] = data_obtenida
-	return render(request, "AppMejoraDespacho/tables/mutable_table.html", context)
+	return response_with_cookie_sucursal(request, "AppMejoraDespacho/tables/mutable_table.html", context, n_sucursal)
 
 def change_numero_guia(nvv, listo):
 	'''
@@ -628,6 +663,15 @@ def get_sucursales(groups, sucursal):
 		return False
 		
 	return {'sucursal': s, 'colina': colina, 'concepcion': concepcion, 'santa_elena': santa_elena,}
+
+def response_with_cookie_sucursal(request, template, context, sucursal):
+	'''
+	Returns a http response with the cookie of the last sucursal the user
+	used, so it is restores the next session
+	'''
+	response = render(request, template, context)
+	response.set_cookie('cookie_sucursal', sucursal, max_age=2678400)
+	return response
 
 def handler404(request, exception):
 	'''
