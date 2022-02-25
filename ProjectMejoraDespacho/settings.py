@@ -90,7 +90,15 @@ DATABASES = {
         'PASSWORD': 'DIM**890',
         'HOST': '192.168.2.251',
         'PORT': '1433',
-    }
+    },
+    'WMS': {
+        'ENGINE': 'mssql',
+        'NAME': 'WmsDimaco',
+        'USER': 'wmsbesa',
+        'PASSWORD': 'besa',
+        'HOST': '192.168.10.253',
+        'PORT': '1433',
+    },
 }
 
 

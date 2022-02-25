@@ -431,6 +431,7 @@ def table(request, con_guia):
 
 	sucursal = context['sucursal']
 	n_sucursal = sucursal
+	datos = []
 
 	# Get depending on office
 	if (sucursal == '0'):
@@ -460,7 +461,30 @@ def table(request, con_guia):
 			filename = fs.save(file.name, file)
 			obj.update(comprobante_pago=os.path.join('comprobantes_de_pago/', now.strftime("%Y/%m/%d/"), filename))
 
-	queryset = Ordenes.objects.filter(nvv__startswith=sucursal) # Get the data from the database
+	if (sucursal == 'COL'):
+		on_base = Ordenes.objects.values('nvv')
+		query_nvv = ['', '']
+		for i in on_base:
+			query_nvv.append(i['nvv'])
+		cursor = connections['WMS'].cursor()
+		cursor.execute("SELECT * FROM vw_documento_salida_estado WHERE id_documento_salida IN {};".format(tuple(query_nvv)))
+		datos = dictfetchall(cursor)
+		for i in datos:
+			old_estado = i['ESTADO']
+			new_estado = 10
+			if (old_estado == 'LIBERADO'): new_estado = 11
+			elif (old_estado == 'ANDEN'): new_estado = 12
+			elif (old_estado == 'PICKING'): new_estado = 13
+			elif (old_estado == 'DESPACHADO'): 
+				new_estado = 14
+				Ordenes.objects.filter(nvv=i['id_documento_salida'].rstrip()).update(listo=1)
+			elif (old_estado == 'ANULADO'): new_estado = 15
+			elif (old_estado == 'ELIMINADO'): new_estado = 16
+			Ordenes.objects.filter(nvv=i['id_documento_salida'].rstrip()).update(estado_pedido_para_vendedor=new_estado)
+			
+
+	# Get the data from the database
+	queryset = Ordenes.objects.filter(nvv__startswith=sucursal)
 	
 	permissions = 'Básico'
 	if (request.user.is_superuser or 'Eliminar' in groups):

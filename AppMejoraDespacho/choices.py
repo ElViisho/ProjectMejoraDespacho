@@ -16,7 +16,14 @@ choices_estados_pedido_para_vendedor= (
         (0, 'En Preparación'),
         (1, 'Detenido'),
         (2, 'Preparado incompleto'),
-        (3, 'Preparado completo')
+        (3, 'Preparado completo'),
+        (10, 'Creado'),
+        (11, 'Liberado'),
+        (12, 'Andén'),
+        (13, 'Picking'),
+        (14, 'Despachado'),
+        (15, 'Anulado'),
+        (16, 'Eliminado'),
 )
 
 choices_am_pm = (
