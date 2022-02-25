@@ -472,15 +472,16 @@ def table(request, con_guia):
 		for i in datos:
 			old_estado = i['ESTADO']
 			new_estado = 10
+			listo=0
 			if (old_estado == 'LIBERADO'): new_estado = 11
 			elif (old_estado == 'ANDEN'): new_estado = 12
 			elif (old_estado == 'PICKING'): new_estado = 13
 			elif (old_estado == 'DESPACHADO'): 
 				new_estado = 14
-				Ordenes.objects.filter(nvv=i['id_documento_salida'].rstrip()).update(listo=1)
+				listo=1
 			elif (old_estado == 'ANULADO'): new_estado = 15
 			elif (old_estado == 'ELIMINADO'): new_estado = 16
-			Ordenes.objects.filter(nvv=i['id_documento_salida'].rstrip()).update(estado_pedido_para_vendedor=new_estado)
+			Ordenes.objects.filter(nvv=i['id_documento_salida'].rstrip()).update(estado_pedido_para_vendedor=new_estado, listo=listo)
 			
 
 	# Get the data from the database
