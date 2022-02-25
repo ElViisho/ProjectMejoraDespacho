@@ -8,6 +8,7 @@
 <tr class="text-center" id="{{ item.nvv }}">
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
     <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
+    <td>{{item.cliente}}</td> <!-- The name of the client of the order -->
     <td>{{ item.fecha_solicitud|date:"d F Y" }}</td> <!-- Date when NVV was submitted to the table -->
     <td>{{ item.comuna }}</td>  <!-- Commune address -->
     <td>{{ item.direccion }}</td> <!-- Dispatch address -->
@@ -58,9 +59,9 @@
     -->
     <td style="display: none;" id="estado_string{{ item.nvv }}" >
         {% if item.listo == 1 %}
-            5
+            Despachado
         {% else %}
-            {{item.estado}}
+            {{ item.get_estado_display }}
         {% endif %}
     </td>
     <td style="display: none;" id="estado_string{{ item.nvv }}" >
@@ -84,6 +85,9 @@
     </td>
     <td style="display: none;">
         {{ item.tipo_despacho }}
+    </td>
+    <td style="display: none;">
+        {{ item.rut }}
     </td>
     
 </tr>

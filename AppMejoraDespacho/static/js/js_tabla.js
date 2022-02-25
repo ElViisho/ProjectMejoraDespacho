@@ -77,6 +77,7 @@ $(document).ready(function() {
         "columns": [        // Define properties for the columns of the table 
             { "searchable": false, orderable: false },
             null,
+            { orderable: false },
             null,
             null,
             { "searchable": false, orderable: false },
@@ -85,6 +86,7 @@ $(document).ready(function() {
             null,
             null,
             null,
+            { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
@@ -95,7 +97,7 @@ $(document).ready(function() {
             { "searchable": false, orderable: false },
         ],
 		columnDefs: [
-		   { type: 'date-dd-mmm-yyyy', targets: [2,8] }
+		   { type: 'date-dd-mmm-yyyy', targets: [3,9] }
 		],
         "search": {     // Searches for the whole match and not each word individually
             "smart": false
@@ -108,7 +110,7 @@ $(document).ready(function() {
         "scrollY": "70vh",
         "scrollCollapse": true,
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
-        order: [ 2, order ],            // Default order by state
+        order: [ 3, order ],            // Default order by state
         scrollToTop: true,              // When changing page it goes back to top of table
         buttons: [                      // Export to Excel button
             {
@@ -120,13 +122,13 @@ $(document).ready(function() {
                     return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
                 },
                 exportOptions: {
-                    columns: [ 0, 1, 2, 17, 3, 4, 7, 14, 8, 9, 12, 15, 16],
+                    columns: [ 0, 1, 2, 19, 3, 18, 4, 5, 8, 15, 8, 10, 13, 16, 17],
                     format: {
                         body: function ( data, row, column, node ) {
                             // Format date for excel
-                            if (column === 2 || column === 8 || column === 7) {
-								if (data == 'No asignada') return data;
+                            if (column === 4 || column === 9 || column === 10) {
                                 d = data.split(' ');
+								if (data == 'No asignada' || data == 'No asignado' || !d[2]) return data;
 								var mes="";
                                 switch(d[1]){
                                     case "Enero": mes = "01"; break;
@@ -165,14 +167,14 @@ $(document).ready(function() {
                     var currencyFormat = lastXfIndex + 1;
                     var dateFormat = lastXfIndex + 2;
                     var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('row c[r^="K"]', sheet).attr( 's', currencyFormat );
+                    $('row c[r^="L"]', sheet).attr( 's', currencyFormat );
+                    $('row c[r="L2"]', sheet).attr( 's', '2' );
+                    $('row c[r^="E"]', sheet).attr( 's', dateFormat );
+                    $('row c[r="E2"]', sheet).attr( 's', '2' );
+                    $('row c[r^="J"]', sheet).attr( 's', dateFormat );
+                    $('row c[r="J2"]', sheet).attr( 's', '2' );
+					$('row c[r^="K"]', sheet).attr( 's', dateFormat );
                     $('row c[r="K2"]', sheet).attr( 's', '2' );
-                    $('row c[r^="C"]', sheet).attr( 's', dateFormat );
-                    $('row c[r="C2"]', sheet).attr( 's', '2' );
-                    $('row c[r^="H"]', sheet).attr( 's', dateFormat );
-                    $('row c[r="H2"]', sheet).attr( 's', '2' );
-					$('row c[r^="I"]', sheet).attr( 's', dateFormat );
-                    $('row c[r="I2"]', sheet).attr( 's', '2' );
                 }
             }
         ]
@@ -182,9 +184,9 @@ $(document).ready(function() {
     $('#listado tbody').on('click', 'td.show_hide', function () {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
-        var data = row.data()[10].split("\\,\\,")
-        data.push(row.data()[12])
+        var data = row.data()[11].split("\\,\\,")
         data.push(row.data()[13])
+        data.push(row.data()[14])
         data.unshift(row.data()[1])
  
         if ( row.child.isShown() ) {
@@ -244,34 +246,32 @@ function format (d) {
     return '<td class="child_table">' + 
         '<table cellpadding="5" cellspacing="0" border="0">'+
             '<tr class="child_table">' +
-                '<td>Solicitado por:</td>' +
-                '<td>' + d[8] + '</td>' +
+                '<td>RUT Cliente:</td>'+
+                '<td>' + d[3] + '</td>'+
                 '<td>Valor neto:</td>' +
                 '<td>$' + Number(d[12]).toLocaleString() + '</td>' +
             '</tr>' +
             '<tr class="child_table">' +
-                '<td>Nombre vendedor:</td>' +
-                '<td>' + d[7] + '</td>' +
+                '<td>Solicitado por:</td>' +
+                '<td>' + d[8] + '</td>' +
                 '<td>Condición de pago:</td>'+
                 '<td>' + d[4] + '</td>'+
             '</tr>' +
             '<tr class="child_table">'+
-                '<td>Fecha emisión NVV:</td>'+
-                '<td>'+d[1]+'</td>'+
+                '<td>Nombre vendedor:</td>' +
+                '<td>' + d[7] + '</td>' +
                 '<td>Comprobante de pago:</td>' +
                 '<td>' + 
                     d[5] + 
                 '</td>' +
             '</tr>'+
             '<tr class="child_table">'+
-                '<td>Cliente:</td>'+
-                '<td>'+d[2]+'</td>'+
+                '<td>Fecha emisión NVV:</td>'+
+                '<td>'+d[1]+'</td>'+
                 '<td></td>'+
                 comprobante +
             '</tr>'+
             '<tr class="child_table">'+
-                '<td>RUT Cliente:</td>'+
-                '<td>' + d[3] + '</td>'+
                 '<td rowspan="' + (rowspan+2) + '" style="vertical-align: top;">Obervaciones del pedido:</td>'+
                 '<td rowspan="' + (rowspan+2) + '" style="vertical-align: top;">' + d[10] + '</td>'+
             '</tr>'+

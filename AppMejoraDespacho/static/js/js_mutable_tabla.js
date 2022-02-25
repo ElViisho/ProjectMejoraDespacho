@@ -87,6 +87,7 @@ $(document).ready(function() {
         "columns": [        // Define properties for the columns of the table 
             { "searchable": false, orderable: false },
             null,
+            { orderable: false },
             null,
             null,
             null,
@@ -127,26 +128,14 @@ $(document).ready(function() {
                 return x;
                 }
             },
-            { "searchable": false, orderable: false, render: function (data, type, row) {
-                x = []
-                for (i in data){
-                    switch(data[i]){
-                        case "0": x.push("En preparación"); break;
-                        case "1": x.push("Sin pago adjunto"); break;
-                        case "2": x.push("Sin material"); break;
-                        case "3": x.push("Preaparado incompleto"); break;
-                        case "4": x.push("Preaparado completo"); break;
-                        default: x.push(""); break;
-                    }
-                }
-                return x;
-                } },
+            { "searchable": false, orderable: false },
+            { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
         ],
         columnDefs: [
-            { type: 'date-dd-mmm-yyyy', targets: [2] }
+            { type: 'date-dd-mmm-yyyy', targets: [3] }
         ],
         "search": {     // Searches for the whole match and not each word individually
             "smart": false
@@ -159,7 +148,7 @@ $(document).ready(function() {
         "scrollY": "70vh",
         "scrollCollapse": true,
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
-        order: [ 2, order ],            // Default order by date
+        order: [ 3, order ],            // Default order by date
         scrollToTop: true,              // When changing page it goes back to top of table
         buttons: [                      // Export to Excel button
             {
@@ -171,11 +160,11 @@ $(document).ready(function() {
                     return "Ordenes de despacho " + d.getDate() + "-" + (nombresMeses[d.getMonth()]) + "-" + d.getFullYear() + " " + d.getHours() + "." + d.getMinutes();
                 },
                 exportOptions: {
-                    columns: [ 0, 1, 2, 3, 4, 5, 17, 8, 12, 13, 14, 15, 18, 16],
+                    columns: [ 0, 1, 2, 20, 3, 4, 5, 6, 18, 9, 13, 14, 15, 16, 19, ],
                     format: {
                         body: function ( data, row, column, node ) {
                             // Format date for excel
-                            if (column === 2 ) {
+                            if (column === 4 ) {
 								if (data == 'No asignada') return data;
                                 d = data.split(' ');
 								var mes="";
@@ -196,7 +185,7 @@ $(document).ready(function() {
                                 }
                                 return d[0]+"-"+mes+"-"+d[2];
                             }
-                            else if (column === 6) {
+                            else if (column === 8) {
                                 d = data.split(' ');
 								var mes="";
                                 switch(d[2]){
@@ -236,12 +225,12 @@ $(document).ready(function() {
                     var currencyFormat = lastXfIndex + 1;
                     var dateFormat = lastXfIndex + 2;
                     var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('row c[r^="J"]', sheet).attr( 's', currencyFormat );
-                    $('row c[r="J2"]', sheet).attr( 's', '2' );
-                    $('row c[r^="C"]', sheet).attr( 's', dateFormat );
-                    $('row c[r="C2"]', sheet).attr( 's', '2' );
-                    $('row c[r^="G"]', sheet).attr( 's', dateFormat );
-                    $('row c[r="G2"]', sheet).attr( 's', '2' );
+                    $('row c[r^="L"]', sheet).attr( 's', currencyFormat );
+                    $('row c[r="L2"]', sheet).attr( 's', '2' );
+                    $('row c[r^="E"]', sheet).attr( 's', dateFormat );
+                    $('row c[r="E2"]', sheet).attr( 's', '2' );
+                    $('row c[r^="I"]', sheet).attr( 's', dateFormat );
+                    $('row c[r="I2"]', sheet).attr( 's', '2' );
                 }
             }
         ]
@@ -251,9 +240,9 @@ $(document).ready(function() {
     $('#listado tbody').on('click', 'td.show_hide', function () {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
-        var data = row.data()[11].split("\\,\\,")
-        data.push(row.data()[16])
-        data.push(row.data()[13])
+        var data = row.data()[12].split("\\,\\,")
+        data.push(row.data()[17])
+        data.push(row.data()[14])
         data.unshift(row.data()[1])
  
         if ( row.child.isShown() ) {
@@ -319,6 +308,20 @@ $(document).ready(function() {
         $('.estados_pedido_para_vendedor').on('change', function () {
             var url = window.location.href;
             var option = $(this).val();
+            switch(option){
+                case "0": option = "En preparación"; break;
+                case "1": option = "Detenido"; break;
+                case "2": option = "Preparado incompleto"; break;
+                case "3": option = "Preparado completo"; break;
+                case "10": option = "Creado"; break;
+                case "11": option = "Liberado"; break;
+                case "12": option = "Andén"; break;
+                case "13": option = "Picking"; break;
+                case "14": case "5": option = "Despachado"; break;
+                case "15": option = "Anulado"; break;
+                case "16": option = "Eliminado"; break;
+                default: option = "En preparación"; break;
+            }
             var nvv = this.id;
 
             $.ajaxSetup({
@@ -441,43 +444,42 @@ function format (d) {
     return '<td class="child_table">' + 
         '<table cellpadding="5" cellspacing="0" border="0">'+
             '<tr class="child_table">' +
-                '<td>Nombre vendedor:</td>' +
-                '<td>' + d[8] + '</td>' +
+                '<td>RUT Cliente:</td>'+
+                '<td>' + d[3] + '</td>'+
                 '<td>Valor neto:</td>' +
                 '<td>$' + Number(d[15]).toLocaleString() + '</td>' + 
             '</tr>' +
             '<tr class="child_table">' +
-                '<td>Solicitado por:</td>' +
-                '<td>' + d[9] + '</td>' +
+                '<td>Nombre vendedor:</td>' +
+                '<td>' + d[8] + '</td>' +
                 '<td>Condición de pago:</td>'+
                 '<td>' + d[4] + '</td>'+
             '</tr>' +
             '<tr class="child_table">'+
-                '<td>Fecha emisión NVV:</td>'+
-                '<td>'+d[1]+'</td>'+
+                '<td>Solicitado por:</td>' +
+                '<td>' + d[9] + '</td>' +
                 '<td>Comprobante de pago:</td>' +
                 '<td>' + d[5] + '</td>' +
             '</tr>'+
             '<tr class="child_table">'+
-                '<td>Cliente:</td>'+
-                '<td>'+d[2]+'</td>'+
+                '<td>Fecha emisión NVV:</td>'+
+                '<td>'+d[1]+'</td>'+
                 '<td rowspan="2" style="vertical-align: top;">Obervaciones solicitud:</td>'+
                 '<td rowspan="2" style="vertical-align: top;">' + d[6] + '</td>'+
             '</tr>'+
             '<tr class="child_table">'+
-                '<td>RUT Cliente:</td>'+
-                '<td>' + d[3] + '</td>'+
-            '</tr>'+
-            '<tr class="child_table">'+
                 '<td>Nombre Contacto:</td>'+
                 '<td>' + d[11] + '</td>'+
+            '</tr>'+
+            '<tr class="child_table">'+
+                '<td style="vertical-align: top;">Teléfono Contacto:</td>'+
+                '<td style="vertical-align: top;">' + d[12] + '</td>'+
                 '<td rowspan="2" style="vertical-align: top;">Observaciones del pedido:</td>' +
                 '<td rowspan="2" style="vertical-align: top;"><textarea onchange="textAreaChange()" class="observaciones_pedido" id="'+ d[0] +
                     '" style="resize:none" rows=3 cols=50 placeholder="Ingrese alguna observación en caso de ser pertinente">' + d[14] + '</textarea></td>' +
             '</tr>'+
             '<tr class="child_table">'+
-                '<td>Teléfono Contacto:</td>'+
-                '<td>' + d[12] + '</td>'+
+                
             '</tr>'+
             n_guia +
             comprobante +

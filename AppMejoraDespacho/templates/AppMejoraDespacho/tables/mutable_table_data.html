@@ -7,7 +7,8 @@
 
 <tr class="text-center" id="{{ item.nvv }}">
     <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
-    <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
+    <td>{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
+    <td>{{item.cliente}}</td> <!-- The name of the client of the order -->
     <td>{{ item.fecha_solicitud|date:"d F Y" }}</td> <!-- Date when NVV was submitted to the table -->
     <!-- Way of dispatch. If it's internal, just show DIMACO. Else, show the name of the dispatcher and its direction -->
     <td class="despacho_externo"> {{ item.tipo_despacho }} </td>
@@ -110,42 +111,42 @@
         {% endif %}
     </td>
     <td>
-        {% if item.listo == 1 %}
-            <select disabled class='estados_pedido_para_vendedor' id='{{ item.nvv }}'>
-                {% if item.estado_pedido_para_vendedor == 3 %}
-                    <option selected value=3>Preparado completo</option>
-                {% elif item.estado_pedido_para_vendedor == 2 %}
-                    <option selected value=2>Preparado incompleto</option>
-                {% elif item.estado_pedido_para_vendedor == 1 %}
-                    <option selected value=1>Detenido</option>
-                {% else %}
-                    <option selected value=0>En preparación</option>
-                {% endif %}
-            </select>
+        {% if sucursal == '0' %}
+            {% if item.listo == 1 %}
+                Despachado
+            {% else %}
+                {{ item.get_estado_pedido_para_vendedor_display }}
+            {% endif %}
         {% else %}
-            <select class='estados_pedido_para_vendedor' id='{{ item.nvv }}'>
-                {% if item.estado_pedido_para_vendedor == 3 %}
-                    <option value=0>En preparación</option>
-                    <option value=1>Detenido</option>
-                    <option value=2>Preparado incompleto</option>
-                    <option selected value=3>Preparado completo</option>
-                {% elif item.estado_pedido_para_vendedor == 2 %}
-                    <option value=0>En preparación</option>
-                    <option value=1>Detenido</option>
-                    <option selected value=2>Preparado incompleto</option>
-                    <option value=3>Preparado completo</option>
-                {% elif item.estado_pedido_para_vendedor == 1 %}
-                    <option value=0>En preparación</option>
-                    <option selected value=1>Detenido</option>
-                    <option value=2>Preparado incompleto</option>
-                    <option value=3>Preparado completo</option>
-                {% else %}
-                    <option selected value=0>En preparación</option>
-                    <option value=1>Detenido</option>
-                    <option value=2>Preparado incompleto</option>
-                    <option value=3>Preparado completo</option>
-                {% endif %}
-            </select>
+            {% if item.listo == 1 %}
+                <select disabled class='estados_pedido_para_vendedor' id='{{ item.nvv }}'>
+                    <option selected value=5>Despachado</option>
+                </select>
+            {% else %}
+                <select class='estados_pedido_para_vendedor' id='{{ item.nvv }}'>
+                    {% if item.estado_pedido_para_vendedor == 3 %}
+                        <option value=0>En preparación</option>
+                        <option value=1>Detenido</option>
+                        <option value=2>Preparado incompleto</option>
+                        <option selected value=3>Preparado completo</option>
+                    {% elif item.estado_pedido_para_vendedor == 2 %}
+                        <option value=0>En preparación</option>
+                        <option value=1>Detenido</option>
+                        <option selected value=2>Preparado incompleto</option>
+                        <option value=3>Preparado completo</option>
+                    {% elif item.estado_pedido_para_vendedor == 1 %}
+                        <option value=0>En preparación</option>
+                        <option selected value=1>Detenido</option>
+                        <option value=2>Preparado incompleto</option>
+                        <option value=3>Preparado completo</option>
+                    {% else %}
+                        <option selected value=0>En preparación</option>
+                        <option value=1>Detenido</option>
+                        <option value=2>Preparado incompleto</option>
+                        <option value=3>Preparado completo</option>
+                    {% endif %}
+                </select>
+            {% endif %}
         {% endif %}
     </td>
 
@@ -181,7 +182,11 @@
         {{item.rango_horario_final}}
     </td>
     <td style="display: none;" id="estado_pedido{{ item.nvv }}" >
-        {{item.estado_pedido_para_vendedor}}
+        {% if item.listo == 1 %}
+            Despachado
+        {% else %}
+            {{ item.get_estado_pedido_para_vendedor_display }}
+        {% endif %}
     </td>
     <td style="display: none;" id="observacion_despacho{{ item.nvv }}" >
         {{ item.observacion_despacho }}
@@ -191,6 +196,9 @@
     </td>
     <td style="display: none;" id="observacion{{ item.nvv }}" >
         {{ item.observacion }}
+    </td>
+    <td style="display: none;">
+        {{ item.rut }}
     </td>
     
 </tr>

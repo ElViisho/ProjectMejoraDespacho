@@ -3,7 +3,7 @@ The different choices arrays that are used by django models
 and forms throughout the app.
 """
 
-# The choices for the states of an order
+# The choices for the states of an order, for the dispatcher
 choices_estados = (
         (0, 'En Preparación'),
         (1, 'Preparado'),
@@ -12,6 +12,8 @@ choices_estados = (
         (4, 'Rollos')
 )
 
+# The choices for the states of an order. 0-3 for Santa Elena and Concepción
+# 10-16 for Colina.
 choices_estados_pedido_para_vendedor= (
         (0, 'En Preparación'),
         (1, 'Detenido'),
