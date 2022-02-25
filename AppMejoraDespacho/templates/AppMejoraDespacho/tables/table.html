@@ -121,7 +121,11 @@
     </form>
 </div>
 
-<script>var permissions = '{{ permissions }}';</script>
+<!-- Have to be definedhere, otherwise it wouldn't work, but it is needed in the javaScript below -->
+<script>
+    var permissions = "{{ permissions }}";
+    var con_guia = "{{ con_guia }}";
+</script>
 <script src="{% static 'js/js_tabla.js' %}"></script>
 
 

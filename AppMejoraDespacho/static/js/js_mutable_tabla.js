@@ -21,6 +21,8 @@ const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "S
 // Initialize variable as nothing
 let nvv = "";
 let table = "";
+let order = "asc";
+if (con_guia == 'True') order = "desc"
 
 $(document).ready(function() {
 	var today = new Date();
@@ -157,7 +159,7 @@ $(document).ready(function() {
         "scrollY": "70vh",
         "scrollCollapse": true,
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
-        order: [ 2, 'asc' ],            // Default order by date
+        order: [ 2, order ],            // Default order by date
         scrollToTop: true,              // When changing page it goes back to top of table
         buttons: [                      // Export to Excel button
             {

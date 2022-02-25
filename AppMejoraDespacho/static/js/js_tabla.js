@@ -27,6 +27,8 @@ const nombresMeses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "S
 // Initialize variable as nothing
 let nvv = "";
 let table = "";
+let order = "asc";
+if (con_guia == 'True') order = "desc"
 
 $(document).ready(function() {
 	//Custom ordering for dates
@@ -106,7 +108,7 @@ $(document).ready(function() {
         "scrollY": "70vh",
         "scrollCollapse": true,
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
-        order: [ 7, 'asc' ],            // Default order by state
+        order: [ 2, order ],            // Default order by state
         scrollToTop: true,              // When changing page it goes back to top of table
         buttons: [                      // Export to Excel button
             {
