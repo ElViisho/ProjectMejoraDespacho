@@ -1,3 +1,9 @@
+Este proyecto ya no se puede correr ya que está actualmente
+configurado para correr en un windows server y además 
+necesita acceso a una base de datos que está en una red 
+privada de la empresa. Igual se deja el repositorio público 
+para poder ver cosas de implementación. 
+
 [<img src="static/images/logo.png">](https://dimacosac.cl)
 
 # ProjectMejoraDespacho
