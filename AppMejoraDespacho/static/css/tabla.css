@@ -1,3 +1,9 @@
+.red_circle {
+    position: relative;
+    left: 20px;
+    scale: 0.5;
+}
+
 /*  For datatables plugin elements */
 .dataTables_length {
     padding-left: 2em;

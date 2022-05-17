@@ -7,8 +7,15 @@
 -->
 
 <tr class="text-center" id="{{ item.nvv }}">
-    <td class="dt-control show_hide"></td> <!-- Button with + sign to show or hide children of row -->
-    <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order, which is also clickable to show or hide children, thanks to "show_hide" class -->
+    <!-- Button with + sign to show or hide children of row -->
+    <td class="dt-control show_hide">
+        {% if item.observacion != "" %}
+            <div class="red_circle">
+                &#128308;
+            </div>
+        {% endif %}
+    </td>
+    <td class="show_hide">{{ item.nvv }}</td> <!-- NVV of order -->
     <td>{{ item.fecha_solicitud }}</td> <!-- Date when NVV was submitted to the table -->
     <!-- Way of dispatch. If it's internal, just show DIMACO. Else, show the name of the dispatcher and its direction -->
     <td>
