@@ -111,9 +111,11 @@ $(document).ready(function() {
         },
         // Scrolling options
         "scrollX": true,
-        "scrollY": "70vh",
+        "scrollY": "60vh",
         "scrollCollapse": true,
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
+        "pageLength": 50,
+        "stateSave": true,
         order: [ 2, 'asc' ],            // Default order by date
         scrollToTop: true,              // When changing page it goes back to top of table
         buttons: [                      // Export to Excel button

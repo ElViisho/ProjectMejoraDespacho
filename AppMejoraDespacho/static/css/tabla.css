@@ -24,6 +24,7 @@
 	border-style: solid;
 	border-color: #007030;
 	transition: background-color 1s , border-color 1s;
+    margin-top: 10px;
 }
 /*  Excel button when cursor hovers over it */
 .dt-button.buttons-excel:hover{
