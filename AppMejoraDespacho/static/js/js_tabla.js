@@ -17,8 +17,8 @@ function getCookie(c_name)
 
 
 function domDataTable() {
-    if (permissions=='Eliminar') return '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>'
-    return '<"top"iflp<"clear">>rt<"bottom"iflp<"clear">>'
+    if (permissions=='Eliminar') return '<"top"iflp<"clear">>rtB<"bottom"<"clear">>'
+    return '<"top"iflp<"clear">>rt<"bottom"<"clear">>'
 }
 
 // Array with the name of months for display
@@ -107,7 +107,7 @@ $(document).ready(function() {
         "scrollCollapse": true,
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
         "pageLength": 50,
-        "stateSave": true,
+        "stateSave": true,              // To remember the state the user left the table
         order: [ 7, 'asc' ],            // Default order by state
         scrollToTop: true,              // When changing page it goes back to top of table
         buttons: [                      // Export to Excel button

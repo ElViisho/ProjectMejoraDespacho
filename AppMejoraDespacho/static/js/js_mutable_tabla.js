@@ -42,7 +42,7 @@ $(document).ready(function() {
 	
     // Add plugin of DataTable to table of data
     table = $('#listado').DataTable({ 
-        "dom": '<"top"iflp<"clear">>rtB<"bottom"iflp<"clear">>',    // Display order of objects of table
+        "dom": '<"top"iflp<"clear">>rtB<"bottom"<"clear">>',    // Display order of objects of table
         "columns": [        // Define properties for the columns of the table 
             { "searchable": false, orderable: false },
             null,
@@ -51,7 +51,7 @@ $(document).ready(function() {
             null,
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
-            null,
+            { "orderData": 17},
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
             { "searchable": false, orderable: false },
@@ -115,7 +115,7 @@ $(document).ready(function() {
         "scrollCollapse": true,
         "lengthMenu": [5, 10, 25, 50],  // Different options for how many to display per page
         "pageLength": 50,
-        "stateSave": true,
+        "stateSave": true,              // To remember the state the user left the table
         order: [ 2, 'asc' ],            // Default order by date
         scrollToTop: true,              // When changing page it goes back to top of table
         buttons: [                      // Export to Excel button
