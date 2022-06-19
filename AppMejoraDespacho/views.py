@@ -218,6 +218,7 @@ def submit_nvv_form(request):
 		data_obtenida = ingresoForm(request.POST or None, request.FILES or None, sucursal=sucursal)
 		if data_obtenida.is_valid():
 			cleaned_data = data_obtenida.cleaned_data
+			print(cleaned_data)
 			nvv = cleaned_data['nvv']
 
 			comunas = comunas_todas
@@ -266,10 +267,10 @@ def submit_nvv_form(request):
 				observacion = cleaned_data['observaciones'],
 				fecha_despacho = cleaned_data['fecha_despacho'],
 				fecha_despacho_final = cleaned_data['fecha_despacho'],
-				hora_de_despacho_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_inicio'])),
-				hora_de_despacho_fin = datetime.time(hour=int(cleaned_data['hora_despacho_fin'])),
-				hora_despacho_extra_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_extra_inicio'])),
-				hora_despacho_extra_fin = datetime.time(hour=int(cleaned_data['hora_despacho_extra_fin'])),
+				hora_de_despacho_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_inicio']), minute=int(cleaned_data['hora_despacho_inicio_minutos'])*15),
+				hora_de_despacho_fin = datetime.time(hour=int(cleaned_data['hora_despacho_fin']), minute=int(cleaned_data['hora_despacho_fin_minutos'])*15),
+				hora_despacho_extra_inicio = datetime.time(hour=int(cleaned_data['hora_despacho_extra_inicio']), minute=int(cleaned_data['hora_despacho_extra_inicio_minutos'])*15),
+				hora_despacho_extra_fin = datetime.time(hour=int(cleaned_data['hora_despacho_extra_fin']), minute=int(cleaned_data['hora_despacho_extra_fin_minutos'])*15),
 				nombre_asistente = request.user.get_full_name(),
 				valor_neto_documento = datos_maeedo[0]["VANEDO"],
 			)		

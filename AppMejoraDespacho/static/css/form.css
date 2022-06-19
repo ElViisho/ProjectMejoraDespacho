@@ -108,17 +108,13 @@ input#id_direccion::placeholder, input#id_cont_nombre::placeholder, input#id_con
     transition-duration: 1s;
 }
 
-/*  Div container of all the hour selectors */
-.selector_hora{
-    text-align: center;
-    display: flex;
-}
-/*  Each of the hour selectors */
-#id_hora_despacho_inicio, #id_hora_despacho_fin, #id_hora_despacho_extra_inicio, #id_hora_despacho_extra_fin{
-    width: 100%;
+/*  Each of the hour and minutes selectors */
+#id_hora_despacho_inicio, #id_hora_despacho_fin, #id_hora_despacho_extra_inicio, #id_hora_despacho_extra_fin,
+#id_hora_despacho_inicio_minutos, #id_hora_despacho_fin_minutos, #id_hora_despacho_extra_inicio_minutos, #id_hora_despacho_extra_fin_minutos{
     margin-left: 2%;
     margin-right: 2%;
     margin-bottom: 10px;
+    text-align: center;
 }
 /*  Sublabel */
 .sublabel {

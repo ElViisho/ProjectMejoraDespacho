@@ -1,3 +1,4 @@
+from re import T
 from django import forms
 from AppMejoraDespacho.models import *
 from django.forms.widgets import NumberInput
@@ -6,7 +7,7 @@ from django.contrib.auth.models import User
 
 from django.db import connections
 import datetime 
-from .choices import comunas_longest, horas, regiones, choices_dispatch_way
+from .choices import comunas_longest, horas, minutos, regiones, choices_dispatch_way
 from .queries import query_get_relevant_NVVs
 
 from file_resubmit.admin import AdminResubmitFileWidget
@@ -121,17 +122,21 @@ class ingresoForm(forms.Form):
 
     # Get all dispatch time ranges and only put the possible values for selection
     hora_despacho_inicio = forms.ChoiceField(label='Rango horario de despacho', choices=horas[:-1], initial=8, required=True)
+    hora_despacho_inicio_minutos = forms.ChoiceField(choices=minutos, initial=0, required=True)
     hora_despacho_fin = forms.ChoiceField(label='', choices=horas[1:], initial=9, required=True)
-    horas_extra_inicio = [("0", "-------")]
+    hora_despacho_fin_minutos = forms.ChoiceField(choices=minutos, initial=0, required=True)
+    horas_extra_inicio = [("0", "---")]
     for i in horas[2:-1]:
         horas_extra_inicio.append(i)
     horas_extra_inicio = tuple(horas_extra_inicio)
     hora_despacho_extra_inicio = forms.ChoiceField(label='Hora de despacho extra', choices=horas_extra_inicio, initial=0)
-    horas_extra_fin = [("0", "-------")]
+    hora_despacho_extra_inicio_minutos = forms.ChoiceField(choices=minutos, initial=0)
+    horas_extra_fin = [("0", "---")]
     for i in horas[3:]:
         horas_extra_fin.append(i)
     horas_extra_fin = tuple(horas_extra_fin)
     hora_despacho_extra_fin = forms.ChoiceField(label='', choices=horas_extra_fin, initial=0)
+    hora_despacho_extra_fin_minutos = forms.ChoiceField(choices=minutos, initial=0)
 
     observaciones = forms.CharField(label="Observaciones", required = False, widget=forms.Textarea(attrs={"rows":5, "cols":20, "placeholder": "Ingrese alguna observación en caso de ser pertinente"}))
 

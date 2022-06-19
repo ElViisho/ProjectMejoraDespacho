@@ -30,6 +30,8 @@ $(document).ready(function() {
 
     change_button();
     change_dispath();
+    change_inicio_minutes();
+    change_fin_minutes();
 
     // Set the phone input field to use the plugin for country code and validation of valid phone number format
     let phoneInputField = document.getElementById("id_cont_telefono");
@@ -158,3 +160,23 @@ function change_comunas(cambiar) {
 
 // When value of region changes, change the available communes
 $("#id_region").change(change_comunas)
+
+
+// When extra hour range changes, enable or disable its minutes
+function change_inicio_minutes(){
+    var val = $('#id_hora_despacho_extra_inicio').val();
+    if (val == '0')
+        $('#id_hora_despacho_extra_inicio_minutos').prop('disabled', true)
+    else 
+        $('#id_hora_despacho_extra_inicio_minutos').prop('disabled', false)
+}
+$('#id_hora_despacho_extra_inicio').change(change_inicio_minutes)
+
+function change_fin_minutes(){
+    var val = $('#id_hora_despacho_extra_fin').val();
+    if (val == '0')
+        $('#id_hora_despacho_extra_fin_minutos').prop('disabled', true)
+    else 
+        $('#id_hora_despacho_extra_fin_minutos').prop('disabled', false)
+}
+$('#id_hora_despacho_extra_fin').change(change_fin_minutes)
